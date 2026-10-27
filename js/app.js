@@ -8,14 +8,16 @@
         const query = globalSearch.value.trim().toLocaleLowerCase("fr");
         if (!query) { results.innerHTML = ""; return; }
         const matches = ["python", "kali", "html", "css", "javascript"].flatMap((key) => data[key].flatMap((section) => section.items
-          .filter((item) => `${item.nom} ${item.utilite} ${item.exemple} ${section.categorie}`.toLocaleLowerCase("fr").includes(query))
+          .filter((item) => `${item.nom} ${window.LearnHubI18n.itemName(item.nom)} ${window.LearnHubI18n.content(item, "utilite", key, section.categorie)} ${section.categorie} ${window.LearnHubI18n.category(section.categorie)}`.toLocaleLowerCase().includes(query))
           .map((item) => ({ ...item, categorie: section.categorie, key })))).slice(0, 8);
         results.innerHTML = matches.length ? matches.map((item) => {
           const isWeb = ["html", "css", "javascript"].includes(item.key);
           const courseName = { python: "Python", kali: "Kali Linux", html: "HTML", css: "CSS", javascript: "JavaScript" }[item.key];
           const href = isWeb ? `web.html?lang=${item.key}&q=${encodeURIComponent(item.nom)}` : `${item.key}.html?q=${encodeURIComponent(item.nom)}`;
-          return `<a class="result-link" href="${href}"><strong>${item.nom}</strong><span>${courseName} · ${item.categorie} — ${item.utilite}</span></a>`;
-        }).join("") : '<p class="search-empty">Aucune notion trouvée. Essaie un autre mot.</p>';
+          const language = window.LearnHubI18n.language();
+          const courseLabel = language === "ar" ? "دورة" : language === "en" ? "Course" : "Cours";
+          return `<a class="result-link" href="${href}"><strong>${window.LearnHubI18n.itemName(item.nom)}</strong><span>${courseLabel} ${courseName} · ${window.LearnHubI18n.category(item.categorie)} — ${window.LearnHubI18n.content(item, "utilite", item.key, item.categorie)}</span></a>`;
+        }).join("") : `<p class="search-empty">${window.LearnHubI18n.get("noResults")}</p>`;
       };
       globalSearch.addEventListener("input", showResults);
       globalSearch.form.addEventListener("submit", (event) => {
@@ -52,12 +54,12 @@
     const course = data[activeKey];
     const learned = readLearned(activeKey);
     const allItems = course.flatMap((section) => section.items.map((item) => ({ ...item, categorie: section.categorie })));
-    const query = search.value.trim().toLocaleLowerCase("fr");
+    const query = search.value.trim().toLocaleLowerCase();
     const selectedLevel = level.value;
-    nav.innerHTML = course.map((section) => `<a href="#${activeKey}-${slug(section.categorie)}">${section.categorie}</a>`).join("");
+    nav.innerHTML = course.map((section) => `<a href="#${activeKey}-${slug(section.categorie)}">${window.LearnHubI18n.category(section.categorie)}</a>`).join("");
     const sectionsVisible = course.map((section) => {
       const items = section.items.filter((item) => {
-        const searchable = `${item.nom} ${item.utilite} ${item.exemple} ${section.categorie}`.toLocaleLowerCase("fr");
+        const searchable = `${item.nom} ${window.LearnHubI18n.itemName(item.nom)} ${window.LearnHubI18n.content(item, "utilite", activeKey, section.categorie)} ${window.LearnHubI18n.content(item, "exemple", activeKey, section.categorie)} ${section.categorie} ${window.LearnHubI18n.category(section.categorie)}`.toLocaleLowerCase();
         return (!query || searchable.includes(query)) && (selectedLevel === "all" || item.niveau === selectedLevel);
       });
       return { ...section, items };
@@ -65,10 +67,17 @@
     sections.innerHTML = sectionsVisible.length ? sectionsVisible.map((section) => {
       const cards = section.items.map((item) => {
         const id = idFor(activeKey, section.categorie, item);
-        return `<button class="concept-card${learned.has(id) ? " is-learned" : ""}" type="button" data-id="${id}" data-category="${section.categorie}" data-name="${item.nom}" aria-label="Ouvrir la fiche ${item.nom}${learned.has(id) ? ", notion apprise" : ""}"><span class="concept-name">${item.nom}</span><span class="concept-bottom"><span class="level-badge">${item.niveau}</span>${learned.has(id) ? '<span class="learned-mark" aria-label="Apprise">✓</span>' : ""}</span></button>`;
+        const language = window.LearnHubI18n.language();
+        const openLabel = language === "ar" ? "افتح شرح" : language === "en" ? "Open lesson for" : "Ouvrir la fiche";
+        const learnedLabel = language === "ar" ? ", تم تعلمه" : language === "en" ? ", learned" : ", notion apprise";
+        const checkLabel = language === "ar" ? "تم تعلمه" : language === "en" ? "Learned" : "Apprise";
+        const displayName = window.LearnHubI18n.itemName(item.nom);
+        return `<button class="concept-card${learned.has(id) ? " is-learned" : ""}" type="button" data-id="${id}" data-category="${section.categorie}" data-name="${item.nom}" aria-label="${openLabel} ${displayName}${learned.has(id) ? learnedLabel : ""}"><span class="concept-name">${displayName}</span><span class="concept-bottom"><span class="level-badge">${window.LearnHubI18n.level(item.niveau)}</span>${learned.has(id) ? `<span class="learned-mark" aria-label="${checkLabel}">✓</span>` : ""}</span></button>`;
       }).join("");
-      return `<section class="category-section" id="${activeKey}-${slug(section.categorie)}"><div class="section-heading"><h2>${section.categorie}</h2><span>${section.items.length} notion${section.items.length > 1 ? "s" : ""}</span></div><div class="cards-grid">${cards}</div></section>`;
-    }).join("") : '<p class="empty-state">Aucune notion ne correspond à ta recherche.</p>';
+      const language = window.LearnHubI18n.language();
+      const countLabel = language === "ar" ? "مفهوم" : language === "en" ? "concepts" : `notion${section.items.length > 1 ? "s" : ""}`;
+      return `<section class="category-section" id="${activeKey}-${slug(section.categorie)}"><div class="section-heading"><h2>${window.LearnHubI18n.category(section.categorie)}</h2><span>${section.items.length} ${countLabel}</span></div><div class="cards-grid">${cards}</div></section>`;
+    }).join("") : `<p class="empty-state">${window.LearnHubI18n.get("noResults")}</p>`;
     nav.querySelectorAll("a").forEach((link) => {
       link.hidden = !sectionsVisible.some((section) => `#${activeKey}-${slug(section.categorie)}` === link.getAttribute("href"));
     });
@@ -76,7 +85,8 @@
       card.addEventListener("click", () => {
         const item = allItems.find((entry) => entry.nom === card.dataset.name && entry.categorie === card.dataset.category);
         const id = card.dataset.id;
-        window.LearnHubModal.open(item, item.categorie, learned.has(id), () => {
+        const localizedItem = { ...item, nom: window.LearnHubI18n.itemName(item.nom), utilite: window.LearnHubI18n.content(item, "utilite", activeKey, item.categorie), exemple: window.LearnHubI18n.content(item, "exemple", activeKey, item.categorie), attention: window.LearnHubI18n.content(item, "attention", activeKey, item.categorie) };
+        window.LearnHubModal.open(localizedItem, item.categorie, learned.has(id), () => {
           const updated = readLearned(activeKey);
           if (updated.has(id)) updated.delete(id); else updated.add(id);
           localStorage.setItem(`learnhub-learned-${activeKey}`, JSON.stringify([...updated]));
@@ -92,7 +102,10 @@
   function updateProgress(items, learned, key) {
     const count = items.filter((item) => learned.has(idFor(key, item.categorie, item))).length;
     const percent = items.length ? Math.round(count / items.length * 100) : 0;
-    document.querySelectorAll(".progress-label").forEach((label) => { label.textContent = `${count} / ${items.length} notions apprises`; });
+    document.querySelectorAll(".progress-label").forEach((label) => {
+      const language = window.LearnHubI18n.language();
+      label.textContent = language === "ar" ? `${count} من ${items.length} مفهوم تم تعلمه` : language === "en" ? `${count} of ${items.length} concepts learned` : `${count} / ${items.length} notions apprises`;
+    });
     document.querySelectorAll(".progress-track").forEach((track) => {
       track.setAttribute("aria-valuenow", String(percent));
       track.querySelector("span").style.width = `${percent}%`;
@@ -108,6 +121,7 @@
   }));
   search.addEventListener("input", render);
   level.addEventListener("change", render);
+  window.addEventListener("learnhublanguagechange", render);
   const params = new URLSearchParams(location.search);
   if (params.has("q")) search.value = params.get("q");
   render();
