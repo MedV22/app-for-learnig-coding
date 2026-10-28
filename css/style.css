@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap");
+
 :root {
   color-scheme: light;
   --bg: #f3f0e8;
@@ -13,8 +15,8 @@
   --code-text: #e7eee4;
   --shadow: 0 18px 48px rgb(36 40 32 / 8%);
   --serif: Georgia, "Times New Roman", serif;
-  --sans: "Segoe UI", Tahoma, Arial, sans-serif;
-  --mono: Consolas, "Courier New", monospace;
+  --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif;
+  --mono: "JetBrains Mono", Consolas, "Courier New", monospace;
   font-family: var(--sans);
   color: var(--ink);
   background: var(--bg);
@@ -154,6 +156,28 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .learn-toggle.done { border-color: #a9bcab; background: #e9f0e7; color: var(--accent); }
 @keyframes modal-in { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
 
+/* Animations */
+@keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+@keyframes badge-bounce { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
+.fade-in { animation: fade-in 0.4s ease-out both; }
+
+/* Favorite star */
+.favorite-btn { display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--muted); cursor: pointer; font-size: 14px; line-height: 1; }
+.favorite-btn:hover { border-color: var(--accent); color: var(--accent); }
+.favorite-btn.is-favorite { color: #f4b400; border-color: #f4b400; animation: pulse 1.2s infinite; }
+
+/* Completion badge */
+.badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.4px; }
+.badge-gold { background: #fdeecb; color: #8a6d1b; border: 1px solid #e3c98a; }
+.badge-gold .badge-icon { font-size: 12px; }
+
+/* Dark theme overrides for new components */
+.dark .favorite-btn { background: var(--surface); border-color: var(--line); color: var(--muted); }
+.dark .favorite-btn.is-favorite { color: #f4b400; border-color: #f4b400; }
+.dark .badge-gold { background: #3d3312; color: #e3c98a; border: 1px solid #8a6d1b; }
+
 /* Dark theme */
 .dark { color-scheme: dark; --bg: #1b201d; --paper: #222823; --surface: #282f29; --ink: #eceee7; --muted: #a8afa3; --line: #3b443d; --accent: #9cbea6; --accent-soft: #303d34; --orange: #dc9870; --code: #121713; --code-text: #e6eee5; --shadow: 0 18px 48px rgb(0 0 0 / 24%); }
 .dark .course-hero { background: #29312b; }
@@ -241,3 +265,59 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .concept-card { padding: 8px; }
 }
+
+/* Quiz */
+.quiz-btn { margin-left: 10px; padding: 4px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); color: var(--ink); font-size: 11px; cursor: pointer; }
+.quiz-btn:hover { border-color: var(--accent); color: var(--accent); }
+.quiz-backdrop { position: fixed; z-index: 20; inset: 0; display: grid; place-items: center; background: rgb(0 0 0 / 45%); backdrop-filter: blur(2px); padding: 20px; }
+.quiz-dialog { width: min(520px, 92vw); max-height: 85vh; overflow: auto; padding: 28px; border-radius: 8px; background: var(--paper); border: 1px solid var(--line); box-shadow: 0 25px 80px rgb(0 0 0 / 30%); animation: fade-in 0.25s ease-out; }
+.quiz-close { position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: transparent; color: var(--muted); font-size: 20px; cursor: pointer; }
+.quiz-close:hover { color: var(--ink); }
+.quiz-progress { margin-bottom: 16px; font-size: 12px; color: var(--muted); }
+.quiz-question { font-size: 16px; margin: 0 0 14px; color: var(--ink); }
+.quiz-options { list-style: none; padding: 0; margin: 0 0 16px; display: grid; gap: 8px; }
+.quiz-option { width: 100%; padding: 10px 14px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); text-align: left; cursor: pointer; font-size: 14px; }
+.quiz-option:hover { border-color: var(--accent); }
+.quiz-option:disabled { cursor: not-allowed; opacity: 0.7; }
+.quiz-feedback { margin: 10px 0 14px; font-size: 14px; font-weight: 600; }
+.quiz-actions { display: flex; gap: 10px; justify-content: flex-end; }
+.quiz-next, .quiz-retry, .quiz-close-btn { padding: 8px 16px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); color: var(--ink); font-size: 13px; cursor: pointer; }
+.quiz-next:hover, .quiz-retry:hover, .quiz-close-btn:hover { border-color: var(--accent); color: var(--accent); }
+.quiz-result { text-align: center; font-size: 18px; margin-top: 10px; }
+.dark .quiz-backdrop { background: rgb(0 0 0 / 60%); }
+.dark .quiz-option { background: var(--surface); border-color: var(--line); color: var(--ink); }
+
+/* Terminal simulé */
+.terminal-backdrop { position: fixed; z-index: 20; inset: 0; display: grid; place-items: center; background: rgb(0 0 0 / 50%); backdrop-filter: blur(2px); padding: 20px; }
+.terminal-dialog { width: min(700px, 95vw); height: min(600px, 85vh); display: flex; flex-direction: column; border-radius: 8px; background: #0d1117; border: 1px solid #30363d; box-shadow: 0 25px 80px rgb(0 0 0 / 40%); animation: fade-in 0.25s ease-out; }
+.terminal-close { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; display: grid; place-items: center; border: 1px solid #30363d; border-radius: 50%; background: #21262d; color: #c9d1d9; font-size: 20px; cursor: pointer; }
+.terminal-close:hover { background: #30363d; color: #fff; }
+.terminal-dialog h3 { margin: 0 0 10px; padding: 12px 16px; font-size: 14px; color: #c9d1d9; border-bottom: 1px solid #30363d; background: #161b22; }
+.terminal-hint { padding: 8px 16px; font-size: 12px; color: #8b949e; border-bottom: 1px solid #30363d; background: #161b22; }
+.terminal-output { flex: 1; overflow: auto; padding: 16px; font-family: var(--mono); font-size: 13px; color: #c9d1d9; background: #0d1117; }
+.terminal-prompt { display: flex; gap: 6px; align-items: center; }
+.terminal-prompt-user { color: #f9828a; }
+.terminal-prompt-dir { color: #a5d6ff; }
+.terminal-prompt-symbol { color: #ff7b72; }
+.terminal-input { background: transparent; border: none; color: #c9d1d9; font: inherit; outline: none; flex: 1; }
+.terminal-history { white-space: pre-wrap; margin: 2px 0; }
+.terminal-cmd { color: #d2a8ff; }
+.dark .terminal-close { background: #21262d; color: #c9d1d9; }
+
+/* Éditeur Python Pyodide */
+.pyodide-backdrop { position: fixed; z-index: 20; inset: 0; display: grid; place-items: center; background: rgb(0 0 0 / 50%); backdrop-filter: blur(2px); padding: 20px; }
+.pyodide-dialog { width: min(750px, 95vw); height: min(650px, 90vh); display: flex; flex-direction: column; border-radius: 8px; background: #161b22; border: 1px solid #30363d; box-shadow: 0 25px 80px rgb(0 0 0 / 40%); animation: fade-in 0.25s ease-out; }
+.pyodide-close { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; display: grid; place-items: center; border: 1px solid #30363d; border-radius: 50%; background: #21262d; color: #c9d1d9; font-size: 20px; cursor: pointer; }
+.pyodide-close:hover { background: #30363d; color: #fff; }
+.pyodide-dialog h3 { margin: 0 0 12px; padding: 12px 16px; font-size: 15px; color: #c9d1d9; border-bottom: 1px solid #30363d; }
+.pyodide-toolbar { display: flex; gap: 8px; padding: 10px 16px; border-bottom: 1px solid #30363d; align-items: center; }
+.pyodide-btn { padding: 6px 14px; border: 1px solid #30363d; border-radius: 4px; background: #21262d; color: #c9d1d9; font-size: 13px; cursor: pointer; font-family: inherit; }
+.pyodide-btn:hover { border-color: #58a6ff; color: #fff; }
+.pyodide-btn.pyodide-run { border-color: #3fb950; color: #3fb950; }
+.pyodide-btn.pyodide-run:hover { background: #3fb950; color: #fff; }
+.pyodide-status { margin-left: auto; font-size: 12px; color: #8b949e; }
+.pyodide-editor { flex: 1; font-family: var(--mono); font-size: 14px; padding: 16px; resize: vertical; border: 1px solid #30363d; border-top: none; background: #0d1117; color: #c9d1d9; outline: none; }
+.pyodide-editor::placeholder { color: #8b949e; }
+.pyodide-output { padding: 16px; font-family: var(--mono); font-size: 13px; color: #c9d1d9; background: #0d1117; overflow: auto; border-top: 1px solid #30363d; }
+.dark .pyodide-close { background: #21262d; color: #c9d1d9; }
+

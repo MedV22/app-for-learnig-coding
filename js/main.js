@@ -22,6 +22,12 @@
       update();
     });
   });
+  document.querySelectorAll(".terminal-toggle").forEach((button) => {
+    button.addEventListener("click", () => { window.LearnHubTerminal?.open(); });
+  });
+  document.querySelectorAll(".python-toggle").forEach((button) => {
+    button.addEventListener("click", () => { window.LearnHubPyodide?.open(); });
+  });
   document.querySelectorAll(".language-switch").forEach((select) => {
     select.value = savedLanguage;
     select.addEventListener("change", () => {

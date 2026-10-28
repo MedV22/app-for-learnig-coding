@@ -43,6 +43,10 @@
     try { return new Set(JSON.parse(localStorage.getItem(`learnhub-learned-${key}`) || "[]")); }
     catch { return new Set(); }
   };
+  const readFavorites = (key) => {
+    try { return new Set(JSON.parse(localStorage.getItem(`learnhub-favorites-${key}`) || "[]")); }
+    catch { return new Set(); }
+  };
   const setActiveTab = () => tabs.forEach((tab) => {
     const active = tab.dataset.language === activeKey;
     tab.classList.toggle("active", active);
@@ -53,6 +57,7 @@
   function render() {
     const course = data[activeKey];
     const learned = readLearned(activeKey);
+    const favorites = readFavorites(activeKey);
     const allItems = course.flatMap((section) => section.items.map((item) => ({ ...item, categorie: section.categorie })));
     const query = search.value.trim().toLocaleLowerCase();
     const selectedLevel = level.value;
@@ -71,12 +76,19 @@
         const openLabel = language === "ar" ? "افتح شرح" : language === "en" ? "Open lesson for" : "Ouvrir la fiche";
         const learnedLabel = language === "ar" ? ", تم تعلمه" : language === "en" ? ", learned" : ", notion apprise";
         const checkLabel = language === "ar" ? "تم تعلمه" : language === "en" ? "Learned" : "Apprise";
+        const favLabel = language === "ar" ? "إضافة للمفضلات" : language === "en" ? "Add to favorites" : "Ajouter aux favoris";
+        const favLabelRemove = language === "ar" ? "إزالة من المفضلات" : language === "en" ? "Remove from favorites" : "Retirer des favoris";
         const displayName = window.LearnHubI18n.itemName(item.nom);
-        return `<button class="concept-card${learned.has(id) ? " is-learned" : ""}" type="button" data-id="${id}" data-category="${section.categorie}" data-name="${item.nom}" aria-label="${openLabel} ${displayName}${learned.has(id) ? learnedLabel : ""}"><span class="concept-name">${displayName}</span><span class="concept-bottom"><span class="level-badge">${window.LearnHubI18n.level(item.niveau)}</span>${learned.has(id) ? `<span class="learned-mark" aria-label="${checkLabel}">✓</span>` : ""}</span></button>`;
+        const isFav = favorites.has(id);
+        return `<button class="concept-card${learned.has(id) ? " is-learned" : ""}" type="button" data-id="${id}" data-category="${section.categorie}" data-name="${item.nom}" aria-label="${openLabel} ${displayName}${learned.has(id) ? learnedLabel : ""}"><span class="concept-name">${displayName}</span><span class="concept-bottom"><span class="level-badge">${window.LearnHubI18n.level(item.niveau)}</span>${learned.has(id) ? `<span class="learned-mark" aria-label="${checkLabel}">✓</span>` : ""}</span><span class="favorite-btn${isFav ? " is-favorite" : ""}" data-id="${id}" aria-label="${isFav ? favLabelRemove : favLabel}">${isFav ? "★" : "☆"}</span></button>`;
       }).join("");
       const language = window.LearnHubI18n.language();
       const countLabel = language === "ar" ? "مفهوم" : language === "en" ? "concepts" : `notion${section.items.length > 1 ? "s" : ""}`;
-      return `<section class="category-section" id="${activeKey}-${slug(section.categorie)}"><div class="section-heading"><h2>${window.LearnHubI18n.category(section.categorie)}</h2><span>${section.items.length} ${countLabel}</span></div><div class="cards-grid">${cards}</div></section>`;
+      const sectionIds = section.items.map((item) => idFor(activeKey, section.categorie, item));
+      const sectionComplete = sectionIds.length > 0 && sectionIds.every((id) => learned.has(id));
+      const completeLabel = language === "ar" ? "مكتمل" : language === "en" ? "Completed" : "Complété";
+      const quizLabel = language === "ar" ? "اختبار" : language === "en" ? "Quiz" : "Quiz";
+      return `<section class="category-section" id="${activeKey}-${slug(section.categorie)}"><div class="section-heading"><h2>${window.LearnHubI18n.category(section.categorie)}</h2><span>${section.items.length} ${countLabel}</span>${sectionComplete ? `<span class="badge badge-gold fade-in"><span class="badge-icon">🏆</span>${completeLabel}</span>` : ""}<button class="quiz-btn" type="button" data-category="${section.categorie}" aria-label="${quizLabel}">${quizLabel}</button></div><div class="cards-grid">${cards}</div></section>`;
     }).join("") : `<p class="empty-state">${window.LearnHubI18n.get("noResults")}</p>`;
     nav.querySelectorAll("a").forEach((link) => {
       link.hidden = !sectionsVisible.some((section) => `#${activeKey}-${slug(section.categorie)}` === link.getAttribute("href"));
@@ -92,7 +104,28 @@
           localStorage.setItem(`learnhub-learned-${activeKey}`, JSON.stringify([...updated]));
           render();
           return updated.has(id);
-        });
+        }, activeKey, id);
+      });
+    });
+    sections.querySelectorAll(".favorite-btn").forEach((btn) => {
+      btn.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const id = btn.dataset.id;
+        const updated = new Set(favorites);
+        if (updated.has(id)) updated.delete(id); else updated.add(id);
+        localStorage.setItem(`learnhub-favorites-${activeKey}`, JSON.stringify([...updated]));
+        btn.classList.toggle("is-favorite", updated.has(id));
+        btn.textContent = updated.has(id) ? "★" : "☆";
+      });
+    });
+    sections.querySelectorAll(".quiz-btn").forEach((btn) => {
+      btn.addEventListener("click", (event) => {
+        event.stopPropagation();
+        if (window.LearnHubQuiz) {
+          window.LearnHubQuiz.open(page === "web" ? "web" : activeKey, null, window.LearnHubI18n.language());
+        } else {
+          alert("Le module Quiz est encore en chargement. Rafraîchis la page et réessaie.");
+        }
       });
     });
     updateProgress(allItems, learned, activeKey);
