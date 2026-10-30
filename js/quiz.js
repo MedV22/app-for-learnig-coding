@@ -204,7 +204,19 @@
         </section>
       </div>`;
 
-    const closeModal = () => container.remove();
+    const previousFocus = document.activeElement;
+    const closeModal = () => {
+      container.remove();
+      previousFocus?.focus();
+    };
+    container.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") { event.stopPropagation(); closeModal(); return; }
+      if (event.key !== "Tab") return;
+      const dialog = container.querySelector(".quiz-dialog");
+      const focusable = [...dialog.querySelectorAll("button:not(:disabled), a[href], input, textarea, select")].filter((element) => element.offsetParent !== null);
+      if (event.shiftKey && (document.activeElement === focusable[0] || document.activeElement === dialog)) { event.preventDefault(); focusable.at(-1).focus(); }
+      else if (!event.shiftKey && (document.activeElement === focusable.at(-1) || document.activeElement === dialog)) { event.preventDefault(); focusable[0].focus(); }
+    });
     container.querySelector(".quiz-close").addEventListener("click", closeModal);
     container.querySelector(".quiz-close-btn").addEventListener("click", closeModal);
     container.querySelector(".quiz-backdrop").addEventListener("click", (e) => { if (e.target === container.querySelector(".quiz-backdrop")) closeModal(); });

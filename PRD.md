@@ -22,7 +22,7 @@ Principe clé : **chaque élément est cliquable**. Quand l'utilisateur clique s
 - Regrouper tous les concepts importants de Python et de Kali Linux dans un seul site.
 - Expliquer chaque notion en langage simple (niveau débutant).
 - Permettre une navigation rapide (menu, recherche, filtres).
-- Fonctionner sans serveur ni base de données (site statique, ouvrable avec `index.html`).
+- Fonctionner sans backend ni base de données. Pour le service worker et l’installation PWA, le site doit être servi depuis `localhost` ou une origine HTTPS.
 - Être utilisable sur téléphone et ordinateur.
 
 ### Hors périmètre (version 1)
@@ -224,7 +224,7 @@ Le contenu est **généré dynamiquement en JavaScript** à partir de ces donné
 
 ## 9. Critères d'acceptation
 
-- [ ] Le site s'ouvre en double-cliquant sur `index.html`.
+- [ ] Le site s'ouvre depuis `localhost` ou une origine HTTPS.
 - [ ] Les sections Python et Kali contiennent toutes les catégories listées.
 - [ ] Cliquer sur n'importe quelle carte ouvre la modale avec « À quoi ça sert ».
 - [ ] La recherche filtre les cartes en temps réel.
@@ -250,14 +250,12 @@ Le contenu est **généré dynamiquement en JavaScript** à partir de ces donné
 
 ---
 
-## 11. Évolutions futures (V2)
+## 11. Évolutions futures
 
-- Quiz interactifs et badges
-- Éditeur Python en ligne (Pyodide)
-- Terminal Linux simulé dans le navigateur
-- Parcours guidés (« Python en 30 jours », « Kali pour débutant »)
-- Traduction anglais / arabe
-- Contributions de la communauté (ajout de notions via GitHub)
+- Exercices avec correction et parcours guidés (« Python en 30 jours », « Kali pour débutant »).
+- Essais manuels sur les navigateurs, les lecteurs d'écran et les téléphones réels.
+- Étudier la mise en cache hors ligne du runtime Pyodide, actuellement chargé depuis un CDN.
+- Contributions de la communauté (ajout de notions via GitHub).
 
 ---
 

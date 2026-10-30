@@ -80,7 +80,7 @@
         const favLabelRemove = language === "ar" ? "إزالة من المفضلات" : language === "en" ? "Remove from favorites" : "Retirer des favoris";
         const displayName = window.LearnHubI18n.itemName(item.nom);
         const isFav = favorites.has(id);
-        return `<button class="concept-card${learned.has(id) ? " is-learned" : ""}" type="button" data-id="${id}" data-category="${section.categorie}" data-name="${item.nom}" aria-label="${openLabel} ${displayName}${learned.has(id) ? learnedLabel : ""}"><span class="concept-name">${displayName}</span><span class="concept-bottom"><span class="level-badge">${window.LearnHubI18n.level(item.niveau)}</span>${learned.has(id) ? `<span class="learned-mark" aria-label="${checkLabel}">✓</span>` : ""}</span><span class="favorite-btn${isFav ? " is-favorite" : ""}" data-id="${id}" aria-label="${isFav ? favLabelRemove : favLabel}">${isFav ? "★" : "☆"}</span></button>`;
+        return `<article class="concept-card${learned.has(id) ? " is-learned" : ""}"><button class="concept-open" type="button" data-id="${id}" data-category="${section.categorie}" data-name="${item.nom}" aria-label="${openLabel} ${displayName}${learned.has(id) ? learnedLabel : ""}"><span class="concept-name">${displayName}</span><span class="concept-bottom"><span class="level-badge">${window.LearnHubI18n.level(item.niveau)}</span>${learned.has(id) ? `<span class="learned-mark" aria-label="${checkLabel}">✓</span>` : ""}</span></button><button class="favorite-btn${isFav ? " is-favorite" : ""}" type="button" data-id="${id}" aria-label="${isFav ? favLabelRemove : favLabel}">${isFav ? "★" : "☆"}</button></article>`;
       }).join("");
       const language = window.LearnHubI18n.language();
       const countLabel = language === "ar" ? "مفهوم" : language === "en" ? "concepts" : `notion${section.items.length > 1 ? "s" : ""}`;
@@ -93,7 +93,7 @@
     nav.querySelectorAll("a").forEach((link) => {
       link.hidden = !sectionsVisible.some((section) => `#${activeKey}-${slug(section.categorie)}` === link.getAttribute("href"));
     });
-    sections.querySelectorAll(".concept-card").forEach((card) => {
+    sections.querySelectorAll(".concept-open").forEach((card) => {
       card.addEventListener("click", () => {
         const item = allItems.find((entry) => entry.nom === card.dataset.name && entry.categorie === card.dataset.category);
         const id = card.dataset.id;
@@ -116,6 +116,7 @@
         localStorage.setItem(`learnhub-favorites-${activeKey}`, JSON.stringify([...updated]));
         btn.classList.toggle("is-favorite", updated.has(id));
         btn.textContent = updated.has(id) ? "★" : "☆";
+        btn.setAttribute("aria-label", updated.has(id) ? favLabelRemove : favLabel);
       });
     });
     sections.querySelectorAll(".quiz-btn").forEach((btn) => {
@@ -141,17 +142,31 @@
     });
     document.querySelectorAll(".progress-track").forEach((track) => {
       track.setAttribute("aria-valuenow", String(percent));
+      const language = window.LearnHubI18n.language();
+      track.setAttribute("aria-label", language === "ar" ? "التقدم في التعلم" : language === "en" ? "Learning progress" : "Progression d’apprentissage");
+      track.setAttribute("aria-valuetext", language === "ar" ? `${count} من ${items.length}` : language === "en" ? `${count} of ${items.length} concepts learned` : `${count} sur ${items.length} notions apprises`);
       track.querySelector("span").style.width = `${percent}%`;
     });
   }
 
-  tabs.forEach((tab) => tab.addEventListener("click", () => {
+  const activateTab = (tab) => {
     activeKey = tab.dataset.language;
     const url = new URL(location.href);
     url.searchParams.set("lang", activeKey);
     history.replaceState(null, "", url);
     render();
-  }));
+  };
+  tabs.forEach((tab, index) => {
+    tab.addEventListener("click", () => activateTab(tab));
+    tab.addEventListener("keydown", (event) => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      const direction = window.LearnHubI18n.isArabic() ? -1 : 1;
+      const nextIndex = event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : (index + (event.key === "ArrowRight" ? direction : -direction) + tabs.length) % tabs.length;
+      tabs[nextIndex].focus();
+      activateTab(tabs[nextIndex]);
+    });
+  });
   search.addEventListener("input", render);
   level.addEventListener("change", render);
   window.addEventListener("learnhublanguagechange", render);

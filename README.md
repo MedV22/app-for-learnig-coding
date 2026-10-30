@@ -31,10 +31,15 @@ Un site web simple et gratuit pour apprendre **Python** et **Kali Linux** au mê
 
 ## 🚀 Utilisation
 
-Aucune installation nécessaire.
+Aucune installation de dépendances n’est nécessaire. Lance le site avec un serveur local (nécessaire pour le service worker et l’installation PWA) :
 
-1. Ouvre `index.html` directement dans ton navigateur.
-2. Ou double-clique sur le fichier.
+```bash
+python -m http.server 8000
+```
+
+Puis ouvre `http://localhost:8000` dans ton navigateur. Le site est aussi disponible sur GitHub Pages en HTTPS.
+
+Le site peut mettre ses pages en cache après une première visite en ligne. L’éditeur Python charge Pyodide depuis un CDN et nécessite une connexion la première fois ; son runtime n’est pas inclus dans le cache hors ligne.
 
 ---
 
@@ -92,13 +97,11 @@ Toute utilisation illégale est interdite et relève de la seule responsabilité
 
 ---
 
-## 🗺️ Roadmap
+## 🗺️ À améliorer ensuite
 
-- [ ] Quiz interactifs et badges
-- [ ] Éditeur Python en ligne (Pyodide)
-- [ ] Terminal Linux simulé
-- [ ] Parcours guidés (« Python en 30 jours »)
-- [ ] Traduction en anglais et en arabe
+- [ ] Ajouter des exercices avec correction et des parcours guidés.
+- [ ] Compléter les essais sur les navigateurs et téléphones réels.
+- [ ] Étudier un mode hors ligne pour l’éditeur Python (Pyodide).
 
 ---
 

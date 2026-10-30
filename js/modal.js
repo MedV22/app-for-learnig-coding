@@ -2,16 +2,30 @@
   const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
   const modalId = "concept-modal";
   let previousFocus = null;
+  let previousFocusId = null;
 
   function close() {
     document.querySelector(".modal-backdrop")?.remove();
     document.removeEventListener("keydown", onKeydown);
-    previousFocus?.focus();
+    const restoredFocus = previousFocus?.isConnected ? previousFocus : previousFocusId ? document.querySelector(`.concept-open[data-id="${previousFocusId}"]`) : null;
+    restoredFocus?.focus();
+    previousFocusId = null;
   }
-  function onKeydown(event) { if (event.key === "Escape") close(); }
+  function onKeydown(event) {
+    if (event.key === "Escape") { close(); return; }
+    if (event.key !== "Tab") return;
+    const dialog = document.querySelector(".detail-modal");
+    if (!dialog) return;
+    const focusable = [...dialog.querySelectorAll("button:not(:disabled), a[href], input, textarea, select, [tabindex]:not([tabindex='-1'])")];
+    const first = focusable[0];
+    const last = focusable.at(-1);
+    if (event.shiftKey && (document.activeElement === first || document.activeElement === dialog)) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && (document.activeElement === last || document.activeElement === dialog)) { event.preventDefault(); first.focus(); }
+  }
   function open(item, category, learned, onToggle, key, id) {
     close();
     previousFocus = document.activeElement;
+    previousFocusId = id || null;
     const language = window.LearnHubI18n.language();
     const arabic = language === "ar";
     const english = language === "en";
@@ -69,6 +83,7 @@
         localStorage.setItem(`learnhub-favorites-${key}`, JSON.stringify(now));
         favBtn.classList.toggle("is-favorite", !stored.has(id));
         favBtn.textContent = stored.has(id) ? "☆" : "★";
+        favBtn.setAttribute("aria-label", stored.has(id) ? favLabelAdd : favLabel);
       } catch {}
     });
     document.body.append(backdrop);
