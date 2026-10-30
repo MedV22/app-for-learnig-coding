@@ -1,0 +1,14 @@
+{
+  "name": "LearnHub",
+  "short_name": "LearnHub",
+  "description": "Application d'apprentissage de Python, du web et de Kali Linux.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f3f0e8",
+  "theme_color": "#315b49",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" },
+    { "src": "favicon.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
