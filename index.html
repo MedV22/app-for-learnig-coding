@@ -1,19 +1,183 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f5f7fb"><meta name="description" content="Apprends Python et découvre Kali Linux grâce à des fiches simples et interactives."><link rel="manifest" href="manifest.json">
-  <title>Learn Hub — Apprendre, comprendre, pratiquer</title><link rel="stylesheet" href="css/style.css"><link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <script src="js/data.js" defer></script><script src="js/i18n.js" defer></script><script src="js/main.js" defer></script><script src="js/app.js" defer></script><script src="js/quiz.js" defer></script><script src="js/terminal.js" defer></script><script src="js/pypod.js" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f46e5">
+  <meta name="description" content="Plateforme moderne et interactive pour apprendre Python, Kali Linux et le développement Web avec fiches cliquables, quiz et terminal simulé.">
+  <link rel="manifest" href="manifest.json">
+  <title>Learn Hub — Apprendre, comprendre, pratiquer</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+  <script src="js/data.js" defer></script>
+  <script src="js/i18n.js" defer></script>
+  <script src="js/modal.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/app.js" defer></script>
+  <script src="js/quiz.js" defer></script>
+  <script src="js/terminal.js" defer></script>
+  <script src="js/pypod.js" defer></script>
 </head>
 <body data-page="home">
-  <header class="topbar"><a class="brand" href="index.html"><span class="brand-mark">&lt;/&gt;</span> Learn<span>Hub</span></a><nav aria-label="Navigation principale"><a class="active" href="index.html">Accueil</a><a href="web.html">HTML · CSS · JS</a><a href="python.html">Python</a><a href="kali.html">Kali Linux</a></nav><select class="language-switch" aria-label="Choisir la langue du site"><option value="fr">Français</option><option value="ar">العربية</option><option value="en">English</option></select><button class="theme-toggle" type="button" aria-label="Activer le thème sombre">☾</button><button class="terminal-toggle" type="button" aria-label="Ouvrir le terminal simulé">⬢</button><button class="python-toggle" type="button" aria-label="Ouvrir l'éditeur Python en ligne">🐍</button></header>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">&lt;/&gt;</span> Learn<span>Hub</span>
+    </a>
+    <nav aria-label="Navigation principale">
+      <a class="active" href="index.html">Accueil</a>
+      <a href="web.html">HTML · CSS · JS</a>
+      <a href="python.html">Python</a>
+      <a href="kali.html">Kali Linux</a>
+    </nav>
+    <div class="header-actions">
+      <button class="btn-pill terminal-toggle" type="button" aria-label="Ouvrir le terminal simulé" title="Terminal Linux (Alt+T)">
+        <span class="btn-icon">🐧</span><span class="btn-label">Terminal</span><kbd class="btn-kbd">Alt+T</kbd>
+      </button>
+      <button class="btn-pill python-toggle" type="button" aria-label="Ouvrir l'éditeur Python en ligne" title="Éditeur Python (Alt+P)">
+        <span class="btn-icon">🐍</span><span class="btn-label">Python Lab</span><kbd class="btn-kbd">Alt+P</kbd>
+      </button>
+      <select class="language-switch" aria-label="Choisir la langue du site">
+        <option value="fr">Français</option>
+        <option value="ar">العربية</option>
+        <option value="en">English</option>
+      </select>
+      <button class="theme-toggle" type="button" aria-label="Activer le thème sombre" title="Changer de thème">
+        <span class="theme-icon">☾</span>
+      </button>
+    </div>
+  </header>
+
   <main class="home-main">
-    <section class="hero"><p class="eyebrow">APPRENDRE À TON RYTHME</p><h1>Comprendre le code.<br><span>Explorer la sécurité.</span></h1><p class="hero-copy">Des explications claires, des exemples concrets et les bases pour progresser en Python et en cybersécurité.</p>
-      <form class="search home-search" role="search"><label class="sr-only" for="global-search">Rechercher une notion</label><span aria-hidden="true">⌕</span><input id="global-search" type="search" placeholder="Chercher une notion, une commande…"><button type="submit">Rechercher</button></form><div class="search-results" aria-live="polite"></div>
+    <section class="hero">
+      <div class="hero-pill-badge">✨ Plateforme d'apprentissage interactive & open-source</div>
+      <h1>Comprendre le code.<br><span>Explorer la cybersécurité.</span></h1>
+      <p class="hero-copy">Des fiches claires, des exemples interactifs et un environnement complet pour apprendre Python, Kali Linux et le Web à ton rythme.</p>
+      
+      <div class="home-search-wrap">
+        <form class="home-search" role="search">
+          <label class="sr-only" for="global-search">Rechercher une notion</label>
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input id="global-search" type="search" placeholder="Chercher une notion, une commande (ex: print, nmap, flexbox)..." autocomplete="off">
+          <kbd class="search-kbd-hint">/</kbd>
+          <button type="submit">Rechercher</button>
+        </form>
+        <div class="search-results" aria-live="polite"></div>
+      </div>
+
+      <div class="search-quick-tags">
+        <span>Suggestions populaires :</span>
+        <button type="button" class="search-tag" onclick="document.querySelector('#global-search').value='print'; document.querySelector('#global-search').dispatchEvent(new Event('input'));">print()</button>
+        <button type="button" class="search-tag" onclick="document.querySelector('#global-search').value='nmap'; document.querySelector('#global-search').dispatchEvent(new Event('input'));">nmap</button>
+        <button type="button" class="search-tag" onclick="document.querySelector('#global-search').value='boucles'; document.querySelector('#global-search').dispatchEvent(new Event('input'));">boucles</button>
+        <button type="button" class="search-tag" onclick="document.querySelector('#global-search').value='flexbox'; document.querySelector('#global-search').dispatchEvent(new Event('input'));">flexbox</button>
+        <button type="button" class="search-tag" onclick="document.querySelector('#global-search').value='chmod'; document.querySelector('#global-search').dispatchEvent(new Event('input'));">chmod</button>
+      </div>
     </section>
-    <section class="learning-paths" aria-label="Choisir un parcours"><a class="path-card web-path" href="web.html"><div class="path-icon" aria-hidden="true">&lt;/&gt;</div><p class="eyebrow">CRÉATION WEB</p><h2>HTML, CSS &amp; JavaScript</h2><p>Apprends à construire une page, la mettre en forme et lui ajouter des interactions.</p><span class="path-link">Explorer le web <b>→</b></span></a><a class="path-card python-path" href="python.html"><div class="path-icon" aria-hidden="true">Py</div><p class="eyebrow">PROGRAMMATION</p><h2>Apprendre Python</h2><p>Des premières variables aux fonctions, fichiers et mini-projets.</p><span class="path-link">Explorer Python <b>→</b></span></a><a class="path-card kali-path" href="kali.html"><div class="path-icon" aria-hidden="true">⌘</div><p class="eyebrow">CYBERSÉCURITÉ</p><h2>Découvrir Kali Linux</h2><p>Commandes Linux, réseau et outils de sécurité en environnement autorisé.</p><span class="path-link">Explorer Kali Linux <b>→</b></span></a></section>
-    <section class="home-note"><span>✦</span><p><strong>Un concept à la fois.</strong> Ouvre une fiche pour comprendre à quoi sert chaque notion, voir un exemple et marquer tes acquis.</p></section>
+
+    <section class="feature-highlights" aria-label="Points forts">
+      <div class="feature-pill">
+        <span class="feature-pill-icon">📚</span>
+        <div class="feature-pill-text">
+          <strong>200+ Fiches interactives</strong>
+          <span>Explications, syntaxe & exemples</span>
+        </div>
+      </div>
+      <div class="feature-pill">
+        <span class="feature-pill-icon">🐧</span>
+        <div class="feature-pill-text">
+          <strong>Terminal Kali simulé</strong>
+          <span>Pratique en ligne sans installation</span>
+        </div>
+      </div>
+      <div class="feature-pill">
+        <span class="feature-pill-icon">🐍</span>
+        <div class="feature-pill-text">
+          <strong>Éditeur Python réel</strong>
+          <span>Exécution de code dans le navigateur</span>
+        </div>
+      </div>
+      <div class="feature-pill">
+        <span class="feature-pill-icon">⚡</span>
+        <div class="feature-pill-text">
+          <strong>100% Hors-ligne & PWA</strong>
+          <span>Progression sauvegardée en local</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="learning-paths" aria-label="Choisir un parcours">
+      <a class="path-card web-path" href="web.html">
+        <div class="path-card-top">
+          <div class="path-icon" aria-hidden="true">&lt;/&gt;</div>
+          <span class="path-level-tag">50+ notions</span>
+        </div>
+        <p class="eyebrow">CRÉATION WEB</p>
+        <h2>HTML, CSS &amp; JavaScript</h2>
+        <p>Apprends à construire une page structurée, à la styliser avec modernité et à lui donner vie avec JavaScript.</p>
+        <div class="path-topics-list">
+          <span class="path-topic-badge">HTML5</span>
+          <span class="path-topic-badge">Flexbox</span>
+          <span class="path-topic-badge">Grid</span>
+          <span class="path-topic-badge">DOM JS</span>
+          <span class="path-topic-badge">Async / Await</span>
+        </div>
+        <span class="path-link">Explorer le parcours Web <b>→</b></span>
+      </a>
+
+      <a class="path-card python-path" href="python.html">
+        <div class="path-card-top">
+          <div class="path-icon" aria-hidden="true">Py</div>
+          <span class="path-level-tag">70+ notions</span>
+        </div>
+        <p class="eyebrow">PROGRAMMATION</p>
+        <h2>Apprendre Python</h2>
+        <p>Des bases fondamentales aux boucles, fonctions, POO, scripts d'automatisation et mini-projets pratiques.</p>
+        <div class="path-topics-list">
+          <span class="path-topic-badge">Variables</span>
+          <span class="path-topic-badge">Fonctions</span>
+          <span class="path-topic-badge">POO</span>
+          <span class="path-topic-badge">Fichiers</span>
+          <span class="path-topic-badge">Sécurité</span>
+        </div>
+        <span class="path-link">Explorer Python <b>→</b></span>
+      </a>
+
+      <a class="path-card kali-path" href="kali.html">
+        <div class="path-card-top">
+          <div class="path-icon" aria-hidden="true">⌘</div>
+          <span class="path-level-tag">80+ outils & cmds</span>
+        </div>
+        <p class="eyebrow">CYBERSÉCURITÉ</p>
+        <h2>Découvrir Kali Linux</h2>
+        <p>Commandes Linux essentielles, réseaux, reconnaissance et outils de test de pénétration en cadre légal.</p>
+        <div class="path-topics-list">
+          <span class="path-topic-badge">Bash</span>
+          <span class="path-topic-badge">Nmap</span>
+          <span class="path-topic-badge">Wireshark</span>
+          <span class="path-topic-badge">Burp Suite</span>
+          <span class="path-topic-badge">Labs</span>
+        </div>
+        <span class="path-link">Explorer Kali Linux <b>→</b></span>
+      </a>
+    </section>
+
+    <section class="home-note">
+      <span>✦</span>
+      <p><strong>Un concept à la fois.</strong> Clique sur n'importe quelle carte pour ouvrir sa fiche détaillée, copier sa syntaxe, comprendre son utilité et marquer tes acquis.</p>
+    </section>
   </main>
-  <footer class="site-footer"><a class="brand" href="index.html"><span class="brand-mark">&lt;/&gt;</span> Learn<span>Hub</span></a><p>Apprendre avec curiosité, pratiquer avec responsabilité.</p></footer>
-</body></html>
+
+  <footer class="site-footer">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">&lt;/&gt;</span> Learn<span>Hub</span>
+    </a>
+    <p>Apprendre avec curiosité, pratiquer avec responsabilité · Fait avec passion.</p>
+  </footer>
+</body>
+</html>

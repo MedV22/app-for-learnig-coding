@@ -6,6 +6,37 @@
 
   if (savedTheme === "dark") root.classList.add("dark");
 
+  const slug = (value) => {
+    if (!value) return "notion";
+    const map = {
+      "+": "plus",
+      "-": "minus",
+      "*": "mult",
+      "/": "div",
+      "%": "mod",
+      "=": "eq",
+      "<": "lt",
+      ">": "gt",
+      "&": "and",
+      "|": "pipe",
+      "#": "hash",
+      ":": "colon",
+      ".": "dot",
+      "$": "dollar",
+      "@": "at"
+    };
+    let s = String(value);
+    for (const [char, rep] of Object.entries(map)) {
+      s = s.split(char).join("-" + rep + "-");
+    }
+    s = s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    return s || "notion";
+  };
+
+  const legacySlug = (value) => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+  window.LearnHubUtils = { slug, legacySlug };
+
   const getLanguage = () => window.LearnHubI18n?.language?.() || savedLanguage || "fr";
 
   const insertInstallButton = () => {
@@ -15,7 +46,7 @@
     installButton.type = "button";
     installButton.className = "install-button";
     installButton.hidden = true;
-    installButton.textContent = "Installer";
+    installButton.innerHTML = `<span class="install-icon">📥</span> <span class="install-text">Installer</span>`;
     installButton.setAttribute("aria-label", "Installer l'application");
     header.appendChild(installButton);
     return installButton;
@@ -27,10 +58,11 @@
     const language = getLanguage();
     const labels = {
       ar: "تثبيت التطبيق",
-      en: "Install app",
+      en: "Install App",
       fr: "Installer l'application"
     };
-    installButton.textContent = labels[language] || labels.fr;
+    const textEl = installButton.querySelector(".install-text");
+    if (textEl) textEl.textContent = labels[language] || labels.fr;
     installButton.setAttribute("aria-label", labels[language] || labels.fr);
   };
 
@@ -60,8 +92,6 @@
     if (installButton) installButton.hidden = true;
   });
 
-  const slug = (value) => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-
   const getCourseKey = () => {
     if (page === "web") return document.querySelector(".language-tab.active")?.dataset.language || "html";
     if (page && page !== "home") return page;
@@ -70,42 +100,56 @@
 
   const continueLesson = () => {
     const courseKey = getCourseKey();
-    // data.js declares `data` as a global lexical binding, not window.data.
-    const course = typeof data === "undefined" ? null : data[courseKey];
+    const course = typeof window.data !== "undefined" ? window.data[courseKey] : (typeof data !== "undefined" ? data[courseKey] : null);
     if (!courseKey || !course || !window.LearnHubModal || !window.LearnHubI18n) return;
 
     const learned = new Set(JSON.parse(localStorage.getItem(`learnhub-learned-${courseKey}`) || "[]"));
+
+    // Find first unlearned item
     for (const section of course) {
       for (const item of section.items) {
         const id = `${courseKey}-${slug(section.categorie)}-${slug(item.nom)}`;
-        if (learned.has(id)) continue;
+        const legId = `${courseKey}-${legacySlug(section.categorie)}-${legacySlug(item.nom)}`;
+        if (learned.has(id) || learned.has(legId)) continue;
 
-        const localizedItem = {
-          ...item,
-          nom: window.LearnHubI18n.itemName(item.nom),
-          utilite: window.LearnHubI18n.content(item, "utilite", courseKey, section.categorie),
-          exemple: window.LearnHubI18n.content(item, "exemple", courseKey, section.categorie),
-          attention: window.LearnHubI18n.content(item, "attention", courseKey, section.categorie)
-        };
-
-        window.LearnHubModal.open(localizedItem, section.categorie, false, () => {
-          const updated = new Set(JSON.parse(localStorage.getItem(`learnhub-learned-${courseKey}`) || "[]"));
-          const isLearned = updated.has(id);
-          if (isLearned) updated.delete(id); else updated.add(id);
-          localStorage.setItem(`learnhub-learned-${courseKey}`, JSON.stringify([...updated]));
-          window.dispatchEvent(new Event("learnhublanguagechange"));
-          return !isLearned;
-        }, courseKey, id);
+        // Found unlearned item!
+        const cardBtn = document.querySelector(`.concept-open[data-name="${CSS.escape(item.nom)}"][data-category="${CSS.escape(section.categorie)}"]`);
+        if (cardBtn) {
+          cardBtn.scrollIntoView({ behavior: "smooth", block: "center" });
+          cardBtn.click();
+        }
         return;
       }
+    }
+
+    // All items learned! Celebrate and offer quiz!
+    const lang = getLanguage();
+    const messages = {
+      ar: "🎉 مبروك! لقد أكملت جميع المفاهيم في هذا المسار بنجاح. هل ترغب في خوض الاختبار الشامل لاختبار معلوماتك؟",
+      en: "🎉 Congratulations! You have mastered all concepts in this course. Would you like to take the Challenge Quiz?",
+      fr: "🎉 Bravo ! Tu as validé toutes les notions de ce parcours. Veux-tu passer le Grand Quiz de validation pour tester tes acquis ?"
+    };
+    if (confirm(messages[lang] || messages.fr)) {
+      window.LearnHubQuiz?.open(page === "web" ? "web" : courseKey, null, lang);
     }
   };
 
   const resetCourseProgress = () => {
     const courseKey = getCourseKey();
     if (!courseKey) return;
-    localStorage.removeItem(`learnhub-learned-${courseKey}`);
-    window.dispatchEvent(new Event("learnhublanguagechange"));
+
+    const lang = getLanguage();
+    const confirmations = {
+      ar: "هل أنت متأكد من رغبتك في إعادة تعيين تقدمك في هذا المسار؟ سيتم مسح المفاهيم المكتملة.",
+      en: "Are you sure you want to reset your progress for this course? This action cannot be undone.",
+      fr: "Es-tu sûr de vouloir réinitialiser ta progression pour ce parcours ? Cette action est irréversible."
+    };
+
+    if (confirm(confirmations[lang] || confirmations.fr)) {
+      localStorage.removeItem(`learnhub-learned-${courseKey}`);
+      window.dispatchEvent(new Event("learnhubstatechange"));
+      window.dispatchEvent(new Event("learnhublanguagechange"));
+    }
   };
 
   const attachProgressActions = () => {
@@ -114,39 +158,47 @@
 
     const language = getLanguage();
     const labels = {
-      ar: { reset: "إعادة تعيين التقدم", continue: "استمرار" },
-      en: { reset: "Reset progress", continue: "Continue" },
-      fr: { reset: "Réinitialiser ma progression", continue: "Continuer" }
+      ar: { reset: "إعادة التعيين", continue: "استمرار التعلم →" },
+      en: { reset: "Reset Progress", continue: "Continue Lesson →" },
+      fr: { reset: "Réinitialiser", continue: "Continuer →" }
     };
     const currentLabels = labels[language] || labels.fr;
 
-    if (!progressWrap.querySelector(".reset-progress")) {
-      const resetButton = document.createElement("button");
-      resetButton.type = "button";
-      resetButton.className = "reset-progress";
-      resetButton.textContent = currentLabels.reset;
-      resetButton.addEventListener("click", resetCourseProgress);
-      progressWrap.appendChild(resetButton);
-    } else {
-      progressWrap.querySelector(".reset-progress").textContent = currentLabels.reset;
+    let actionsGroup = progressWrap.querySelector(".progress-actions-group");
+    if (!actionsGroup) {
+      actionsGroup = document.createElement("div");
+      actionsGroup.className = "progress-actions-group";
+      progressWrap.appendChild(actionsGroup);
     }
 
-    if (!progressWrap.querySelector(".continue-btn")) {
+    if (!actionsGroup.querySelector(".continue-btn")) {
       const continueButton = document.createElement("button");
       continueButton.type = "button";
       continueButton.className = "continue-btn";
       continueButton.textContent = currentLabels.continue;
       continueButton.addEventListener("click", continueLesson);
-      progressWrap.appendChild(continueButton);
+      actionsGroup.appendChild(continueButton);
     } else {
-      progressWrap.querySelector(".continue-btn").textContent = currentLabels.continue;
+      actionsGroup.querySelector(".continue-btn").textContent = currentLabels.continue;
+    }
+
+    if (!actionsGroup.querySelector(".reset-progress")) {
+      const resetButton = document.createElement("button");
+      resetButton.type = "button";
+      resetButton.className = "reset-progress";
+      resetButton.textContent = currentLabels.reset;
+      resetButton.addEventListener("click", resetCourseProgress);
+      actionsGroup.appendChild(resetButton);
+    } else {
+      actionsGroup.querySelector(".reset-progress").textContent = currentLabels.reset;
     }
   };
 
+  // Theme toggle
   document.querySelectorAll(".theme-toggle").forEach((button) => {
     const update = () => {
       const dark = root.classList.contains("dark");
-      button.textContent = dark ? "☀" : "☾";
+      button.innerHTML = dark ? `<span class="theme-icon">☀</span>` : `<span class="theme-icon">☾</span>`;
       const language = getLanguage();
       const labels = {
         ar: dark ? "تفعيل الوضع الفاتح" : "تفعيل الوضع الداكن",
@@ -154,6 +206,7 @@
         fr: dark ? "Activer le thème clair" : "Activer le thème sombre"
       };
       button.setAttribute("aria-label", labels[language] || labels.fr);
+      button.setAttribute("title", labels[language] || labels.fr);
     };
     update();
     button.addEventListener("click", () => {
@@ -163,27 +216,55 @@
     });
   });
 
+  // Terminal buttons
   document.querySelectorAll(".terminal-toggle").forEach((button) => {
-    button.addEventListener("click", () => { window.LearnHubTerminal?.open(); });
+    button.addEventListener("click", () => {
+      window.LearnHubTerminal?.open();
+    });
   });
 
+  // Python playground buttons
   document.querySelectorAll(".python-toggle").forEach((button) => {
-    button.addEventListener("click", () => { window.LearnHubPyodide?.open(); });
+    button.addEventListener("click", () => {
+      window.LearnHubPyodide?.open();
+    });
   });
 
+  // Language switch
   document.querySelectorAll(".language-switch").forEach((select) => {
     select.value = savedLanguage;
     select.addEventListener("change", () => {
       localStorage.setItem("learnhub-language", select.value);
-      if (select.value === "fr") location.reload();
-      else window.LearnHubI18n?.apply(select.value);
+      window.LearnHubI18n?.apply(select.value);
     });
   });
 
-  if (savedLanguage !== "fr") window.LearnHubI18n?.apply(savedLanguage);
+  // Keyboard global shortcuts
+  document.addEventListener("keydown", (event) => {
+    // Ignore when typing inside input / textarea
+    const tag = event.target.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+
+    if (event.key === "/" && !event.ctrlKey && !event.metaKey) {
+      event.preventDefault();
+      const searchInput = document.querySelector("#global-search, .item-search");
+      searchInput?.focus();
+    } else if (event.altKey && (event.key === "t" || event.key === "T")) {
+      event.preventDefault();
+      window.LearnHubTerminal?.open();
+    } else if (event.altKey && (event.key === "p" || event.key === "P")) {
+      event.preventDefault();
+      window.LearnHubPyodide?.open();
+    }
+  });
+
+  if (savedLanguage !== "fr") {
+    window.LearnHubI18n?.apply(savedLanguage);
+  }
 
   attachProgressActions();
   updateInstallButton();
+
   window.addEventListener("learnhublanguagechange", () => {
     attachProgressActions();
     updateInstallButton();

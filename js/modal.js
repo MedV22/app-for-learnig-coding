@@ -1,94 +1,252 @@
 (() => {
-  const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+  const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  })[char]);
+
   const modalId = "concept-modal";
   let previousFocus = null;
   let previousFocusId = null;
 
   function close() {
-    document.querySelector(".modal-backdrop")?.remove();
+    const backdrop = document.querySelector(".modal-backdrop");
+    if (!backdrop) return;
+    backdrop.classList.add("modal-leaving");
+    window.setTimeout(() => {
+      backdrop.remove();
+    }, 150);
+
     document.removeEventListener("keydown", onKeydown);
-    const restoredFocus = previousFocus?.isConnected ? previousFocus : previousFocusId ? document.querySelector(`.concept-open[data-id="${previousFocusId}"]`) : null;
+    const restoredFocus = previousFocus?.isConnected ? previousFocus : (previousFocusId ? document.querySelector(`.concept-open[data-id="${previousFocusId}"]`) : null);
     restoredFocus?.focus();
     previousFocusId = null;
   }
+
   function onKeydown(event) {
-    if (event.key === "Escape") { close(); return; }
-    if (event.key !== "Tab") return;
-    const dialog = document.querySelector(".detail-modal");
-    if (!dialog) return;
-    const focusable = [...dialog.querySelectorAll("button:not(:disabled), a[href], input, textarea, select, [tabindex]:not([tabindex='-1'])")];
-    const first = focusable[0];
-    const last = focusable.at(-1);
-    if (event.shiftKey && (document.activeElement === first || document.activeElement === dialog)) { event.preventDefault(); last.focus(); }
-    else if (!event.shiftKey && (document.activeElement === last || document.activeElement === dialog)) { event.preventDefault(); first.focus(); }
+    if (event.key === "Escape") {
+      event.preventDefault();
+      close();
+      return;
+    }
+    if (event.key === "Tab") {
+      const dialog = document.querySelector(".detail-modal");
+      if (!dialog) return;
+      const focusable = [...dialog.querySelectorAll("button:not(:disabled), a[href], input, textarea, select, [tabindex]:not([tabindex='-1'])")];
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable.at(-1);
+      if (event.shiftKey && (document.activeElement === first || document.activeElement === dialog)) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (document.activeElement === last || document.activeElement === dialog)) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
   }
+
   function open(item, category, learned, onToggle, key, id) {
-    close();
+    // Close existing modal if open
+    document.querySelector(".modal-backdrop")?.remove();
     previousFocus = document.activeElement;
     previousFocusId = id || null;
-    const language = window.LearnHubI18n.language();
+
+    const language = window.LearnHubI18n?.language?.() || "fr";
     const arabic = language === "ar";
-    const english = language === "en";
-    const label = (key2, fallback) => window.LearnHubI18n.get(key2) || fallback;
+    const label = (key2, fallback) => window.LearnHubI18n?.get?.(key2) || fallback;
+
     let isFav = false;
     if (key && id) {
-      try { isFav = new Set(JSON.parse(localStorage.getItem(`learnhub-favorites-${key}`) || "[]")).has(id); }
-      catch { isFav = false; }
+      try {
+        isFav = new Set(JSON.parse(localStorage.getItem(`learnhub-favorites-${key}`) || "[]")).has(id);
+      } catch {
+        isFav = false;
+      }
     }
-    const favLabel = language === "ar" ? "إزالة من المفضلات" : language === "en" ? "Remove from favorites" : "Retirer des favoris";
-    const favLabelAdd = language === "ar" ? "إضافة للمفضلات" : language === "en" ? "Add to favorites" : "Ajouter aux favoris";
+
+    const favLabelRemove = arabic ? "إزالة من المفضلات" : language === "en" ? "Remove from favorites" : "Retirer des favoris";
+    const favLabelAdd = arabic ? "إضافة للمفضلات" : language === "en" ? "Add to favorites" : "Ajouter aux favoris";
+
+    // Detect language badge for code snippet
+    const codeLang = key === "python" ? "Python" : key === "kali" ? "Bash / Terminal" : key === "css" ? "CSS" : key === "javascript" ? "JavaScript" : "HTML";
+
+    // Navigation (prev / next) across items
+    let prevItem = null;
+    let nextItem = null;
+    if (key && typeof window.data !== "undefined" && window.data[key]) {
+      const allItems = window.data[key].flatMap((s) => s.items.map((it) => ({ ...it, sectionCategory: s.categorie })));
+      const currentIndex = allItems.findIndex((it) => it.nom === item.nom && it.sectionCategory === category);
+      if (currentIndex > 0) prevItem = allItems[currentIndex - 1];
+      if (currentIndex >= 0 && currentIndex < allItems.length - 1) nextItem = allItems[currentIndex + 1];
+    }
+
+    const prevLabel = arabic ? "السابق" : language === "en" ? "Previous" : "Précédent";
+    const nextLabel = arabic ? "التالي" : language === "en" ? "Next" : "Suivant";
+
     const backdrop = document.createElement("div");
     backdrop.className = "modal-backdrop";
-    backdrop.innerHTML = `<section class="detail-modal" id="${modalId}" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1">
-      <button class="modal-close" type="button" aria-label="${label("close", "Fermer la fenêtre")}">×</button>
-      <span class="modal-kicker">${esc(window.LearnHubI18n.category(category))}</span><h2 class="modal-title" id="modal-title">${esc(item.nom)}</h2>
-      <div class="modal-meta"><span class="level-badge">${esc(window.LearnHubI18n.level(item.niveau))}</span><button class="favorite-btn${isFav ? " is-favorite" : ""}" type="button" data-id="${id || ""}" data-key="${key || ""}" aria-label="${isFav ? favLabel : favLabelAdd}">${isFav ? "★" : "☆"}</button></div>
-      <h3 class="modal-subtitle">${label("modalPurpose", "À quoi ça sert ?")}</h3><p class="modal-copy">${esc(item.utilite)}</p>
-      <h3 class="modal-subtitle">${label("modalSyntax", "Syntaxe et exemple")}</h3><div class="code-block"><pre><code>${esc(item.syntaxe)}</code></pre><button class="copy-button" type="button">${label("copy", "Copier")}</button></div>
-      <p class="modal-copy"><strong>${label("modalExplanation", "Ce qui se passe :")}</strong> ${esc(item.exemple)}</p>
-      <aside class="modal-note"><strong>${label("modalKnow", "À savoir")}</strong><br>${esc(item.attention)}</aside>
-      <button class="learn-toggle${learned ? " done" : ""}" type="button">${learned ? label("learned", "✓ Notion apprise") : label("markLearned", "Marquer comme apprise")}</button>
-    </section>`;
-    backdrop.addEventListener("click", (event) => { if (event.target === backdrop) close(); });
+    backdrop.innerHTML = `
+      <section class="detail-modal" id="${modalId}" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1">
+        <div class="modal-header-bar">
+          <div class="modal-breadcrumbs">
+            <span class="modal-badge-course">${esc(codeLang)}</span>
+            <span class="modal-badge-category">${esc(window.LearnHubI18n?.category?.(category) || category)}</span>
+          </div>
+          <div class="modal-header-actions">
+            <button class="favorite-btn modal-fav-btn${isFav ? " is-favorite" : ""}" type="button" aria-label="${isFav ? favLabelRemove : favLabelAdd}">
+              ${isFav ? "★" : "☆"}
+            </button>
+            <button class="modal-close" type="button" aria-label="${label("close", "Fermer la fenêtre")}">×</button>
+          </div>
+        </div>
+
+        <div class="modal-title-wrap">
+          <h2 class="modal-title" id="modal-title"><code>${esc(item.nom)}</code></h2>
+          <span class="level-badge level-${esc(String(item.niveau || '').toLowerCase())}">${esc(window.LearnHubI18n?.level?.(item.niveau) || item.niveau)}</span>
+        </div>
+
+        <div class="modal-card-section modal-purpose-card">
+          <div class="modal-section-title"><span class="modal-icon">💡</span> ${label("modalPurpose", "À quoi ça sert ?")}</div>
+          <p class="modal-copy">${esc(item.utilite)}</p>
+        </div>
+
+        <div class="modal-card-section modal-code-card">
+          <div class="code-window-header">
+            <div class="window-dots" aria-hidden="true">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+            </div>
+            <span class="window-lang-tag">${esc(codeLang)}</span>
+            <button class="copy-button" type="button" aria-label="${label("copy", "Copier le code")}">
+              <span class="copy-icon">📋</span> <span class="copy-text">${label("copy", "Copier")}</span>
+            </button>
+          </div>
+          <div class="code-block"><pre><code>${esc(item.syntaxe)}</code></pre></div>
+        </div>
+
+        <div class="modal-card-section modal-expl-card">
+          <div class="modal-section-title"><span class="modal-icon">⚙️</span> ${label("modalExplanation", "Ce qui se passe :")}</div>
+          <p class="modal-copy">${esc(item.exemple)}</p>
+        </div>
+
+        <aside class="modal-note">
+          <div class="modal-note-title"><span class="modal-icon">⚠️</span> ${label("modalKnow", "À savoir & Bonnes pratiques")}</div>
+          <p>${esc(item.attention)}</p>
+        </aside>
+
+        <div class="modal-actions-footer">
+          <button class="learn-toggle${learned ? " done" : ""}" type="button">
+            <span class="learn-toggle-icon">${learned ? "✓" : "○"}</span>
+            <span class="learn-toggle-text">${learned ? label("learned", "✓ Notion apprise") : label("markLearned", "Marquer comme apprise")}</span>
+          </button>
+        </div>
+
+        ${(prevItem || nextItem) ? `
+          <div class="modal-nav-row">
+            ${prevItem ? `<button class="modal-nav-btn modal-prev-btn" type="button" aria-label="${prevLabel}: ${esc(prevItem.nom)}">← ${prevLabel} <code>${esc(prevItem.nom)}</code></button>` : `<span class="modal-nav-placeholder"></span>`}
+            ${nextItem ? `<button class="modal-nav-btn modal-next-btn" type="button" aria-label="${nextLabel}: ${esc(nextItem.nom)}">${nextLabel} <code>${esc(nextItem.nom)}</code> →</button>` : `<span class="modal-nav-placeholder"></span>`}
+          </div>
+        ` : ""}
+      </section>`;
+
+    backdrop.addEventListener("click", (event) => {
+      if (event.target === backdrop) close();
+    });
     backdrop.querySelector(".modal-close").addEventListener("click", close);
-    backdrop.querySelector(".copy-button").addEventListener("click", async (event) => {
-      const button = event.currentTarget;
+
+    // Copy button
+    const copyButton = backdrop.querySelector(".copy-button");
+    const copyText = copyButton.querySelector(".copy-text");
+    copyButton.addEventListener("click", async () => {
       try {
         await navigator.clipboard.writeText(item.syntaxe);
-        button.textContent = label("copied", "Copié !");
+        copyText.textContent = label("copied", "Copié !");
+        copyButton.classList.add("copied");
       } catch {
         const field = document.createElement("textarea");
-        field.value = item.syntaxe; field.style.position = "fixed"; field.style.opacity = "0";
-        document.body.append(field); field.select();
-        const copied = document.execCommand("copy"); field.remove();
-        button.textContent = copied ? label("copied", "Copié !") : label("copyFailed", "Copie impossible");
+        field.value = item.syntaxe;
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+        document.body.append(field);
+        field.select();
+        const success = document.execCommand("copy");
+        field.remove();
+        copyText.textContent = success ? label("copied", "Copié !") : label("copyFailed", "Copie impossible");
       }
-      window.setTimeout(() => { if (button.isConnected) button.textContent = label("copy", "Copier"); }, 1800);
+      window.setTimeout(() => {
+        if (copyButton.isConnected) {
+          copyText.textContent = label("copy", "Copier");
+          copyButton.classList.remove("copied");
+        }
+      }, 1800);
     });
-    backdrop.querySelector(".learn-toggle").addEventListener("click", () => {
-      const nowLearned = onToggle();
-      const button = backdrop.querySelector(".learn-toggle");
-      button.classList.toggle("done", nowLearned);
-      button.textContent = nowLearned ? label("learned", "✓ Notion apprise") : label("markLearned", "Marquer comme apprise");
+
+    // Learn toggle
+    const learnBtn = backdrop.querySelector(".learn-toggle");
+    const learnIcon = learnBtn.querySelector(".learn-toggle-icon");
+    const learnText = learnBtn.querySelector(".learn-toggle-text");
+    learnBtn.addEventListener("click", () => {
+      if (typeof onToggle === "function") {
+        const nowLearned = onToggle();
+        learnBtn.classList.toggle("done", nowLearned);
+        learnIcon.textContent = nowLearned ? "✓" : "○";
+        learnText.textContent = nowLearned ? label("learned", "✓ Notion apprise") : label("markLearned", "Marquer comme apprise");
+      }
     });
-    const favBtn = backdrop.querySelector(".favorite-btn");
+
+    // Favorite button inside modal
+    const favBtn = backdrop.querySelector(".modal-fav-btn");
     favBtn.addEventListener("click", (event) => {
       event.stopPropagation();
-      const key = favBtn.dataset.key;
-      const id = favBtn.dataset.id;
       if (!key || !id) return;
       try {
         const stored = new Set(JSON.parse(localStorage.getItem(`learnhub-favorites-${key}`) || "[]"));
-        const now = stored.has(id) ? [...stored].filter((x) => x !== id) : [...stored, id];
-        localStorage.setItem(`learnhub-favorites-${key}`, JSON.stringify(now));
-        favBtn.classList.toggle("is-favorite", !stored.has(id));
-        favBtn.textContent = stored.has(id) ? "☆" : "★";
-        favBtn.setAttribute("aria-label", stored.has(id) ? favLabelAdd : favLabel);
+        const currentlyFav = stored.has(id);
+        if (currentlyFav) stored.delete(id);
+        else stored.add(id);
+        localStorage.setItem(`learnhub-favorites-${key}`, JSON.stringify([...stored]));
+
+        const isNowFav = stored.has(id);
+        favBtn.classList.toggle("is-favorite", isNowFav);
+        favBtn.textContent = isNowFav ? "★" : "☆";
+        favBtn.setAttribute("aria-label", isNowFav ? favLabelRemove : favLabelAdd);
+
+        // Sync with card on page
+        const cardFavBtn = document.querySelector(`.concept-card .favorite-btn[data-id="${id}"]`);
+        if (cardFavBtn) {
+          cardFavBtn.classList.toggle("is-favorite", isNowFav);
+          cardFavBtn.textContent = isNowFav ? "★" : "☆";
+          cardFavBtn.setAttribute("aria-label", isNowFav ? favLabelRemove : favLabelAdd);
+        }
+
+        window.dispatchEvent(new CustomEvent("learnhubfavoritetoggle", { detail: { key, id, isFavorite: isNowFav } }));
       } catch {}
     });
+
+    // Previous and Next notion handlers
+    const prevBtn = backdrop.querySelector(".modal-prev-btn");
+    const nextBtn = backdrop.querySelector(".modal-next-btn");
+
+    const navigateToItem = (targetItem) => {
+      const card = document.querySelector(`.concept-open[data-name="${CSS.escape(targetItem.nom)}"][data-category="${CSS.escape(targetItem.sectionCategory)}"]`);
+      if (card) {
+        card.click();
+      } else {
+        close();
+      }
+    };
+
+    if (prevBtn && prevItem) {
+      prevBtn.addEventListener("click", () => navigateToItem(prevItem));
+    }
+    if (nextBtn && nextItem) {
+      nextBtn.addEventListener("click", () => navigateToItem(nextItem));
+    }
+
     document.body.append(backdrop);
     document.addEventListener("keydown", onKeydown);
     backdrop.querySelector(".detail-modal").focus();
   }
+
   window.LearnHubModal = { open, close };
 })();

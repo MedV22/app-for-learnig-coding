@@ -1,1 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#1b201d"/><path d="M10 10h12v2H10zM10 14h6v2h-6zM10 18h4v2h-4z" fill="#9cbea6"/><text x="16" y="26" font-family="monospace" font-size="10" fill="#fffefa" text-anchor="middle" font-weight="bold">LH</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="brandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="9" fill="url(#brandGrad)"/>
+  <text x="16" y="21" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="800">&lt;/&gt;</text>
+</svg>

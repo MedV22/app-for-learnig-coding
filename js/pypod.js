@@ -5,6 +5,58 @@
   let pyodidePromise = null;
   let previousFocus = null;
 
+  const codeSnippets = {
+    hello: `# Premier programme Python
+nom = "Apprenant"
+print(f"Bonjour {nom} ! Bienvenue sur Learn Hub.")
+print("Python est prêt à exécuter tes idées.")
+`,
+    calc: `# Mini-calculatrice
+def calculer(a, b, operation):
+    if operation == "+":
+        return a + b
+    elif operation == "-":
+        return a - b
+    elif operation == "*":
+        return a * b
+    elif operation == "/":
+        return a / b if b != 0 else "Erreur : division par zéro"
+    return "Opération inconnue"
+
+print("12 + 8 =", calculer(12, 8, "+"))
+print("15 * 3 =", calculer(15, 3, "*"))
+print("100 / 4 =", calculer(100, 4, "/"))
+`,
+    loop: `# Boucle et liste
+langages = ["Python", "JavaScript", "HTML", "CSS", "Bash"]
+print("Langages disponibles sur Learn Hub :")
+for index, lang in enumerate(langages, start=1):
+    print(f"  {index}. {lang}")
+`,
+    password: `# Générateur de mot de passe simple
+import random
+
+caracteres = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*"
+longueur = 14
+mot_de_passe = "".join(random.choice(caracteres) for _ in range(longueur))
+print("Mot de passe sécurisé généré :")
+print("->", mot_de_passe)
+`,
+    security: `# Simulation d'analyse réseau (lab)
+ports_usuels = {
+    21: "FTP",
+    22: "SSH",
+    80: "HTTP",
+    443: "HTTPS",
+    3306: "MySQL"
+}
+
+print("Ports de test détectés sur la cible 192.168.1.1 :")
+for port, service in ports_usuels.items():
+    print(f"[+] Port {port:<5} | Service : {service} (SIMULÉ)")
+`
+  };
+
   function loadPyodide() {
     if (pyodidePromise) return pyodidePromise;
 
@@ -23,7 +75,7 @@
       script.onerror = () => {
         pyodidePromise = null;
         script.remove();
-        reject(new Error("Impossible de charger Pyodide"));
+        reject(new Error("Impossible de charger Pyodide depuis le CDN."));
       };
       document.head.append(script);
     });
@@ -35,95 +87,189 @@
     close();
     previousFocus = document.activeElement;
 
-    const language = window.LearnHubI18n?.language() || "fr";
+    const language = window.LearnHubI18n?.language?.() || "fr";
     const labels = {
-      ar: { title: "محرر بايثون", run: "تشغيل", clear: "مسح", close: "إغلاق", output: "المخرجات", empty: "لا توجد مخرجات", loading: "جارٍ التحميل…", offline: "اتصل بالإنترنت لتحميل محرر Python لأول مرة.", error: "تعذر تحميل Pyodide. تحقق من اتصالك بالإنترنت ثم أعد المحاولة.", editor: "محرر Python", status: "حالة المحرر" },
-      en: { title: "Python editor", run: "Run", clear: "Clear", close: "Close", output: "Output", empty: "No output", loading: "Loading…", offline: "Connect to the internet to load the Python editor for the first time.", error: "Could not load Pyodide. Check your connection and try again.", editor: "Python editor", status: "Editor status" },
-      fr: { title: "Éditeur Python", run: "Exécuter", clear: "Effacer", close: "Fermer", output: "Résultat", empty: "Aucune sortie", loading: "Chargement…", offline: "Connecte-toi à Internet pour charger l’éditeur Python la première fois.", error: "Impossible de charger Pyodide. Vérifie ta connexion puis réessaie.", editor: "Éditeur Python", status: "État de l’éditeur" }
+      ar: {
+        title: "محرر بايثون التفاعلي (Pyodide)",
+        run: "تشغيل (Ctrl+Enter)",
+        clear: "مسح",
+        close: "إغلاق",
+        output: "المخرجات والنتائج",
+        empty: "(لا توجد مخرجات)",
+        loading: "جارٍ تحميل بيئة Python...",
+        offline: "اتصل بالإنترنت لتحميل محرر Python لأول مرة.",
+        error: "تعذر تشغيل الكود. تحقق من اتصالك ثم حاول مجدداً.",
+        presets: "أمثلة جاهزة..."
+      },
+      en: {
+        title: "Interactive Python Playground (Pyodide)",
+        run: "Run Code (Ctrl+Enter)",
+        clear: "Clear",
+        close: "Close",
+        output: "Console Output",
+        empty: "(No output produced)",
+        loading: "Initializing Python runtime...",
+        offline: "Please connect to the internet to load Pyodide on the first run.",
+        error: "Could not execute code. Please verify your connection.",
+        presets: "Code presets..."
+      },
+      fr: {
+        title: "Éditeur Python en ligne (Pyodide)",
+        run: "Exécuter (Ctrl+Entrée)",
+        clear: "Effacer",
+        close: "Fermer",
+        output: "Console de sortie",
+        empty: "(Aucune sortie produite)",
+        loading: "Chargement du moteur Python...",
+        offline: "Connecte-toi à Internet pour charger l'interpréteur Python la première fois.",
+        error: "Erreur lors de l'exécution du code.",
+        presets: "Exemples de code..."
+      }
     };
     const text = labels[language] || labels.fr;
 
     const backdrop = document.createElement("div");
     backdrop.className = "pyodide-backdrop";
-    backdrop.innerHTML = `<section class="pyodide-dialog" role="dialog" aria-modal="true" aria-labelledby="pyodide-title" tabindex="-1">
-      <button class="pyodide-close" type="button" aria-label="${text.close}">×</button>
-      <h3 id="pyodide-title">${text.title}</h3>
-      <div class="pyodide-toolbar">
-        <button class="pyodide-btn pyodide-run" type="button">${text.run}</button>
-        <button class="pyodide-btn pyodide-clear" type="button">${text.clear}</button>
-        <button class="pyodide-btn pyodide-close-btn" type="button">${text.close}</button>
-        <span class="pyodide-status" aria-live="polite" aria-label="${text.status}"></span>
-      </div>
-      <textarea class="pyodide-editor" aria-label="${text.editor}" spellcheck="false" placeholder="print('Bonjour depuis Python !')"></textarea>
-      <pre class="pyodide-output" aria-live="polite">${text.output} :</pre>
-    </section>`;
+    backdrop.innerHTML = `
+      <section class="pyodide-dialog" role="dialog" aria-modal="true" aria-labelledby="pyodide-title" tabindex="-1">
+        <div class="pyodide-titlebar">
+          <div class="window-dots" aria-hidden="true">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+          </div>
+          <div class="pyodide-tab" id="pyodide-title">
+            <span class="py-icon">🐍</span> ${text.title}
+          </div>
+          <button class="pyodide-close" type="button" aria-label="${text.close}">×</button>
+        </div>
 
-    const dialog = backdrop.querySelector(".pyodide-dialog");
+        <div class="pyodide-toolbar">
+          <button class="pyodide-btn pyodide-run" type="button">
+            <span>▶</span> ${text.run}
+          </button>
+          <select class="pyodide-presets" aria-label="Choisir un exemple">
+            <option value="">${text.presets}</option>
+            <option value="hello">👋 Bonjour le monde</option>
+            <option value="calc">🔢 Calculatrice & Fonctions</option>
+            <option value="loop">🔁 Boucle & Liste</option>
+            <option value="password">🔐 Mot de passe aléatoire</option>
+            <option value="security">🛡️ Simulation réseau</option>
+          </select>
+          <button class="pyodide-btn pyodide-clear" type="button">${text.clear}</button>
+          <span class="pyodide-status" aria-live="polite"></span>
+        </div>
+
+        <div class="pyodide-body">
+          <div class="pyodide-editor-wrap">
+            <textarea class="pyodide-editor" spellcheck="false" placeholder="# Écris ton code Python ici...
+print('Hello from Python!')" aria-label="Éditeur de code Python"></textarea>
+          </div>
+          <div class="pyodide-output-wrap">
+            <div class="pyodide-output-header">
+              <span>🖥️ ${text.output}</span>
+            </div>
+            <pre class="pyodide-output" aria-live="polite"># Cliquez sur 'Exécuter' pour tester votre code.</pre>
+          </div>
+        </div>
+      </section>`;
+
     const editor = backdrop.querySelector(".pyodide-editor");
     const output = backdrop.querySelector(".pyodide-output");
     const status = backdrop.querySelector(".pyodide-status");
     const runButton = backdrop.querySelector(".pyodide-run");
+    const presetsSelect = backdrop.querySelector(".pyodide-presets");
 
-    backdrop.querySelector(".pyodide-close").addEventListener("click", close);
-    backdrop.querySelector(".pyodide-close-btn").addEventListener("click", close);
-    backdrop.querySelector(".pyodide-clear").addEventListener("click", () => {
-      editor.value = "";
-      output.textContent = `${text.output} :`;
-      editor.focus();
-    });
-    backdrop.addEventListener("click", (event) => { if (event.target === backdrop) close(); });
-    backdrop.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") {
-        event.stopPropagation();
-        close();
-      } else if (event.key === "Tab") {
-        const focusable = [...dialog.querySelectorAll("button:not(:disabled), textarea")];
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-        if (event.shiftKey && (document.activeElement === first || document.activeElement === dialog)) { event.preventDefault(); last.focus(); }
-        else if (!event.shiftKey && (document.activeElement === last || document.activeElement === dialog)) { event.preventDefault(); first.focus(); }
-      }
-    });
+    // Set default starter code
+    editor.value = codeSnippets.hello;
 
-    runButton.addEventListener("click", async () => {
-      runButton.disabled = true;
-      status.textContent = text.loading;
-      output.textContent = `${text.output} :`;
-      try {
-        const pyodide = await loadPyodide();
-        const stdout = [];
-        const stderr = [];
-        pyodide.setStdout({ batched: (line) => stdout.push(line) });
-        pyodide.setStderr({ batched: (line) => stderr.push(line) });
-        pyodide.setStdin({ error: true });
-        const result = await pyodide.runPythonAsync(editor.value);
-        if (result !== undefined && result !== null) stdout.push(String(result));
-        output.textContent = `${text.output} :\n${[...stdout, ...stderr].join("\n") || text.empty}`;
-        status.textContent = "";
-      } catch (error) {
-        const message = !navigator.onLine ? text.offline : pyodidePromise ? String(error?.message || error) : text.error;
-        output.textContent = `${text.output} :\n${message}`;
-        status.textContent = "";
-      } finally {
-        runButton.disabled = false;
+    // Presets change
+    presetsSelect.addEventListener("change", () => {
+      const chosen = presetsSelect.value;
+      if (chosen && codeSnippets[chosen]) {
+        editor.value = codeSnippets[chosen];
         editor.focus();
       }
     });
 
-    document.addEventListener("keydown", onEscape);
-    document.body.append(backdrop);
-    dialog.focus();
-  }
+    // Indent with tab key
+    editor.addEventListener("keydown", (e) => {
+      if (e.key === "Tab") {
+        e.preventDefault();
+        const start = editor.selectionStart;
+        const end = editor.selectionEnd;
+        editor.value = editor.value.substring(0, start) + "    " + editor.value.substring(end);
+        editor.selectionStart = editor.selectionEnd = start + 4;
+      } else if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        runButton.click();
+      }
+    });
 
-  function onEscape(event) {
-    if (event.key === "Escape") close();
+    backdrop.querySelector(".pyodide-close").addEventListener("click", close);
+    backdrop.querySelector(".pyodide-clear").addEventListener("click", () => {
+      editor.value = "";
+      output.textContent = `# ${text.output} effacée.`;
+      editor.focus();
+    });
+
+    backdrop.addEventListener("click", (event) => {
+      if (event.target === backdrop) close();
+    });
+
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") {
+        event.stopPropagation();
+        close();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+
+    // Run action
+    runButton.addEventListener("click", async () => {
+      runButton.disabled = true;
+      runButton.classList.add("is-running");
+      status.textContent = text.loading;
+      output.textContent = "Exécution en cours...";
+
+      try {
+        const pyodide = await loadPyodide();
+        const stdout = [];
+        const stderr = [];
+
+        pyodide.setStdout({ batched: (line) => stdout.push(line) });
+        pyodide.setStderr({ batched: (line) => stderr.push(line) });
+        pyodide.setStdin({ error: true });
+
+        const result = await pyodide.runPythonAsync(editor.value);
+        if (result !== undefined && result !== null) {
+          stdout.push(String(result));
+        }
+
+        const outText = [...stdout, ...stderr].join("\n").trim();
+        output.textContent = outText || text.empty;
+        status.textContent = "✓ Terminé";
+      } catch (error) {
+        const message = !navigator.onLine ? text.offline : (error?.message || String(error));
+        output.textContent = `Traceback / Erreur :\n${message}`;
+        status.textContent = "⚠ Erreur";
+      } finally {
+        runButton.disabled = false;
+        runButton.classList.remove("is-running");
+        window.setTimeout(() => {
+          if (status.isConnected) status.textContent = "";
+        }, 2500);
+      }
+    });
+
+    document.body.append(backdrop);
+    editor.focus();
   }
 
   function close() {
     const backdrop = document.querySelector(".pyodide-backdrop");
     if (!backdrop) return;
     backdrop.remove();
-    document.removeEventListener("keydown", onEscape);
     previousFocus?.focus();
   }
 

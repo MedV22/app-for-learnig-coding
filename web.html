@@ -1,22 +1,113 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Apprends le HTML, le CSS et le JavaScript avec des fiches interactives et des exemples simples."><link rel="manifest" href="manifest.json">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Apprends le HTML5, le CSS3 moderne et le JavaScript avec des fiches interactives et des exemples simples.">
+  <link rel="manifest" href="manifest.json">
   <title>HTML, CSS et JavaScript — Learn Hub</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <script src="js/data.js" defer></script><script src="js/i18n.js" defer></script><script src="js/modal.js" defer></script><script src="js/main.js" defer></script><script src="js/app.js" defer></script><script src="js/quiz.js" defer></script><script src="js/terminal.js" defer></script><script src="js/pypod.js" defer></script>
+
+  <script src="js/data.js" defer></script>
+  <script src="js/i18n.js" defer></script>
+  <script src="js/modal.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/app.js" defer></script>
+  <script src="js/quiz.js" defer></script>
+  <script src="js/terminal.js" defer></script>
+  <script src="js/pypod.js" defer></script>
 </head>
 <body data-page="web">
-  <header class="topbar"><a class="brand" href="index.html"><span class="brand-mark">&lt;/&gt;</span> Learn<span>Hub</span></a><nav aria-label="Navigation principale"><a href="index.html">Accueil</a><a class="active" href="web.html">HTML · CSS · JS</a><a href="python.html">Python</a><a href="kali.html">Kali Linux</a></nav><select class="language-switch" aria-label="Choisir la langue du site"><option value="fr">Français</option><option value="ar">العربية</option><option value="en">English</option></select><button class="theme-toggle" type="button" aria-label="Activer le thème sombre">☾</button><button class="terminal-toggle" type="button" aria-label="Ouvrir le terminal simulé">⬢</button><button class="python-toggle" type="button" aria-label="Ouvrir l'éditeur Python en ligne">🐍</button></header>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">&lt;/&gt;</span> Learn<span>Hub</span>
+    </a>
+    <nav aria-label="Navigation principale">
+      <a href="index.html">Accueil</a>
+      <a class="active" href="web.html">HTML · CSS · JS</a>
+      <a href="python.html">Python</a>
+      <a href="kali.html">Kali Linux</a>
+    </nav>
+    <div class="header-actions">
+      <button class="btn-pill terminal-toggle" type="button" aria-label="Ouvrir le terminal simulé" title="Terminal Linux (Alt+T)">
+        <span class="btn-icon">🐧</span><span class="btn-label">Terminal</span><kbd class="btn-kbd">Alt+T</kbd>
+      </button>
+      <button class="btn-pill python-toggle" type="button" aria-label="Ouvrir l'éditeur Python en ligne" title="Éditeur Python (Alt+P)">
+        <span class="btn-icon">🐍</span><span class="btn-label">Python Lab</span><kbd class="btn-kbd">Alt+P</kbd>
+      </button>
+      <select class="language-switch" aria-label="Choisir la langue du site">
+        <option value="fr">Français</option>
+        <option value="ar">العربية</option>
+        <option value="en">English</option>
+      </select>
+      <button class="theme-toggle" type="button" aria-label="Activer le thème sombre" title="Changer de thème">
+        <span class="theme-icon">☾</span>
+      </button>
+    </div>
+  </header>
+
   <main class="course-main">
-    <section class="course-hero web-hero"><div><p class="eyebrow">PARCOURS · DÉVELOPPEMENT WEB</p><h1>Créer pour le <span>web</span></h1><p>Apprends à construire une page, à la styliser et à lui donner vie.</p></div><div class="hero-symbol" aria-hidden="true">&lt;/&gt;</div></section>
-    <div class="language-tabs" role="tablist" aria-label="Choisir une technologie"><button class="language-tab active" type="button" role="tab" data-language="html" aria-selected="true">HTML <span>Structure</span></button><button class="language-tab" type="button" role="tab" data-language="css" aria-selected="false">CSS <span>Style</span></button><button class="language-tab" type="button" role="tab" data-language="javascript" aria-selected="false">JavaScript <span>Interactions</span></button></div>
-    <section class="toolbar"><label class="search"><span aria-hidden="true">⌕</span><span class="sr-only">Rechercher une notion</span><input class="item-search" type="search" placeholder="Rechercher une notion…"></label><label class="level-control">Niveau <select class="level-filter" aria-label="Filtrer par niveau"><option value="all">Tous</option><option>Débutant</option><option>Intermédiaire</option><option>Avancé</option></select></label></section>
-    <div class="progress-wrap"><div><span>Ta progression</span><strong class="progress-label">0 / 0 notions apprises</strong></div><div class="progress-track" role="progressbar" aria-label="Progression d'apprentissage" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div></div>
-    <div class="course-layout"><aside class="category-nav" aria-label="Catégories"></aside><section class="card-sections" aria-label="Notions"></section></div>
+    <section class="course-hero web-hero">
+      <div>
+        <p class="eyebrow">PARCOURS · DÉVELOPPEMENT WEB</p>
+        <h1>Créer pour le <span>web</span></h1>
+        <p>Apprends à construire une page structurée, à la styliser avec les technologies modernes et à lui donner vie avec JavaScript.</p>
+      </div>
+      <div class="hero-symbol" aria-hidden="true">&lt;/&gt;</div>
+    </section>
+
+    <div class="language-tabs" role="tablist" aria-label="Choisir une technologie">
+      <button class="language-tab active" type="button" role="tab" data-language="html" aria-selected="true">HTML <span>Structure</span></button>
+      <button class="language-tab" type="button" role="tab" data-language="css" aria-selected="false">CSS <span>Style & Layout</span></button>
+      <button class="language-tab" type="button" role="tab" data-language="javascript" aria-selected="false">JavaScript <span>Interactions</span></button>
+    </div>
+
+    <section class="toolbar">
+      <label class="search">
+        <span aria-hidden="true">⌕</span>
+        <span class="sr-only">Rechercher une notion</span>
+        <input class="item-search" type="search" placeholder="Rechercher une notion (ex: flexbox, div, querySelector)...">
+      </label>
+      <label class="level-control">
+        Niveau 
+        <select class="level-filter" aria-label="Filtrer par niveau">
+          <option value="all">Tous les niveaux</option>
+          <option>Débutant</option>
+          <option>Intermédiaire</option>
+          <option>Avancé</option>
+        </select>
+      </label>
+    </section>
+
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <div class="progress-label-wrap">
+          <span class="progress-title-text">Ta progression</span>
+          <strong class="progress-label">0 / 0 notions apprises</strong>
+        </div>
+        <div class="progress-track" role="progressbar" aria-label="Progression d'apprentissage" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="course-layout">
+      <aside class="category-nav" aria-label="Catégories"></aside>
+      <section class="card-sections" aria-label="Notions"></section>
+    </div>
   </main>
-  <footer class="site-footer"><a class="brand" href="index.html"><span class="brand-mark">&lt;/&gt;</span> Learn<span>Hub</span></a><p>Apprendre avec curiosité, pratiquer avec responsabilité.</p></footer>
+
+  <footer class="site-footer">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">&lt;/&gt;</span> Learn<span>Hub</span>
+    </a>
+    <p>Apprendre avec curiosité, pratiquer avec responsabilité · Fait avec passion.</p>
+  </footer>
 </body>
 </html>
