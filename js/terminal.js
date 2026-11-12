@@ -1,11 +1,11 @@
-/* Terminal Linux simulé (Kali style) — Learn Hub */
+/* Simulated Kali Linux terminal — Learn Hub */
 (() => {
   const defaultFs = {
     "/": ["bin", "boot", "dev", "etc", "home", "lib", "media", "mnt", "opt", "proc", "root", "run", "sbin", "srv", "sys", "tmp", "usr", "var"],
     "/home": ["kali"],
     "/home/kali": ["Documents", "Downloads", "Desktop", "script.sh", "notes.txt", "scan.py"],
     "/home/kali/Desktop": ["lab_targets.txt"],
-    "/home/kali/Documents": ["rapport_audit.pdf", "todo.md"],
+    "/home/kali/Documents": ["audit_report.pdf", "todo.md"],
     "/etc": ["passwd", "hosts", "resolv.conf", "os-release"],
     "/var": ["log", "tmp"]
   };
@@ -14,16 +14,17 @@
     "/etc/passwd": "root:x:0:0:root:/root:/bin/bash\nkali:x:1000:1000:Kali User:/home/kali:/bin/bash",
     "/etc/hosts": "127.0.0.1\tlocalhost\n127.0.1.1\tlearnhub\n::1\t\tip6-localhost ip6-loopback",
     "/etc/os-release": "PRETTY_NAME=\"Kali GNU/Linux Rolling\"\nNAME=\"Kali GNU/Linux\"\nID=kali\nVERSION=\"2026.4\"",
-    "/home/kali/notes.txt": "# Mes notes d'apprentissage Learn Hub\n- Réviser les commandes Linux usuelles (ls, cd, chmod, grep)\n- Pratiquer nmap en labo contrôlé (TryHackMe / DVWA)\n- Tester les requêtes HTTP avec Burp Suite\n- Écrire un port scanner basique en Python",
-    "/home/kali/script.sh": "#!/bin/bash\necho \"[+] Démarrage du script d'audit...\"\necho \"[+] Analyse terminée avec succès.\"\n",
-    "/home/kali/scan.py": "import socket\nprint('Port scanner Python prêt à l\\'emploi.')\n",
-    "/home/kali/Desktop/lab_targets.txt": "192.168.1.100  serveur-web-test\n192.168.1.105  passerelle-lab\n"
+    "/home/kali/notes.txt": "# Learn Hub practice notes\n- Review common Linux commands (ls, cd, chmod, grep)\n- Practice nmap in an authorized lab (TryHackMe / DVWA)\n- Inspect HTTP requests with Burp Suite\n- Write a basic Python port scanner for a lab",
+    "/home/kali/script.sh": "#!/bin/bash\necho \"[+] Starting the audit script...\"\necho \"[+] Scan completed successfully.\"\n",
+    "/home/kali/scan.py": "import socket\nprint('Python port scanner is ready.')\n",
+    "/home/kali/Desktop/lab_targets.txt": "192.168.1.100  test-web-server\n192.168.1.105  lab-gateway\n"
   };
 
   let fs = JSON.parse(JSON.stringify(defaultFs));
   let fileContents = { ...defaultFiles };
   let cwd = "/home/kali";
   let previousFocus = null;
+  let keydownHandler = null;
   const history = [];
   let historyIndex = -1;
 
@@ -60,7 +61,7 @@
     input.autocomplete = "off";
     input.autocapitalize = "off";
     input.spellcheck = false;
-    input.setAttribute("aria-label", "Commande Linux");
+    input.setAttribute("aria-label", "Linux command");
 
     promptWrap.append(promptText, input);
     output.append(promptWrap);
@@ -100,7 +101,7 @@
         const currentVal = input.value;
         const [cmd, arg] = currentVal.split(/\s+/);
         if (!arg) {
-          const commands = ["help", "clear", "ls", "pwd", "cd", "cat", "whoami", "date", "uname", "ip", "ifconfig", "ping", "nmap", "mkdir", "touch", "rm", "history", "exit"];
+          const commands = ["help", "clear", "ls", "pwd", "cd", "cat", "whoami", "date", "uname", "ip", "ifconfig", "ping", "nmap", "mkdir", "touch", "rm", "history", "exit", "grep", "chmod", "ps", "netstat", "ss", "find", "env", "python3", "python", "nano", "vim", "ssh", "wget", "curl", "apt", "apt-get", "man", "sudo", "export", "head", "tail", "wc", "echo"];
           const matches = commands.filter((c) => c.startsWith(cmd));
           if (matches.length === 1) input.value = matches[0] + " ";
         } else {
@@ -135,26 +136,26 @@
 
     switch (name.toLowerCase()) {
       case "help":
-        result = `
-<div class="term-table">
-  <strong>Commandes disponibles :</strong>
-  <div>  <span class="term-hl">ls [-la]</span>         Lister les fichiers du dossier</div>
-  <div>  <span class="term-hl">pwd</span>              Afficher le dossier courant</div>
-  <div>  <span class="term-hl">cd [dossier]</span>     Changer de dossier</div>
-  <div>  <span class="term-hl">cat [fichier]</span>    Lire le contenu d'un fichier</div>
-  <div>  <span class="term-hl">mkdir [nom]</span>      Créer un nouveau dossier</div>
-  <div>  <span class="term-hl">touch [nom]</span>      Créer un fichier vide</div>
-  <div>  <span class="term-hl">rm [nom]</span>         Supprimer un fichier</div>
-  <div>  <span class="term-hl">whoami</span>           Afficher l'utilisateur actif</div>
-  <div>  <span class="term-hl">ip a / ifconfig</span>  Afficher la configuration réseau</div>
-  <div>  <span class="term-hl">ping &lt;host&gt;</span>        Tester la connectivité réseau</div>
-  <div>  <span class="term-hl">nmap &lt;cible&gt;</span>       Simuler un scan de ports</div>
-  <div>  <span class="term-hl">uname -a</span>         Afficher les informations du noyau</div>
-  <div>  <span class="term-hl">date / echo</span>       Afficher l'heure ou un message</div>
-  <div>  <span class="term-hl">history</span>          Historique des commandes</div>
-  <div>  <span class="term-hl">clear</span>            Effacer l'écran</div>
-  <div>  <span class="term-hl">exit</span>             Fermer le terminal</div>
-</div>`;
+        {
+          const rows = [
+            ["ls [-la]", "List directory files"], ["pwd", "Print the current directory"],
+            ["cd [directory]", "Change directory"], ["cat [file]", "Read a file"],
+            ["head / tail", "Show the beginning or end of a file"], ["grep <pattern> <file>", "Search a file for a pattern"],
+            ["wc [-l] <file>", "Count lines, words, or characters"], ["find [path]", "Search for files"],
+            ["mkdir [name]", "Create a directory"], ["touch [name]", "Create an empty file"],
+            ["rm [name]", "Delete a file"], ["chmod <mode> <file>", "Change file permissions"],
+            ["whoami", "Print the current user"], ["ps", "List running processes"],
+            ["ip a / ifconfig", "Show network configuration"], ["ss / netstat", "Show active connections"],
+            ["ping <host>", "Test network connectivity"], ["nmap <target>", "Simulate a port scan"],
+            ["ssh [user@host]", "Secure remote connection (simulated)"], ["wget / curl <url>", "Download a resource (simulated)"],
+            ["apt install <pkg>", "Manage packages (simulated)"], ["python3 [-c code]", "Launch Python (simulated → Python Lab)"],
+            ["man <command>", "Show a command's manual"], ["sudo <cmd>", "Run as root (simulated)"],
+            ["export NAME=VALUE", "Set an environment variable"], ["env", "Show environment variables"],
+            ["uname -a", "Show kernel information"], ["date / echo", "Print the date or a message"],
+            ["history", "Show command history"], ["clear", "Clear the screen"], ["exit", "Close the terminal"]
+          ];
+          result = `<div class="term-table"><strong>Available commands:</strong>${rows.map(([cmd, description]) => `<div><span class="term-hl">${esc(cmd)}</span> ${esc(description)}</div>`).join("")}</div>`;
+        }
         isHtml = true;
         break;
 
@@ -174,7 +175,7 @@
         const entries = fs[target];
 
         if (!entries) {
-          result = `ls: impossible d'accéder à '${pathArg}' : Aucun fichier ou dossier de ce type`;
+          result = `ls: cannot access '${pathArg}': No such file or directory`;
         } else {
           const list = showAll ? [".", "..", ...entries] : entries;
           result = list.map((item) => {
@@ -194,22 +195,22 @@
         if (fs[target] || target === "/") {
           cwd = target;
         } else {
-          result = `cd: aucun fichier ou dossier de ce type : ${targetPath}`;
+          result = `cd: no such file or directory: ${targetPath}`;
         }
         break;
       }
 
       case "cat": {
         if (!args.length) {
-          result = "cat: opérande manquant. Exemple: cat notes.txt";
+          result = "cat: missing operand. Try 'cat notes.txt'";
         } else {
           const path = resolve(args[0]);
           if (fileContents[path] !== undefined) {
             result = fileContents[path];
           } else if (fs[path] !== undefined) {
-            result = `cat: ${args[0]}: est un dossier`;
+            result = `cat: ${args[0]}: Is a directory`;
           } else {
-            result = `cat: ${args[0]}: Aucun fichier ou dossier de ce type`;
+            result = `cat: ${args[0]}: No such file or directory`;
           }
         }
         break;
@@ -217,11 +218,11 @@
 
       case "mkdir": {
         if (!args.length) {
-          result = "mkdir: opérande manquant. Exemple: mkdir labo";
+          result = "mkdir: missing operand. Try 'mkdir lab'";
         } else {
           const newPath = resolve(args[0]);
           if (fs[newPath]) {
-            result = `mkdir: impossible de créer le dossier '${args[0]}': Le fichier existe`;
+            result = `mkdir: cannot create directory '${args[0]}': File exists`;
           } else {
             fs[newPath] = [];
             const parent = newPath.substring(0, newPath.lastIndexOf("/")) || "/";
@@ -236,7 +237,7 @@
 
       case "touch": {
         if (!args.length) {
-          result = "touch: opérande manquant. Exemple: touch test.txt";
+          result = "touch: missing operand. Try 'touch test.txt'";
         } else {
           const filePath = resolve(args[0]);
           const parent = filePath.substring(0, filePath.lastIndexOf("/")) || "/";
@@ -251,7 +252,7 @@
 
       case "rm": {
         if (!args.length) {
-          result = "rm: opérande manquant";
+          result = "rm: missing operand";
         } else {
           const filePath = resolve(args[0]);
           const parent = filePath.substring(0, filePath.lastIndexOf("/")) || "/";
@@ -260,9 +261,9 @@
             delete fileContents[filePath];
             if (fs[parent]) fs[parent] = fs[parent].filter((f) => f !== fileName);
           } else if (fs[filePath] !== undefined) {
-            result = `rm: impossible de supprimer '${args[0]}': est un dossier (utilise rm -r en vrai)`;
+            result = `rm: cannot remove '${args[0]}': Is a directory (use rm -r on a real system)`;
           } else {
-            result = `rm: impossible de supprimer '${args[0]}': Aucun fichier ou dossier de ce type`;
+            result = `rm: cannot remove '${args[0]}': No such file or directory`;
           }
         }
         break;
@@ -273,7 +274,7 @@
         break;
 
       case "date":
-        result = new Date().toLocaleString("fr-FR", { weekday: "short", day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" });
+        result = new Date().toLocaleString("en-US", { weekday: "short", day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" });
         break;
 
       case "uname":
@@ -331,45 +332,226 @@ Nmap done: 1 IP address (1 host up) scanned in 1.48 seconds`;
       }
 
       case "history":
-        result = history.map((cmd, idx) => `  ${String(idx + 1).padStart(3, " ")}  ${esc(cmd)}`).join("\n");
-        isHtml = true;
+        result = history.map((cmd, idx) => `  ${String(idx + 1).padStart(3, " ")}  ${cmd}`).join("\n");
         break;
 
       case "exit":
         close();
         return;
 
+      case "grep": {
+        const pattern = args[0];
+        const fileArg = args[1];
+        if (!pattern) { result = "usage: grep <pattern> [file]"; break; }
+        if (!fileArg) { result = `grep: searching stdin for '${pattern}' is not supported (simulated)`; break; }
+        const grepPath = resolve(fileArg);
+        const grepContent = fileContents[grepPath];
+        if (grepContent === undefined) { result = `grep: ${fileArg}: No such file or directory`; break; }
+        const grepLines = grepContent.split("\n").filter((l) => l.toLowerCase().includes(pattern.toLowerCase()));
+        result = grepLines.length ? grepLines.join("\n") : `(no matches for '${pattern}')`;
+        break;
+      }
+
+      case "chmod": {
+        const mode = args[0];
+        const target = args[1];
+        if (!mode || !target) { result = "usage: chmod <mode> <file> — e.g. chmod 755 script.sh"; break; }
+        result = `chmod: permissions of '${target}' changed to ${mode} (simulated)`;
+        break;
+      }
+
+      case "ps":
+        result = `  PID TTY          TIME CMD
+    1 ?        00:00:03 systemd
+  412 ?        00:00:00 sshd
+  847 pts/0    00:00:00 bash
+ 1023 pts/0    00:00:00 ps`;
+        break;
+
+      case "netstat":
+      case "ss":
+        result = `Netid  State   Recv-Q  Send-Q  Local Address:Port    Peer Address:Port
+tcp    LISTEN  0       128     0.0.0.0:22           0.0.0.0:*
+tcp    LISTEN  0       128     0.0.0.0:80           0.0.0.0:*
+tcp    ESTAB   0       0       192.168.1.105:22     192.168.1.1:51234`;
+        break;
+
+      case "find": {
+        const findPath = args.find((a) => !a.startsWith("-")) || ".";
+        const target2 = resolve(findPath);
+        const findEntries = fs[target2] || [];
+        result = [target2, ...findEntries.map((f) => `${target2}/${f}`)].join("\n");
+        break;
+      }
+
+      case "env":
+        result = `HOME=/home/kali\nUSER=kali\nSHELL=/bin/bash\nTERM=xterm-256color\nPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\nLANG=en_US.UTF-8\nLOGNAME=kali`;
+        break;
+
+      case "python3":
+      case "python": {
+        const pyArg = args.join(" ");
+        if (!pyArg || pyArg === "-V" || pyArg === "--version") {
+          result = "Python 3.12.3 (simulated — use Python Lab to run real code)";
+        } else if (pyArg.startsWith("-c")) {
+          result = "[simulated] Open Python Lab (Alt+P) to run real Python code in your browser.";
+        } else {
+          result = "[simulated] To run a Python script, open the Python Lab editor (top button or Alt+P).";
+        }
+        break;
+      }
+
+      case "nano":
+      case "vim":
+      case "vi": {
+        const editorFile = args[0] || "";
+        result = `[simulated] The ${name} editor is not available in this terminal. Use 'cat' to read a file, or Python Lab to edit code.`;
+        break;
+      }
+
+      case "ssh": {
+        const sshHost = args.find((a) => !a.startsWith("-")) || "";
+        result = sshHost
+          ? `ssh: connection to '${sshHost}' — networking is unavailable in this simulation.\nssh: Use a real Kali terminal in TryHackMe or DVWA to practice SSH.`
+          : "usage: ssh [user@]hostname";
+        break;
+      }
+
+      case "wget":
+      case "curl": {
+        const url = args.find((a) => !a.startsWith("-")) || "";
+        result = url
+          ? `${name}: networking is unavailable in this simulation.\n${name}: Use a real Kali terminal (VM / TryHackMe) to make actual HTTP requests.`
+          : `usage: ${name} <url>`;
+        break;
+      }
+
+      case "apt":
+      case "apt-get": {
+        const sub = args[0];
+        if (sub === "update") result = "Reading package lists... Done (simulated)\nAll packages are up to date.";
+        else if (sub === "install") result = args[1]
+          ? `Installing '${args[1]}'... (simulated — works only on a real Kali Linux system)`
+          : "apt: specify a package to install. Example: apt install nmap";
+        else result = `apt: unknown command '${sub || "?"}'. Commands: update, install, remove, search`;
+        break;
+      }
+
+      case "man": {
+        const manCmd = args[0];
+        if (!manCmd) { result = "usage: man <commande>"; break; }
+        const manPages = {
+          nmap: "NMAP(1) — Network port scanner. Options: -sV (version), -O (OS), -A (advanced detection), -p <ports>",
+          ls: "LS(1) — List directory contents. Options: -l (long format), -a (all), -la (combined)",
+          grep: "GREP(1) — Search a file for a pattern. Options: -i (ignore case), -r (recursive), -n (line numbers)",
+          chmod: "CHMOD(1) — Change permissions. Example: chmod 755 file (rwxr-xr-x)",
+          cat: "CAT(1) — Display file contents. Option: -n (line numbers)",
+          ssh: "SSH(1) — Secure remote connection. Usage: ssh [user@]host [-p port]",
+          ping: "PING(8) — Test network connectivity. Options: -c N (packet count), -i sec (interval)",
+        };
+        result = manPages[manCmd] || `No manual page for '${manCmd}' (simulated — see https://man7.org/linux/man-pages/)`;
+        break;
+      }
+
+      case "sudo": {
+        const sub2 = args.join(" ");
+        result = sub2
+          ? `[sudo] simulated: running '${sub2}' as root (simulation only)`
+          : "usage: sudo <command>";
+        break;
+      }
+
+      case "export": {
+        const varDef = args[0] || "";
+        result = varDef ? `Exported variable: ${varDef}` : "usage: export NAME=VALUE";
+        break;
+      }
+
+      case "head":
+      case "tail": {
+        const fileT = args.find((a) => !a.startsWith("-")) || "";
+        const nLines = parseInt(args.find((a) => /^-n\d*$/.test(a) || /^\d+$/.test(a.replace("-",""))) || "10");
+        const lines2 = parseInt(isNaN(nLines) ? 10 : nLines) || 10;
+        const pathT = resolve(fileT);
+        const contentT = fileContents[pathT];
+        if (!fileT) { result = `usage: ${name} [-n N] <file>`; break; }
+        if (contentT === undefined) { result = `${name}: ${fileT}: No such file or directory`; break; }
+        const linesArr = contentT.split("\n");
+        result = name === "head" ? linesArr.slice(0, lines2).join("\n") : linesArr.slice(-lines2).join("\n");
+        break;
+      }
+
+      case "wc": {
+        const fileW = args.find((a) => !a.startsWith("-")) || "";
+        const pathW = resolve(fileW);
+        const contentW = fileContents[pathW];
+        if (!fileW) { result = "usage: wc [-l] <file>"; break; }
+        if (contentW === undefined) { result = `wc: ${fileW}: No such file or directory`; break; }
+        const lCount = contentW.split("\n").length;
+        const wCount = contentW.split(/\s+/).filter(Boolean).length;
+        const cCount = contentW.length;
+        result = `  ${lCount}  ${wCount} ${cCount} ${fileW}`;
+        break;
+      }
+
       default:
-        result = `${esc(name)}: commande introuvable. Tapez <span class="term-hl">help</span> pour afficher la liste des commandes disponibles.`;
+        result = `${esc(name)}: command not found. Type <span class="term-hl">help</span> to list available commands.`;
         isHtml = true;
         break;
     }
 
-    if (result) {
+    if (result !== undefined && result !== null && result !== "") {
+      // Cap output at 45 lines
+      const rawLines = (typeof result === "string" ? result : String(result)).split("\n");
+      const truncated = rawLines.length > 45;
+      const displayed = truncated ? rawLines.slice(0, 45) : rawLines;
+
       const line = document.createElement("div");
       line.className = "terminal-output-block";
       if (isHtml) {
+        if (truncated) {
+          const template = document.createElement("template");
+          template.innerHTML = result;
+          line.textContent = template.content.textContent.split("\n").slice(0, 45).join("\n");
+          const note = document.createElement("div");
+          note.className = "term-truncation-note";
+          note.textContent = `... (${rawLines.length - 45} lines hidden — limit: 45 lines)`;
+          output.append(line, note);
+          appendPrompt(output);
+          output.scrollTop = output.scrollHeight;
+          return;
+        }
         line.innerHTML = result;
       } else {
-        line.textContent = result;
+        const displayedResult = displayed.join("\n");
+        line.textContent = displayedResult;
+        if (truncated) {
+          const note = document.createElement("div");
+          note.className = "term-truncation-note";
+          note.textContent = `... (${rawLines.length - 45} lines hidden — limit: 45 lines)`;
+          output.append(line);
+          output.append(note);
+          appendPrompt(output);
+          output.scrollTop = output.scrollHeight;
+          return;
+        }
       }
       output.append(line);
     }
 
     appendPrompt(output);
+    output.scrollTop = output.scrollHeight;
   }
 
   function open() {
     close();
     previousFocus = document.activeElement;
 
-    const language = window.LearnHubI18n?.language?.() || "fr";
-    const labels = {
-      ar: { title: "محطة لينكس كالي المحاكية", hint: "اكتب 'help' لعرض الأوامر المتاحة", close: "إغلاق" },
-      en: { title: "Kali Linux Simulated Terminal", hint: "Type 'help' to list available commands", close: "Close" },
-      fr: { title: "Terminal Kali Linux (Simulé)", hint: "Tapez 'help' pour la liste des commandes", close: "Fermer" }
+    const text = {
+      title: "Kali Linux Simulated Terminal",
+      hint: "Type 'help' to list available commands",
+      close: "Close"
     };
-    const text = labels[language] || labels.fr;
 
     const backdrop = document.createElement("div");
     backdrop.className = "terminal-backdrop";
@@ -403,24 +585,43 @@ Nmap done: 1 IP address (1 host up) scanned in 1.48 seconds`;
       if (event.target === backdrop) close();
     });
 
-    const onKeyDown = (event) => {
+    keydownHandler = (event) => {
+      if (window.LearnHubUtils?.isTopLayer && !window.LearnHubUtils.isTopLayer(backdrop)) return;
       if (event.key === "Escape") {
-        event.stopPropagation();
+        event.stopImmediatePropagation();
         close();
+      } else if (event.key === "Tab") {
+        const dialog = backdrop.querySelector(".terminal-dialog");
+        const focusable = [...dialog.querySelectorAll("button:not(:disabled), input:not(:disabled), textarea:not(:disabled), select:not(:disabled), [tabindex]:not([tabindex='-1'])")];
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable.at(-1);
+        if (event.shiftKey && (document.activeElement === first || document.activeElement === dialog)) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && (document.activeElement === last || document.activeElement === dialog)) {
+          event.preventDefault();
+          first.focus();
+        }
       }
     };
-    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("keydown", keydownHandler);
 
     document.body.append(backdrop);
     const output = backdrop.querySelector("#terminal-output");
     appendPrompt(output);
+    output.scrollTop = output.scrollHeight;
   }
 
   function close() {
     const backdrop = document.querySelector(".terminal-backdrop");
-    if (!backdrop) return;
-    backdrop.remove();
-    previousFocus?.focus();
+    if (keydownHandler) {
+      document.removeEventListener("keydown", keydownHandler);
+      keydownHandler = null;
+    }
+    if (backdrop) backdrop.remove();
+    if (previousFocus?.isConnected) previousFocus.focus();
+    previousFocus = null;
   }
 
   window.LearnHubTerminal = { open, close };

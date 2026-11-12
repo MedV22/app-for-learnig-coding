@@ -2,8 +2,6 @@
    Learn Hub — Handcrafted Design System (Human-Engineered & Designed)
    ========================================================================== */
 
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
-
 :root {
   color-scheme: light;
 
@@ -1869,6 +1867,13 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .term-file-normal { color: #f3f4f6; }
 .term-hl { color: #38bdf8; }
 
+.term-truncation-note {
+  margin-top: 4px;
+  font: 11px var(--mono);
+  color: #f59e0b;
+  opacity: 0.85;
+}
+
 /* ==========================================================================
    Python Playground (Pyodide)
    ========================================================================== */
@@ -1970,6 +1975,16 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   margin-left: auto;
   font: 11.5px var(--mono);
   color: #9aa2b2;
+}
+
+.pyodide-status.is-ok {
+  color: #4ade80;
+  font-weight: 600;
+}
+
+.pyodide-status.is-error {
+  color: #f87171;
+  font-weight: 600;
 }
 
 .pyodide-body {
@@ -2089,4 +2104,129 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Shared controls and responsive navigation */
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 36px;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--ink-secondary);
+  font-size: 12px;
+  font-weight: 650;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color .15s ease, color .15s ease, background-color .15s ease, transform .15s ease;
+}
+
+.btn-pill:hover {
+  border-color: var(--line-hover);
+  background: var(--surface-hover);
+  color: var(--ink);
+}
+
+.btn-pill:active { transform: translateY(1px); }
+.btn-icon { font-size: 14px; line-height: 1; }
+.btn-kbd {
+  padding: 1px 5px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface-subtle);
+  color: var(--muted);
+  font: 600 9px var(--mono);
+}
+
+/* Make the main content reachable without tabbing through the full header. */
+.skip-link {
+  position: fixed;
+  z-index: 2000;
+  top: 8px;
+  left: 8px;
+  transform: translateY(calc(-100% - 16px));
+  padding: 9px 13px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  box-shadow: var(--shadow-hover);
+  font-weight: 700;
+  transition: transform .16s ease;
+}
+
+.skip-link:focus { transform: translateY(0); }
+#main-content { scroll-margin-top: 84px; }
+.arabic .skip-link { right: 8px; left: auto; }
+
+.level-debutant { color: var(--success); }
+.level-intermediaire { color: var(--warning); }
+.level-avance { color: var(--danger); }
+
+.concept-open { width: 100%; }
+.favorite-btn { flex: 0 0 auto; }
+.category-nav { scrollbar-width: thin; }
+.category-nav:empty { display: none; }
+
+@media (max-width: 960px) {
+  .topbar {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    row-gap: 6px;
+    padding-top: 8px;
+    padding-bottom: 7px;
+  }
+
+  .topbar > .brand { order: 1; }
+  .topbar > .header-actions { order: 2; }
+  .topbar > nav {
+    order: 3;
+    flex: 0 0 100%;
+    justify-content: center;
+    gap: 3px;
+    min-width: 0;
+    overflow-x: auto;
+    padding: 2px 0 3px;
+    scrollbar-width: none;
+  }
+
+  .topbar > nav::-webkit-scrollbar { display: none; }
+  .topbar nav a { flex: 0 0 auto; }
+}
+
+@media (max-width: 768px) {
+  .topbar { min-height: 0; padding-right: 14px; padding-left: 14px; }
+  .topbar nav { display: flex; }
+  .header-actions { gap: 5px; }
+  .btn-kbd { display: none; }
+  .cards-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); }
+  .toolbar { flex-wrap: wrap; }
+  .toolbar .search { flex-basis: 100%; }
+  .level-control { flex: 1; }
+  .fav-filter-toggle { flex: 0 0 auto; }
+  .progress-actions-group { flex-wrap: wrap; }
+  .detail-modal, .quiz-dialog { padding: 20px; }
+}
+
+@media (max-width: 520px) {
+  .topbar { column-gap: 8px; }
+  .topbar > nav { justify-content: flex-start; }
+  .topbar nav a { padding: 6px 9px; font-size: 12px; }
+  .btn-pill { width: 36px; padding: 0; }
+  .btn-pill .btn-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+  .language-switch { width: 72px; padding: 0 5px; font-size: 11px; }
+  .install-button { width: 36px; padding: 0; justify-content: center; }
+  .install-button .install-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+  .course-main { padding-top: 20px; }
+  .course-hero { padding: 22px 18px; }
+  .hero-symbol { font-size: 34px; }
+  .section-heading { align-items: flex-start; }
+  .quiz-btn { flex: 0 0 auto; }
+  .pyodide-toolbar { flex-wrap: wrap; }
+  .pyodide-status { flex-basis: 100%; margin-left: 0; }
 }

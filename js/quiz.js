@@ -3,203 +3,203 @@
   const quizzes = {
     python: {
       "Bases": [
-        { q: "Quel affichage produit print(2 + 2) ?", options: ["4", "22", "2+2", "Erreur"], answer: 0, explain: "En Python, 2 + 2 additionne deux entiers pour donner 4." },
-        { q: "Quel type a la valeur True en Python ?", options: ["int", "str", "bool", "float"], answer: 2, explain: "True et False sont des valeurs booléennes de type bool." },
-        { q: "Comment déclare-t-on une variable x avec la valeur 5 ?", options: ["var x = 5", "x = 5", "let x = 5", "int x = 5"], answer: 1, explain: "En Python, l'affectation directe 'x = 5' suffit." }
+        { q: "What does print(2 + 2) display?", options: ["4", "22", "2+2", "Error"], answer: 0, explain: "In Python, 2 + 2 adds two integers and returns 4." },
+        { q: "What is the type of the value True in Python?", options: ["int", "str", "bool", "float"], answer: 2, explain: "True and False are Boolean values of type bool." },
+        { q: "How do you declare a variable x with the value 5?", options: ["var x = 5", "x = 5", "let x = 5", "int x = 5"], answer: 1, explain: "In Python, the direct assignment 'x = 5' is enough." }
       ],
       "Opérateurs": [
-        { q: "Quel est le résultat de 9 // 2 en Python ?", options: ["4.5", "4", "1", "5"], answer: 1, explain: "// est l'opérateur de division entière (quotient entier)." },
-        { q: "Quel opérateur calcule le reste d'une division (modulo) ?", options: ["/", "//", "%", "**"], answer: 2, explain: "% est l'opérateur modulo, qui renvoie le reste de la division." },
-        { q: "Quel opérateur calcule une puissance (ex: 2 au cube) ?", options: ["^", "**", "pow", "//"], answer: 1, explain: "2 ** 3 vaut 8 en Python." }
+        { q: "What is the result of 9 // 2 in Python?", options: ["4.5", "4", "1", "5"], answer: 1, explain: "// is the floor-division operator; it returns the integer quotient." },
+        { q: "Which operator returns the remainder of a division (modulo)?", options: ["/", "//", "%", "**"], answer: 2, explain: "% is the modulo operator and returns the remainder of a division." },
+        { q: "Which operator calculates a power (for example, 2 cubed)?", options: ["^", "**", "pow", "//"], answer: 1, explain: "In Python, 2 ** 3 equals 8." }
       ],
       "Conditions": [
-        { q: "Quel mot-clé teste une condition alternative après un 'if' ?", options: ["else", "elif", "then", "unless"], answer: 1, explain: "'elif' est la contraction de 'else if' en Python." },
-        { q: "Que doit-on obligatoirement respecter après 'if condition:' ?", options: ["Les accolades", "L'indentation (espaces)", "Un point-virgule", "Rien"], answer: 1, explain: "Python délimite ses blocs de code grâce à l'indentation." }
+        { q: "Which keyword checks an alternative condition after an 'if'?", options: ["else", "elif", "then", "unless"], answer: 1, explain: "'elif' is Python's abbreviation for 'else if'." },
+        { q: "What must you use after 'if condition:'?", options: ["Braces", "Indentation (spaces)", "A semicolon", "Nothing"], answer: 1, explain: "Python uses indentation to define code blocks." }
       ],
       "Boucles": [
-        { q: "Quelle boucle répète pour chaque élément d'une séquence ?", options: ["while", "for", "if", "def"], answer: 1, explain: "La boucle 'for item in sequence' parcourt chaque élément." },
-        { q: "Quel mot-clé interrompt une boucle immédiatement ?", options: ["continue", "break", "return", "pass"], answer: 1, explain: "'break' sort immédiatement de la boucle en cours." },
-        { q: "Que produit range(1, 4) ?", options: ["[1, 2, 3, 4]", "1, 2, 3", "0, 1, 2, 3", "1, 4"], answer: 1, explain: "range(1, 4) commence à 1 et s'arrête avant 4 (donc 1, 2, 3)." }
+        { q: "Which loop repeats an action for each item in a sequence?", options: ["while", "for", "if", "def"], answer: 1, explain: "The loop 'for item in sequence' visits each item." },
+        { q: "Which keyword immediately stops a loop?", options: ["continue", "break", "return", "pass"], answer: 1, explain: "'break' immediately exits the current loop." },
+        { q: "What values does range(1, 4) produce?", options: ["[1, 2, 3, 4]", "1, 2, 3", "0, 1, 2, 3", "1, 4"], answer: 1, explain: "range(1, 4) starts at 1 and stops before 4, producing 1, 2, 3." }
       ],
       "Structures de données": [
-        { q: "Quelle structure permet d'associer des clés à des valeurs ?", options: ["Liste", "Tuple", "Dictionnaire", "Ensemble"], answer: 2, explain: "Un dictionnaire (dict) stocke des paires clé: valeur." },
-        { q: "Quelle structure ne conserve que des valeurs uniques sans doublon ?", options: ["Liste", "Dictionnaire", "Set (Ensemble)", "Tuple"], answer: 2, explain: "Un set élimine automatiquement les doublons." },
-        { q: "Comment ajoute-t-on un élément à la fin d'une liste ?", options: [".push()", ".append()", ".add()", ".insert()"], answer: 1, explain: "En Python, on utilise ma_liste.append(element)." }
+        { q: "Which data structure associates keys with values?", options: ["List", "Tuple", "Dictionary", "Set"], answer: 2, explain: "A dictionary (dict) stores key-value pairs." },
+        { q: "Which data structure keeps only unique values without duplicates?", options: ["List", "Dictionary", "Set", "Tuple"], answer: 2, explain: "A set automatically removes duplicate values." },
+        { q: "How do you add an item to the end of a list?", options: [".push()", ".append()", ".add()", ".insert()"], answer: 1, explain: "In Python, use my_list.append(item)." }
       ],
       "Fonctions": [
-        { q: "Quel mot-clé définit une fonction en Python ?", options: ["func", "def", "function", "define"], answer: 1, explain: "Le mot-clé 'def' est utilisé pour déclarer une fonction." },
-        { q: "Qu'est-ce qu'une fonction lambda en Python ?", options: ["Une fonction nommée", "Une petite fonction anonyme sur une ligne", "Une classe", "Un décorateur"], answer: 1, explain: "lambda arguments: expression crée une fonction anonyme." },
-        { q: "Quel mot-clé renvoie la valeur calculée par une fonction ?", options: ["send", "output", "return", "result"], answer: 2, explain: "'return' renvoie un résultat à l'appelant." }
+        { q: "Which keyword defines a function in Python?", options: ["func", "def", "function", "define"], answer: 1, explain: "The 'def' keyword is used to declare a function." },
+        { q: "What is a lambda function in Python?", options: ["A named function", "A small anonymous function written on one line", "A class", "A decorator"], answer: 1, explain: "lambda arguments: expression creates an anonymous function." },
+        { q: "Which keyword returns a value calculated by a function?", options: ["send", "output", "return", "result"], answer: 2, explain: "'return' sends a result back to the caller." }
       ],
       "Chaînes de texte": [
-        { q: "Quelle méthode découpe une chaîne en liste de mots ?", options: [".join()", ".split()", ".slice()", ".cut()"], answer: 1, explain: "'un deux'.split() donne ['un', 'deux']." },
-        { q: "Quelle notation permet d'insérer directement une variable dans une chaîne ?", options: ["f-string: f\"Bonjour {nom}\"", "string.format() uniquement", "$nom", "%s obligatoire"], answer: 0, explain: "Les f-strings préfixées par 'f' évaluent les expressions entre accolades." },
-        { q: "Que vaut 'Python'[0:2] ?", options: ["'Py'", "'Pyt'", "'y'", "'Python'"], answer: 0, explain: "Le slicing [0:2] prend les indices 0 et 1 ('Py')." }
+        { q: "Which method splits a string into a list of words?", options: [".join()", ".split()", ".slice()", ".cut()"], answer: 1, explain: "'one two'.split() returns ['one', 'two']." },
+        { q: "Which notation inserts a variable directly into a string?", options: ["f-string: f\"Hello {name}\"", "string.format() only", "$name", "%s required"], answer: 0, explain: "An f-string prefixed with 'f' evaluates expressions inside braces." },
+        { q: "What is the value of 'Python'[0:2]?", options: ["'Py'", "'Pyt'", "'y'", "'Python'"], answer: 0, explain: "The slice [0:2] takes indexes 0 and 1 ('Py')." }
       ],
       "Fichiers": [
-        { q: "Quel mot-clé ferme automatiquement un fichier après usage ?", options: ["open", "with", "close", "auto"], answer: 1, explain: "'with open(...) as f:' garantit la fermeture automatique du fichier." },
-        { q: "Quel mode dans open() écrase le contenu existant d'un fichier ?", options: ["'r'", "'a'", "'w'", "'x'"], answer: 2, explain: "'w' (write) écrase le fichier ou le crée s'il n'existe pas." }
+        { q: "Which keyword automatically closes a file after use?", options: ["open", "with", "close", "auto"], answer: 1, explain: "'with open(...) as f:' ensures the file is closed automatically." },
+        { q: "Which open() mode overwrites a file's existing contents?", options: ["'r'", "'a'", "'w'", "'x'"], answer: 2, explain: "'w' (write) overwrites the file or creates it if it does not exist." }
       ],
       "Erreurs": [
-        { q: "Quel mot-clé encadre du code susceptible de lever une exception ?", options: ["catch", "try", "except", "error"], answer: 1, explain: "Le bloc 'try' contient le code à tester." },
-        { q: "Quel mot-clé déclenche volontairement une exception ?", options: ["throw", "raise", "error", "except"], answer: 1, explain: "En Python, 'raise Exception(\"erreur\")' lève une exception." }
+        { q: "Which keyword wraps code that may raise an exception?", options: ["catch", "try", "except", "error"], answer: 1, explain: "The 'try' block contains the code to test." },
+        { q: "Which keyword deliberately raises an exception?", options: ["throw", "raise", "error", "except"], answer: 1, explain: "In Python, 'raise Exception(\"error\")' raises an exception." }
       ],
       "Modules": [
-        { q: "Quel module standard fournit sqrt(), pi et les fonctions trigonométriques ?", options: ["os", "sys", "math", "random"], answer: 2, explain: "Le module 'math' regroupe les fonctions mathématiques usuelles." },
-        { q: "Quel mot-clé importe un module externe ou standard ?", options: ["include", "import", "require", "using"], answer: 1, explain: "'import' charge le module pour utilisation." }
+        { q: "Which standard module provides sqrt(), pi, and trigonometric functions?", options: ["os", "sys", "math", "random"], answer: 2, explain: "The 'math' module contains common mathematical functions." },
+        { q: "Which keyword imports an external or standard module?", options: ["include", "import", "require", "using"], answer: 1, explain: "'import' loads a module so you can use it." }
       ],
       "POO": [
-        { q: "Quel mot-clé définit une classe en Python ?", options: ["obj", "class", "type", "struct"], answer: 1, explain: "Le mot-clé 'class NomClasse:' définit une classe." },
-        { q: "Quelle méthode spéciale initialise les attributs d'un nouvel objet ?", options: ["__init__", "__main__", "__new__", "__start__"], answer: 0, explain: "def __init__(self, ...) est le constructeur d'une classe Python." },
-        { q: "Que représente le premier paramètre 'self' dans une méthode d'instance ?", options: ["La classe parente", "L'instance courante de l'objet", "Une variable globale", "Rien"], answer: 1, explain: "'self' fait référence à l'objet sur lequel la méthode est appelée." }
+        { q: "Which keyword defines a class in Python?", options: ["obj", "class", "type", "struct"], answer: 1, explain: "The keyword 'class ClassName:' defines a class." },
+        { q: "Which special method initializes a new object's attributes?", options: ["__init__", "__main__", "__new__", "__start__"], answer: 0, explain: "def __init__(self, ...) is a Python class's initializer." },
+        { q: "What does the first parameter 'self' represent in an instance method?", options: ["The parent class", "The current object instance", "A global variable", "Nothing"], answer: 1, explain: "'self' refers to the object on which the method is called." }
       ],
       "Outils": [
-        { q: "Quel outil en ligne de commande installe des paquets Python (PyPI) ?", options: ["conda", "pip", "npm", "apt"], answer: 1, explain: "'pip install paquet' est le gestionnaire de paquets standard de Python." },
-        { q: "À quoi sert un environnement virtuel 'venv' ?", options: ["À accélérer le processeur", "À isoler les dépendances d'un projet", "À compiler en binaire", "À héberger un serveur web"], answer: 1, explain: "venv isole les bibliothèques d'un projet pour éviter les conflits." }
+        { q: "Which command-line tool installs Python packages from PyPI?", options: ["conda", "pip", "npm", "apt"], answer: 1, explain: "'pip install package' is Python's standard package manager." },
+        { q: "What is a 'venv' virtual environment used for?", options: ["Speeding up the processor", "Isolating a project's dependencies", "Compiling to a binary", "Hosting a web server"], answer: 1, explain: "venv isolates a project's libraries to avoid conflicts." }
       ],
       "Python pour la sécurité": [
-        { q: "Quel module Python permet des échanges réseau de bas niveau (TCP/UDP) ?", options: ["socket", "os", "math", "hashlib"], answer: 0, explain: "Le module 'socket' permet d'ouvrir des connexions réseau TCP/UDP." },
-        { q: "Quel module calcule des empreintes cryptographiques (SHA-256, MD5) ?", options: ["random", "hashlib", "secrets", "crypto"], answer: 1, explain: "'hashlib' contient les algorithmes de hachage standard." },
-        { q: "Quel module lance des programmes ou commandes système externes ?", options: ["subprocess", "system", "cmd", "exec"], answer: 0, explain: "'subprocess.run()' est recommandé pour exécuter des commandes externes." }
+        { q: "Which Python module supports low-level network communication (TCP/UDP)?", options: ["socket", "os", "math", "hashlib"], answer: 0, explain: "The 'socket' module can open TCP/UDP network connections." },
+        { q: "Which module calculates cryptographic hashes (SHA-256, MD5)?", options: ["random", "hashlib", "secrets", "crypto"], answer: 1, explain: "'hashlib' contains standard hashing algorithms." },
+        { q: "Which module launches external programs or system commands?", options: ["subprocess", "system", "cmd", "exec"], answer: 0, explain: "'subprocess.run()' is the recommended way to run external commands." }
       ],
       "Mini-projets": [
-        { q: "Quelle fonction génère un entier aléatoire entre 1 et 10 inclus ?", options: ["math.rand(1, 10)", "random.randint(1, 10)", "random.choice(1, 10)", "random.range(1, 10)"], answer: 1, explain: "random.randint(a, b) inclut les deux bornes a et b." },
-        { q: "Comment convertir une saisie utilisateur string en nombre entier ?", options: ["to_int(s)", "int(s)", "parse(s)", "Integer(s)"], answer: 1, explain: "int(\"42\") convertit la chaîne en entier 42." }
+        { q: "Which function generates a random integer from 1 to 10, inclusive?", options: ["math.rand(1, 10)", "random.randint(1, 10)", "random.choice(1, 10)", "random.range(1, 10)"], answer: 1, explain: "random.randint(a, b) includes both endpoints a and b." },
+        { q: "How do you convert a user's string input to an integer?", options: ["to_int(s)", "int(s)", "parse(s)", "Integer(s)"], answer: 1, explain: "int(\"42\") converts the string to the integer 42." }
       ]
     },
     kali: {
       "Introduction": [
-        { q: "Qu'est-ce que Kali Linux ?", options: ["Un antivirus pour Windows", "Une distribution Linux orientée cybersécurité et audits", "Un langage de programmation", "Un routeur matériel"], answer: 1, explain: "Kali Linux est conçue pour les tests d'intrusion et la sécurité informatique." },
-        { q: "Pourquoi recommande-t-on d'utiliser Kali dans une Machine Virtuelle (VM) ?", options: ["Pour aller plus vite sur Internet", "Pour isoler les tests et éviter d'endommager son système principal", "C'est obligatoire pour installer Kali", "Pour miner des cryptomonnaies"], answer: 1, explain: "Une VM offre un environnement de bac à sable sécurisé et facilement réinitialisable." },
-        { q: "Quelle commande met à jour la liste des paquets disponibles sous Kali ?", options: ["sudo apt update", "sudo apt upgrade", "sudo apt get", "kali-update"], answer: 0, explain: "'apt update' télécharge les listes de paquets à jour depuis les dépôts." }
+        { q: "What is Kali Linux?", options: ["An antivirus for Windows", "A Linux distribution for cybersecurity and security audits", "A programming language", "A hardware router"], answer: 1, explain: "Kali Linux is designed for penetration testing and computer security." },
+        { q: "Why is Kali commonly recommended for use in a virtual machine (VM)?", options: ["To make the internet faster", "To isolate tests and protect the main system", "It is required to install Kali", "To mine cryptocurrency"], answer: 1, explain: "A VM provides a secure, easily resettable sandbox." },
+        { q: "Which command updates the list of available packages on Kali?", options: ["sudo apt update", "sudo apt upgrade", "sudo apt get", "kali-update"], answer: 0, explain: "'apt update' downloads current package lists from the repositories." }
       ],
       "Commandes Linux de base": [
-        { q: "Quelle commande liste les fichiers du dossier actuel ?", options: ["cd", "ls", "pwd", "mkdir"], answer: 1, explain: "'ls' (list) affiche les fichiers et dossiers." },
-        { q: "Quelle commande affiche le chemin absolu du dossier courant ?", options: ["dir", "pwd", "path", "where"], answer: 1, explain: "'pwd' signifie Print Working Directory." },
-        { q: "Quelle commande change de répertoire de travail ?", options: ["mv", "cd", "cp", "goto"], answer: 1, explain: "'cd' (Change Directory) permet de naviguer dans les dossiers." },
-        { q: "Quelle commande crée un nouveau dossier ?", options: ["touch", "mkdir", "newdir", "md"], answer: 1, explain: "'mkdir mon_dossier' crée un dossier." }
+        { q: "Which command lists files in the current directory?", options: ["cd", "ls", "pwd", "mkdir"], answer: 1, explain: "'ls' (list) displays files and directories." },
+        { q: "Which command prints the absolute path of the current directory?", options: ["dir", "pwd", "path", "where"], answer: 1, explain: "'pwd' stands for Print Working Directory." },
+        { q: "Which command changes the current working directory?", options: ["mv", "cd", "cp", "goto"], answer: 1, explain: "'cd' (Change Directory) lets you navigate between directories." },
+        { q: "Which command creates a new directory?", options: ["touch", "mkdir", "newdir", "md"], answer: 1, explain: "'mkdir my_directory' creates a directory." }
       ],
       "Permissions & utilisateurs": [
-        { q: "Quelle commande modifie les permissions d'un fichier (rwx) ?", options: ["chown", "chmod", "sudo", "perm"], answer: 1, explain: "'chmod' (Change Mode) modifie les droits de lecture, écriture et exécution." },
-        { q: "Quelle commande exécute une commande avec les privilèges administrateur ?", options: ["su", "sudo", "admin", "root"], answer: 1, explain: "'sudo' (SuperUser DO) élève temporairement les privilèges." },
-        { q: "Quelle commande affiche le nom de l'utilisateur actuellement connecté ?", options: ["whoami", "id", "user", "logname"], answer: 0, explain: "'whoami' renvoie le nom du compte courant (ex: kali)." }
+        { q: "Which command changes a file's permissions (rwx)?", options: ["chown", "chmod", "sudo", "perm"], answer: 1, explain: "'chmod' (Change Mode) changes read, write, and execute permissions." },
+        { q: "Which command runs another command with administrator privileges?", options: ["su", "sudo", "admin", "root"], answer: 1, explain: "'sudo' temporarily elevates privileges for a command." },
+        { q: "Which command displays the name of the currently logged-in user?", options: ["whoami", "id", "user", "logname"], answer: 0, explain: "'whoami' prints the current account name (for example, kali)." }
       ],
       "Gestion des paquets": [
-        { q: "Quelle commande installe un nouveau paquet sous Kali ?", options: ["apt get paquet", "sudo apt install paquet", "dpkg paquet", "pacman paquet"], answer: 1, explain: "'sudo apt install <nom>' installe un paquet depuis les dépôts officiels." },
-        { q: "Que fait la commande 'sudo apt upgrade' ?", options: ["Met à jour la liste des paquets", "Met à jour tous les paquets déjà installés", "Redémarre l'ordinateur", "Supprime les fichiers temporaires"], answer: 1, explain: "'apt upgrade' installe les nouvelles versions des logiciels installés." }
+        { q: "Which command installs a new package on Kali?", options: ["apt get package", "sudo apt install package", "dpkg package", "pacman package"], answer: 1, explain: "'sudo apt install <name>' installs a package from the official repositories." },
+        { q: "What does 'sudo apt upgrade' do?", options: ["Updates the package list", "Upgrades installed packages", "Restarts the computer", "Deletes temporary files"], answer: 1, explain: "'apt upgrade' installs newer versions of installed software." }
       ],
       "Réseau": [
-        { q: "Quelle commande moderne affiche les interfaces réseau et leurs adresses IP ?", options: ["ping", "ip a", "route", "netstat"], answer: 1, explain: "'ip a' (ou 'ip address') liste les interfaces et adresses IP." },
-        { q: "Quelle commande vérifie la connectivité vers un hôte avec des paquets ICMP ?", options: ["curl", "ping", "traceroute", "netstat"], answer: 1, explain: "'ping adresse' teste si une machine répond sur le réseau." },
-        { q: "Quelle commande permet d'observer les sauts (routeurs) vers une destination ?", options: ["traceroute", "ping", "nslookup", "route"], answer: 0, explain: "'traceroute' trace le chemin réseau paquet par paquet." }
+        { q: "Which modern command displays network interfaces and their IP addresses?", options: ["ping", "ip a", "route", "netstat"], answer: 1, explain: "'ip a' (or 'ip address') lists interfaces and IP addresses." },
+        { q: "Which command checks connectivity to a host using ICMP packets?", options: ["curl", "ping", "traceroute", "netstat"], answer: 1, explain: "'ping address' tests whether a machine responds over the network." },
+        { q: "Which command shows the network hops (routers) to a destination?", options: ["traceroute", "ping", "nslookup", "route"], answer: 0, explain: "'traceroute' traces the network path hop by hop." }
       ],
       "Recherche & texte": [
-        { q: "Quelle commande filtre les lignes de texte correspondant à un motif ?", options: ["find", "grep", "locate", "sed"], answer: 1, explain: "'grep' recherche des motifs (expressions régulières) dans du texte." },
-        { q: "Que permet l'opérateur pipe '|' dans le terminal ?", options: ["Arrêter la commande", "Envoyer la sortie d'une commande à l'entrée d'une autre", "Créer un fichier", "Exécuter en tâche de fond"], answer: 1, explain: "'cmd1 | cmd2' redirige le flux de sortie vers cmd2." },
-        { q: "Quelle commande affiche la fin d'un fichier (ex: logs) en direct ?", options: ["head", "cat", "tail -f", "nano"], answer: 2, explain: "'tail -f fichier.log' suit l'écriture dans un fichier en direct." }
+        { q: "Which command filters text lines that match a pattern?", options: ["find", "grep", "locate", "sed"], answer: 1, explain: "'grep' searches text for patterns, including regular expressions." },
+        { q: "What does the pipe operator '|' do in a terminal?", options: ["Stops a command", "Sends one command's output to another command's input", "Creates a file", "Runs a command in the background"], answer: 1, explain: "'cmd1 | cmd2' redirects the output stream to cmd2." },
+        { q: "Which command follows new lines added to a file (such as a log)?", options: ["head", "cat", "tail -f", "nano"], answer: 2, explain: "'tail -f file.log' follows new content written to a file." }
       ],
       "Reconnaissance": [
-        { q: "Quel outil est la référence pour cartographier les ports et services d'un réseau ?", options: ["whois", "nmap", "dig", "traceroute"], answer: 1, explain: "Nmap (Network Mapper) est l'outil phare de scan réseau." },
-        { q: "Quel outil permet de consulter les informations administratives d'un nom de domaine ?", options: ["nmap", "whois", "ping", "cat"], answer: 1, explain: "'whois domaine.com' interroge les registres de noms de domaine." }
+        { q: "Which tool is commonly used to map ports and services on a network?", options: ["whois", "nmap", "dig", "traceroute"], answer: 1, explain: "Nmap (Network Mapper) is a widely used network-scanning tool." },
+        { q: "Which tool retrieves registration information about a domain name?", options: ["nmap", "whois", "ping", "cat"], answer: 1, explain: "'whois example.com' queries domain-name registries." }
       ],
       "Analyse de vulnérabilités": [
-        { q: "Quel outil en ligne de commande teste les vulnérabilités courantes d'un serveur web ?", options: ["Nikto", "Nmap", "Wireshark", "Ping"], answer: 0, explain: "Nikto effectue des tests ciblés sur les configurations serveurs web." },
-        { q: "Quel outil local permet de chercher des exploits connus dans la base Exploit-DB ?", options: ["searchsploit", "findsploit", "exploit-find", "grep-db"], answer: 0, explain: "'searchsploit' interroge hors ligne la base de données Exploit-DB." }
+        { q: "Which command-line tool checks a web server for common vulnerabilities?", options: ["Nikto", "Nmap", "Wireshark", "Ping"], answer: 0, explain: "Nikto performs targeted checks for risky web-server configurations." },
+        { q: "Which local tool searches Exploit-DB for known exploits?", options: ["searchsploit", "findsploit", "exploit-find", "grep-db"], answer: 0, explain: "'searchsploit' searches a local copy of the Exploit-DB database." }
       ],
       "Attaques web (labo)": [
-        { q: "Quel proxy interactif permet d'intercepter et modifier les requêtes HTTP/S en labo ?", options: ["Burp Suite", "Wireshark", "Curl", "Nmap"], answer: 0, explain: "Burp Suite est le proxy d'interception de référence pour l'audit web." },
-        { q: "Quel outil automatise la détection et l'exploitation des failles SQL Injection ?", options: ["sqlmap", "nikto", "john", "gobuster"], answer: 0, explain: "sqlmap est l'outil spécialisé pour tester les vulnérabilités SQLi." },
-        { q: "À quoi sert l'outil Gobuster ou Dirb ?", options: ["Casser des mots de passe", "Découvrir des fichiers et répertoires cachés sur un serveur web", "Scanner les ports Wi-Fi", "Créer un VPN"], answer: 1, explain: "Gobuster énumère les chemins web par force brute avec un dictionnaire." }
+        { q: "Which interactive proxy can intercept and modify HTTP/S requests in a lab?", options: ["Burp Suite", "Wireshark", "Curl", "Nmap"], answer: 0, explain: "Burp Suite is a widely used intercepting proxy for web testing." },
+        { q: "Which tool automates the detection and testing of SQL injection flaws?", options: ["sqlmap", "nikto", "john", "gobuster"], answer: 0, explain: "sqlmap is specialized for testing SQL injection vulnerabilities." },
+        { q: "What are Gobuster and Dirb used for?", options: ["Cracking passwords", "Discovering files and directories on a web server", "Scanning Wi-Fi ports", "Creating a VPN"], answer: 1, explain: "Gobuster enumerates web paths using a wordlist." }
       ],
       "Mots de passe": [
-        { q: "Quel outil ultra-rapide utilise la puissance des GPU pour tester des hachages ?", options: ["nmap", "hashcat", "ping", "hydra"], answer: 1, explain: "Hashcat tire parti des cartes graphiques pour l'audit de hachages." },
-        { q: "Quel outil teste les formulaires d'authentification réseau (SSH, FTP, HTTP) par dictionnaire ?", options: ["Hydra", "John", "Crunch", "Wireshark"], answer: 0, explain: "THC Hydra teste les services d'authentification réseau." }
+        { q: "Which tool uses GPU acceleration to audit password hashes?", options: ["nmap", "hashcat", "ping", "hydra"], answer: 1, explain: "Hashcat uses graphics cards to audit password hashes." },
+        { q: "Which tool tests network authentication services (SSH, FTP, HTTP) using a wordlist?", options: ["Hydra", "John", "Crunch", "Wireshark"], answer: 0, explain: "THC Hydra tests network authentication services." }
       ],
       "Wi-Fi (labo / réseau propre)": [
-        { q: "Quelle suite d'outils est incontournable pour auditer la sécurité des réseaux 802.11 ?", options: ["Aircrack-ng", "Wireshark", "Nmap", "Metasploit"], answer: 0, explain: "Aircrack-ng est la suite complète pour tester la sécurité Wi-Fi." },
-        { q: "Dans quel cadre strict est-il autorisé d'auditer un réseau sans fil ?", options: ["Sur n'importe quel Wi-Fi public", "Uniquement sur son propre réseau ou avec autorisation écrite explicite", "Tant qu'on ne télécharge rien", "Partout le week-end"], answer: 1, explain: "L'audit non autorisé est illégal et pénalement sanctionné." }
+        { q: "Which tool suite is commonly used to audit 802.11 wireless security?", options: ["Aircrack-ng", "Wireshark", "Nmap", "Metasploit"], answer: 0, explain: "Aircrack-ng is a suite for testing Wi-Fi security." },
+        { q: "When is it permitted to audit a wireless network?", options: ["On any public Wi-Fi", "Only on your own network or with explicit written permission", "As long as you do not download anything", "Any weekend"], answer: 1, explain: "Unauthorized auditing is illegal and may carry criminal penalties." }
       ],
       "Analyse réseau": [
-        { q: "Quel logiciel graphique capture et analyse en profondeur les paquets réseau ?", options: ["Wireshark", "Nmap", "Burp Suite", "Netcat"], answer: 0, explain: "Wireshark est l'analyseur de protocoles réseau le plus utilisé au monde." },
-        { q: "Quel outil en ligne de commande équivaut à un renifleur de paquets léger sous Linux ?", options: ["tcpdump", "ping", "traceroute", "netstat"], answer: 0, explain: "tcpdump capture et filtre les paquets directement dans le terminal." }
+        { q: "Which graphical application captures and analyzes network packets?", options: ["Wireshark", "Nmap", "Burp Suite", "Netcat"], answer: 0, explain: "Wireshark is a widely used network protocol analyzer." },
+        { q: "Which Linux command-line tool can capture packets?", options: ["tcpdump", "ping", "traceroute", "netstat"], answer: 0, explain: "tcpdump captures and filters packets directly in the terminal." }
       ],
       "Exploitation": [
-        { q: "Quel framework puissant permet de tester la validation d'exploits en environnement contrôlé ?", options: ["Metasploit (msfconsole)", "Wireshark", "John the Ripper", "Autopsy"], answer: 0, explain: "Metasploit Framework est le standard pour tester des failles en laboratoire." },
-        { q: "Quel utilitaire de la suite Metasploit génère des payloads de test personnalisés ?", options: ["msfvenom", "msfupdate", "msfscan", "msfcli"], answer: 0, explain: "msfvenom combine génération de charges utiles et encodage." }
+        { q: "Which framework helps validate exploits in a controlled environment?", options: ["Metasploit (msfconsole)", "Wireshark", "John the Ripper", "Autopsy"], answer: 0, explain: "Metasploit Framework is commonly used to test vulnerabilities in a lab." },
+        { q: "Which Metasploit utility generates customized test payloads?", options: ["msfvenom", "msfupdate", "msfscan", "msfcli"], answer: 0, explain: "msfvenom combines payload generation and encoding." }
       ],
       "Forensic": [
-        { q: "À quoi sert l'investigation numérique (Digital Forensics) ?", options: ["Attaquer des cibles distantes", "Analyser des preuves numériques et traces après un incident", "Chiffrer un disque dur", "Installer un OS"], answer: 1, explain: "Le Forensic analyse les disques, mémoires et logs pour comprendre une intrusion." },
-        { q: "Quel outil extrait les fichiers intégrés ou cachés dans une image binaire ou firmware ?", options: ["binwalk", "grep", "cat", "tar"], answer: 0, explain: "Binwalk analyse et décompresse les architectures de firmwares et images." }
+        { q: "What is digital forensics used for?", options: ["Attacking remote targets", "Analyzing digital evidence and traces after an incident", "Encrypting a hard drive", "Installing an OS"], answer: 1, explain: "Forensics analyzes disks, memory, and logs to understand an incident." },
+        { q: "Which tool extracts embedded or hidden files from a binary image or firmware?", options: ["binwalk", "grep", "cat", "tar"], answer: 0, explain: "Binwalk analyzes firmware and disk images and can extract embedded files." }
       ],
       "Anonymat & sécurité": [
-        { q: "Quel outil permet de router les requêtes d'une commande via une chaîne de serveurs mandataires (proxies) ?", options: ["proxychains", "curl", "openvpn", "ssh"], answer: 0, explain: "proxychains force les connexions TCP à transiter par des proxies SOCKS/HTTP." },
-        { q: "Quel principe protège le trafic dans le réseau Tor ?", options: ["Le routage en oignon (chiffrement multicouche)", "Un mot de passe unique", "Un proxy centralisé", "Un pare-feu"], answer: 0, explain: "Tor chiffre les paquets en couches successives (comme un oignon)." }
+        { q: "Which tool routes an application's connections through a chain of proxies?", options: ["proxychains", "curl", "openvpn", "ssh"], answer: 0, explain: "proxychains routes supported TCP connections through SOCKS/HTTP proxies." },
+        { q: "Which principle protects traffic on the Tor network?", options: ["Onion routing (layered encryption)", "A single password", "A centralized proxy", "A firewall"], answer: 0, explain: "Tor encrypts packets in successive layers, like an onion." }
       ],
       "Labs pour s'entraîner": [
-        { q: "Quelle plateforme propose des parcours guidés pour apprendre la cybersécurité pas à pas ?", options: ["TryHackMe", "Wikipedia", "StackOverflow", "Reddit"], answer: 0, explain: "TryHackMe offre des machines virtuelles et des salles d'apprentissage guidées." },
-        { q: "Quelle application web volontairement vulnérable est idéale pour s'entraîner en local ?", options: ["DVWA (Damn Vulnerable Web App)", "Apache2", "Nginx", "WordPress"], answer: 0, explain: "DVWA permet de tester légalement XSS, SQLi, CSRF sur sa propre machine." }
+        { q: "Which platform offers guided paths for learning cybersecurity step by step?", options: ["TryHackMe", "Wikipedia", "Stack Overflow", "Reddit"], answer: 0, explain: "TryHackMe provides virtual machines and guided learning rooms." },
+        { q: "Which intentionally vulnerable web application is suitable for local practice?", options: ["DVWA (Damn Vulnerable Web App)", "Apache2", "Nginx", "WordPress"], answer: 0, explain: "DVWA lets you legally practice XSS, SQL injection, and CSRF on your own machine." }
       ]
     },
     html: {
       "Structure d'une page": [
-        { q: "Quelle déclaration indique au navigateur qu'il s'agit de HTML5 ?", options: ["<html>", "<!doctype html>", "<head>", "<?xml>"], answer: 1, explain: "<!doctype html> en tête de document active le rendu standard HTML5." },
-        { q: "Quelle balise contient les métadonnées (titre, encodage, styles) non visibles directement ?", options: ["<body>", "<head>", "<meta>", "<title>"], answer: 1, explain: "<head> contient la configuration et les liens vers les ressources." }
+        { q: "Which declaration tells the browser that the document uses HTML5?", options: ["<html>", "<!doctype html>", "<head>", "<?xml>"], answer: 1, explain: "Placing <!doctype html> at the start of the document enables standard HTML5 rendering." },
+        { q: "Which element contains metadata (title, encoding, styles) that is not directly visible?", options: ["<body>", "<head>", "<meta>", "<title>"], answer: 1, explain: "<head> contains page configuration and links to resources." }
       ],
       "Texte et structure": [
-        { q: "Quelle balise définit un paragraphe de texte ?", options: ["<p>", "<div>", "<span>", "<text>"], answer: 0, explain: "<p> représente un paragraphe sémantique." },
-        { q: "Quelle balise crée une liste à puces non ordonnée ?", options: ["<ol>", "<ul>", "<li>", "<list>"], answer: 1, explain: "<ul> (Unordered List) contient des éléments <li>." }
+        { q: "Which HTML element defines a paragraph of text?", options: ["<p>", "<div>", "<span>", "<text>"], answer: 0, explain: "<p> represents a semantic paragraph." },
+        { q: "Which element creates an unordered bulleted list?", options: ["<ol>", "<ul>", "<li>", "<list>"], answer: 1, explain: "<ul> (unordered list) contains <li> items." }
       ],
       "Liens et médias": [
-        { q: "Quelle balise crée un lien hypertexte vers une autre page ?", options: ["<link>", "<a href=\"...\">", "<url>", "<href>"], answer: 1, explain: "<a href=\"...\"> (Anchor) est la balise de lien hypertexte." },
-        { q: "Quel attribut est indispensable sur <img> pour l'accessibilité ?", options: ["title", "alt", "src", "desc"], answer: 1, explain: "'alt' fournit une description textuelle aux lecteurs d'écran." }
+        { q: "Which element creates a hyperlink to another page?", options: ["<link>", "<a href=\"...\">", "<url>", "<href>"], answer: 1, explain: "<a href=\"...\"> (anchor) creates a hyperlink." },
+        { q: "Which attribute on <img> is essential for accessibility?", options: ["title", "alt", "src", "desc"], answer: 1, explain: "'alt' provides a text description for screen readers." }
       ],
       "HTML sémantique": [
-        { q: "Quelle balise regroupe les liens de navigation principaux du site ?", options: ["<header>", "<nav>", "<menu>", "<links>"], answer: 1, explain: "<nav> indique aux moteurs et lecteurs la zone de navigation." },
-        { q: "Quelle balise contient le contenu principal et unique de la page ?", options: ["<section>", "<main>", "<article>", "<body>"], answer: 1, explain: "<main> doit être unique par document et contenir le sujet central." }
+        { q: "Which element groups a site's primary navigation links?", options: ["<header>", "<nav>", "<menu>", "<links>"], answer: 1, explain: "<nav> identifies a page's navigation area to browsers and assistive technologies." },
+        { q: "Which element contains the page's unique primary content?", options: ["<section>", "<main>", "<article>", "<body>"], answer: 1, explain: "<main> should appear once per document and contain its central topic." }
       ],
       "Formulaires": [
-        { q: "Quelle balise associe une légende accessible à un champ de saisie ?", options: ["<p>", "<label for=\"...\">", "<legend>", "<span>"], answer: 1, explain: "<label for=\"id\"> lie le libellé au champ correspondant." },
-        { q: "Quel type d'input masque les caractères saisis ?", options: ["type=\"secret\"", "type=\"password\"", "type=\"hidden\"", "type=\"protect\""], answer: 1, explain: "<input type=\"password\"> masque visuellement la saisie." }
+        { q: "Which element associates an accessible label with an input field?", options: ["<p>", "<label for=\"...\">", "<legend>", "<span>"], answer: 1, explain: "<label for=\"id\"> connects the label to the matching field." },
+        { q: "Which input type masks the characters a user enters?", options: ["type=\"secret\"", "type=\"password\"", "type=\"hidden\"", "type=\"protect\""], answer: 1, explain: "<input type=\"password\"> visually masks the entered text." }
       ]
     },
     css: {
       "Premiers styles": [
-        { q: "Quel symbole préfixe un sélecteur de classe en CSS ?", options: ["#", ".", "*", "&"], answer: 1, explain: ".nom-classe cible tous les éléments portant cette classe." },
-        { q: "Quel symbole préfixe un sélecteur d'identifiant unique (ID) ?", options: ["#", ".", "@", "$"], answer: 0, explain: "#identifiant cible l'élément unique ayant cet ID." }
+        { q: "Which symbol prefixes a CSS class selector?", options: ["#", ".", "*", "&"], answer: 1, explain: ".class-name targets all elements with that class." },
+        { q: "Which symbol prefixes a unique ID selector?", options: ["#", ".", "@", "$"], answer: 0, explain: "#id targets the unique element with that ID." }
       ],
       "Texte et apparence": [
-        { q: "Quelle propriété contrôle la taille de la police de texte ?", options: ["text-size", "font-size", "size", "font-weight"], answer: 1, explain: "font-size (ex: 16px, 1.2rem) définit la taille de typographie." },
-        { q: "Quelle est la différence entre margin et padding ?", options: ["Margin est l'espace intérieur, padding l'espace extérieur", "Padding est l'espace intérieur, margin l'espace extérieur", "Il n'y en a aucune", "Margin ne fonctionne que sur le texte"], answer: 1, explain: "Padding se trouve à l'intérieur de la bordure, margin autour à l'extérieur." }
+        { q: "Which property controls the size of text?", options: ["text-size", "font-size", "size", "font-weight"], answer: 1, explain: "font-size (for example, 16px or 1.2rem) sets the text size." },
+        { q: "What is the difference between margin and padding?", options: ["Margin is inside space; padding is outside space", "Padding is inside space; margin is outside space", "There is no difference", "Margin only works on text"], answer: 1, explain: "Padding is inside the border; margin is outside it." }
       ],
       "Disposition": [
-        { q: "Quelle valeur de display organise des éléments enfants en ligne ou colonne flexible ?", options: ["block", "flex", "grid", "inline"], answer: 1, explain: "display: flex active le modèle Flexbox unidimensionnel." },
-        { q: "Quelle valeur de position fixe un élément par rapport à la fenêtre du navigateur ?", options: ["absolute", "relative", "fixed", "sticky"], answer: 2, explain: "position: fixed maintient l'élément à l'écran même au défilement." }
+        { q: "Which display value arranges child elements in a flexible row or column?", options: ["block", "flex", "grid", "inline"], answer: 1, explain: "display: flex enables the one-dimensional Flexbox layout." },
+        { q: "Which position value fixes an element relative to the browser window?", options: ["absolute", "relative", "fixed", "sticky"], answer: 2, explain: "position: fixed keeps the element in place while the page scrolls." }
       ],
       "Responsive et accessibilité": [
-        { q: "Quelle règle CSS applique des styles conditionnels selon la largeur d'écran ?", options: ["@responsive", "@media", "@screen", "@query"], answer: 1, explain: "@media (max-width: 768px) { ... } gère l'affichage responsive." },
-        { q: "Quelle pseudo-classe stylise le contour quand l'utilisateur navigue au clavier ?", options: [":hover", ":active", ":focus-visible", ":visited"], answer: 2, explain: ":focus-visible permet un contour d'accessibilité propre sans gêner les clics." }
+        { q: "Which CSS rule applies styles based on screen width?", options: ["@responsive", "@media", "@screen", "@query"], answer: 1, explain: "@media (max-width: 768px) { ... } handles responsive layouts." },
+        { q: "Which pseudo-class styles an outline when a user navigates with a keyboard?", options: [":hover", ":active", ":focus-visible", ":visited"], answer: 2, explain: ":focus-visible provides a useful keyboard focus outline without affecting mouse clicks." }
       ]
     },
     javascript: {
       "Bases du langage": [
-        { q: "Quel mot-clé déclare une variable qui ne sera pas réassignée ?", options: ["let", "var", "const", "fixed"], answer: 2, explain: "'const' empêche la réassignation d'une variable." },
-        { q: "Quelle instruction affiche un message dans la console de développement ?", options: ["print()", "console.log()", "echo()", "System.out.println()"], answer: 1, explain: "console.log(...) est la méthode universelle d'affichage JS." }
+        { q: "Which keyword declares a variable that will not be reassigned?", options: ["let", "var", "const", "fixed"], answer: 2, explain: "'const' prevents a variable from being reassigned." },
+        { q: "Which statement prints a message to the developer console?", options: ["print()", "console.log()", "echo()", "System.out.println()"], answer: 1, explain: "console.log(...) is the standard way to print output in JavaScript." }
       ],
       "Boucles et fonctions": [
-        { q: "Quelle boucle moderne parcourt directement les valeurs d'un tableau itérable ?", options: ["for...in", "for...of", "while", "loop"], answer: 1, explain: "'for (const item of array)' lit chaque valeur directement." },
-        { q: "Quelle est la syntaxe d'une fonction fléchée compacte ?", options: ["(x) => x * 2", "function(x) { x * 2 }", "def(x) => x * 2", "arrow x: x*2"], answer: 0, explain: "(x) => x * 2 est une fonction fléchée avec retour implicite." }
+        { q: "Which modern loop iterates directly over the values of an iterable?", options: ["for...in", "for...of", "while", "loop"], answer: 1, explain: "'for (const item of array)' reads each value directly." },
+        { q: "Which is the syntax for a concise arrow function?", options: ["(x) => x * 2", "function(x) { x * 2 }", "def(x) => x * 2", "arrow x: x*2"], answer: 0, explain: "(x) => x * 2 is an arrow function with an implicit return." }
       ],
       "Tableaux et objets": [
-        { q: "Quelle méthode transforme chaque élément d'un tableau pour produire un nouveau tableau ?", options: ["filter()", "map()", "forEach()", "reduce()"], answer: 1, explain: "arr.map(fn) renvoie un nouveau tableau transformé de même longueur." },
-        { q: "Quelle méthode ne garde que les éléments validant une condition booléenne ?", options: ["map()", "filter()", "find()", "slice()"], answer: 1, explain: "arr.filter(fn) extrait un sous-ensemble d'éléments." }
+        { q: "Which method transforms each array item to produce a new array?", options: ["filter()", "map()", "forEach()", "reduce()"], answer: 1, explain: "arr.map(fn) returns a transformed array with the same length." },
+        { q: "Which method keeps only items that satisfy a Boolean condition?", options: ["map()", "filter()", "find()", "slice()"], answer: 1, explain: "arr.filter(fn) returns a subset of the items." }
       ],
       "HTML et DOM": [
-        { q: "Quelle méthode sélectionne le premier élément correspondant à un sélecteur CSS ?", options: ["document.select()", "document.querySelector()", "document.getElement()", "document.find()"], answer: 1, explain: "querySelector('selecteur') utilise les mêmes sélecteurs que le CSS." },
-        { q: "Quelle méthode écoute les clics de l'utilisateur sur un bouton ?", options: ["btn.onclick()", "btn.addEventListener('click', fn)", "btn.listen('click')", "btn.attachEvent()"], answer: 1, explain: "addEventListener('click', handler) est la méthode standard et modulaire." }
+        { q: "Which method selects the first element matching a CSS selector?", options: ["document.select()", "document.querySelector()", "document.getElement()", "document.find()"], answer: 1, explain: "querySelector('selector') uses the same selectors as CSS." },
+        { q: "Which method listens for user clicks on a button?", options: ["btn.onclick()", "btn.addEventListener('click', fn)", "btn.listen('click')", "btn.attachEvent()"], answer: 1, explain: "addEventListener('click', handler) is the standard, flexible method." }
       ],
       "Asynchrone et stockage": [
-        { q: "Quelle API du navigateur permet de sauvegarder des données simples entre deux visites ?", options: ["sessionMemory", "localStorage", "cookieRAM", "tempStorage"], answer: 1, explain: "localStorage persiste les données même après fermeture du navigateur." },
-        { q: "Comment convertir un objet JavaScript en chaîne de texte JSON ?", options: ["JSON.parse(obj)", "JSON.stringify(obj)", "obj.toJSON()", "String(obj)"], answer: 1, explain: "JSON.stringify() sérialise en texte JSON." }
+        { q: "Which browser API stores simple data between visits?", options: ["sessionMemory", "localStorage", "cookieRAM", "tempStorage"], answer: 1, explain: "localStorage keeps data even after the browser is closed." },
+        { q: "How do you convert a JavaScript object to a JSON string?", options: ["JSON.parse(obj)", "JSON.stringify(obj)", "obj.toJSON()", "String(obj)"], answer: 1, explain: "JSON.stringify() serializes a value as JSON text." }
       ]
     }
   };
@@ -235,7 +235,8 @@
       ar: {
         title: "اختبار المفاهيم",
         generalTitle: "اختبار شامل للمسار",
-        question: "سؤال",
+        question: "السؤال",
+        scoreLabel: "النتيجة",
         score: "نتيجتك: {score} من {total}",
         scorePercent: "النسبة: {percent}%",
         retry: "إعادة الاختبار",
@@ -252,6 +253,7 @@
         title: "Concept Quiz",
         generalTitle: "Course Challenge Quiz",
         question: "Question",
+        scoreLabel: "Score",
         score: "Your score: {score} / {total}",
         scorePercent: "Score: {percent}%",
         retry: "Retake Quiz",
@@ -268,6 +270,7 @@
         title: "Quiz de validation",
         generalTitle: "Grand Quiz du parcours",
         question: "Question",
+        scoreLabel: "Score",
         score: "Ton score : {score} / {total}",
         scorePercent: "Réussite : {percent}%",
         retry: "Recommencer le quiz",
@@ -288,7 +291,8 @@
     let answered = false;
     const previousFocus = document.activeElement;
 
-    const modalTitle = category ? `${l.title} · ${category}` : l.generalTitle;
+    const categoryLabel = category ? window.LearnHubI18n?.category?.(category) || category : "";
+    const modalTitle = categoryLabel ? `${l.title} · ${categoryLabel}` : l.generalTitle;
 
     const container = document.createElement("div");
     container.className = "quiz-modal";
@@ -297,7 +301,7 @@
         <section class="quiz-dialog" role="dialog" aria-modal="true" aria-labelledby="quiz-title" tabindex="-1">
           <div class="quiz-header">
             <div>
-              <span class="quiz-badge">QCM Interactif</span>
+              <span class="quiz-badge">${language === "ar" ? "اختبار تفاعلي" : language === "en" ? "Interactive Quiz" : "QCM interactif"}</span>
               <h3 id="quiz-title">${esc(modalTitle)}</h3>
             </div>
             <button class="quiz-close" type="button" aria-label="${l.close}">×</button>
@@ -308,11 +312,11 @@
             <span class="quiz-score-badge">Score : 0</span>
           </div>
           <div class="quiz-content">
-            <h4 class="quiz-question"></h4>
-            <div class="quiz-options" role="radiogroup"></div>
+            <h4 class="quiz-question" lang="en" dir="ltr"></h4>
+            <div class="quiz-options" role="radiogroup" lang="en" dir="ltr"></div>
             <div class="quiz-feedback" style="display:none">
               <div class="quiz-feedback-title"></div>
-              <div class="quiz-feedback-text"></div>
+              <div class="quiz-feedback-text" lang="en" dir="ltr"></div>
             </div>
             <div class="quiz-result" style="display:none"></div>
           </div>
@@ -331,8 +335,10 @@
     };
 
     function onKeyDown(event) {
+      const backdrop = container.querySelector(".quiz-backdrop");
+      if (window.LearnHubUtils?.isTopLayer && !window.LearnHubUtils.isTopLayer(backdrop)) return;
       if (event.key === "Escape") {
-        event.stopPropagation();
+        event.stopImmediatePropagation();
         closeModal();
         return;
       }
@@ -375,8 +381,8 @@
       const q = questions[current];
       const progressPercent = Math.round(((current) / questions.length) * 100);
       progressFill.style.width = `${progressPercent}%`;
-      stepLabel.textContent = `Question ${current + 1} / ${questions.length}`;
-      scoreBadge.textContent = `Score : ${score}`;
+      stepLabel.textContent = `${l.question} ${current + 1} / ${questions.length}`;
+      scoreBadge.textContent = `${l.scoreLabel}: ${score}`;
 
       questionEl.textContent = q.q;
       feedbackEl.style.display = "none";
@@ -411,7 +417,7 @@
 
       if (chosenIdx === correctIdx) {
         score++;
-        scoreBadge.textContent = `Score : ${score}`;
+        scoreBadge.textContent = `${l.scoreLabel}: ${score}`;
         clickedBtn.classList.add("is-correct");
         feedbackEl.className = "quiz-feedback is-correct";
         feedbackTitle.textContent = l.correct;

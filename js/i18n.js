@@ -81,6 +81,9 @@
     document.documentElement.dir = arabic ? "rtl" : "ltr";
     document.body.classList.toggle("arabic", arabic);
     document.body.classList.toggle("english", english);
+    document.querySelectorAll(".skip-link").forEach((link) => {
+      link.textContent = arabic ? "انتقل إلى المحتوى الرئيسي" : english ? "Skip to main content" : "Aller au contenu principal";
+    });
     document.title = pageText[lang]?.[{home:"homeTitle",web:"webTitle",python:"pythonTitle",kali:"kaliTitle"}[page]] || pageText.fr[{home:"homeTitle",web:"webTitle",python:"pythonTitle",kali:"kaliTitle"}[page]];
     document.querySelectorAll(".language-switch").forEach((select) => { select.value = lang; select.setAttribute("aria-label", arabic ? "اختر لغة الموقع" : english ? "Choose site language" : "Choisir la langue du site"); });
     const set = (selector, value, html = false) => { const element = document.querySelector(selector); if (element) html ? element.innerHTML = value : element.textContent = value; };

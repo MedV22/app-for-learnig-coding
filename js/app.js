@@ -2,13 +2,20 @@
   const page = document.body?.dataset?.page;
   const slug = window.LearnHubUtils?.slug || ((v) => String(v || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""));
   const legacySlug = window.LearnHubUtils?.legacySlug || slug;
+  const esc = window.LearnHubUtils?.escapeHTML || ((value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]));
+  const fold = (value) => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase();
+  const storage = window.LearnHubStorage || {
+    get: (key) => { try { return localStorage.getItem(key); } catch { return null; } },
+    set: (key, value) => { try { localStorage.setItem(key, value); return true; } catch { return false; } }
+  };
 
   const idFor = (key, category, item) => `${key}-${slug(category)}-${slug(item.nom)}`;
   const legacyIdFor = (key, category, item) => `${key}-${legacySlug(category)}-${legacySlug(item.nom)}`;
 
   const readLearned = (key) => {
     try {
-      return new Set(JSON.parse(localStorage.getItem(`learnhub-learned-${key}`) || "[]"));
+      const value = JSON.parse(storage.get(`learnhub-learned-${key}`) || "[]");
+      return new Set(Array.isArray(value) ? value.filter((id) => typeof id === "string") : []);
     } catch {
       return new Set();
     }
@@ -16,7 +23,8 @@
 
   const readFavorites = (key) => {
     try {
-      return new Set(JSON.parse(localStorage.getItem(`learnhub-favorites-${key}`) || "[]"));
+      const value = JSON.parse(storage.get(`learnhub-favorites-${key}`) || "[]");
+      return new Set(Array.isArray(value) ? value.filter((id) => typeof id === "string") : []);
     } catch {
       return new Set();
     }
@@ -37,9 +45,59 @@
     const globalSearch = document.querySelector("#global-search");
     const results = document.querySelector(".search-results");
 
+    const updateHomeHighlights = () => {
+      const dataSrc = window.data || (typeof data !== "undefined" ? data : null);
+      if (!dataSrc) return;
+      const countFor = (keys) => keys.reduce((sum, key) => sum + (dataSrc[key] || []).reduce((n, section) => n + section.items.length, 0), 0);
+      const language = window.LearnHubI18n?.language() || "fr";
+      const labels = {
+        fr: { concepts: "notions", kali: "outils & commandes", lessons: "fiches interactives", features: [
+          ["Explications, syntaxe & exemples", "Fiches courtes pour apprendre une notion à la fois"],
+          ["Pratique en ligne sans installation", "Un terminal simulé pour explorer les commandes"],
+          ["Exécute du code dans le navigateur", "Un éditeur Python avec le moteur Pyodide"],
+          ["Pages mises en cache après la visite", "PWA et progression enregistrée localement"]
+        ] },
+        en: { concepts: "concepts", kali: "tools & commands", lessons: "interactive lessons", features: [
+          ["Explanations, syntax and examples", "Short lessons to learn one concept at a time"],
+          ["Practice online without installing tools", "A simulated terminal for Linux commands"],
+          ["Run code in your browser", "A Python playground powered by Pyodide"],
+          ["Pages cached after your first visit", "PWA support and locally saved progress"]
+        ] },
+        ar: { concepts: "مفاهيم", kali: "أدوات وأوامر", lessons: "دروس تفاعلية", features: [
+          ["شرح وصياغة وأمثلة", "دروس قصيرة لتعلّم مفهوم واحد في كل مرة"],
+          ["تدرّب عبر الإنترنت دون تثبيت أدوات", "طرفية محاكاة لاستكشاف أوامر لينكس"],
+          ["شغّل التعليمات البرمجية في المتصفح", "محرر بايثون يعمل بواسطة Pyodide"],
+          ["تُخزّن الصفحات بعد الزيارة الأولى", "دعم PWA وتقدم محفوظ محلياً"]
+        ] }
+      };
+      const copy = labels[language] || labels.fr;
+      const countLabels = {
+        "web-path": `${countFor(["html", "css", "javascript"])} ${copy.concepts}`,
+        "python-path": `${countFor(["python"])} ${copy.concepts}`,
+        "kali-path": `${countFor(["kali"])} ${copy.kali}`
+      };
+      Object.entries(countLabels).forEach(([className, label]) => {
+        const badge = document.querySelector(`.${className} .path-level-tag`);
+        if (badge) badge.textContent = label;
+      });
+      const total = countFor(["python", "kali", "html", "css", "javascript"]);
+      const featurePills = document.querySelectorAll(".feature-pill");
+      if (featurePills[0]) featurePills[0].querySelector("strong").textContent = `${total} ${copy.lessons}`;
+      featurePills.forEach((pill, index) => {
+        const content = copy.features[index];
+        if (!content) return;
+        const [title, description] = pill.querySelectorAll("strong, span:not(.feature-pill-icon)");
+        if (title) title.textContent = index === 0 ? `${total} ${copy.lessons}` : content[0];
+        if (description) description.textContent = content[1];
+      });
+    };
+
+    updateHomeHighlights();
+    window.addEventListener("learnhublanguagechange", updateHomeHighlights);
+
     if (globalSearch && results) {
       const showResults = () => {
-        const query = globalSearch.value.trim().toLocaleLowerCase();
+        const query = fold(globalSearch.value.trim());
         if (!query) {
           results.innerHTML = "";
           return;
@@ -56,7 +114,8 @@
                 const localizedName = window.LearnHubI18n?.itemName(item.nom) || item.nom;
                 const localizedUtilite = window.LearnHubI18n?.content(item, "utilite", key, section.categorie) || item.utilite;
                 const localizedCat = window.LearnHubI18n?.category(section.categorie) || section.categorie;
-                const searchable = `${item.nom} ${localizedName} ${localizedUtilite} ${section.categorie} ${localizedCat}`.toLocaleLowerCase();
+                const localizedExample = window.LearnHubI18n?.content(item, "exemple", key, section.categorie) || item.exemple;
+                const searchable = fold(`${item.nom} ${localizedName} ${localizedUtilite} ${localizedExample} ${item.syntaxe || ""} ${section.categorie} ${localizedCat}`);
                 return searchable.includes(query);
               })
               .map((item) => ({ ...item, categorie: section.categorie, key }));
@@ -85,14 +144,14 @@
             const displayDesc = window.LearnHubI18n?.content(item, "utilite", item.key, item.categorie) || item.utilite;
 
             return `
-              <a class="result-link" href="${href}">
+              <a class="result-link" href="${esc(href)}">
                 <div class="result-header">
-                  <span class="result-course-badge ${courseInfo.badgeClass}">${courseInfo.label}</span>
-                  <span class="result-cat">${displayCat}</span>
-                  <span class="level-badge">${window.LearnHubI18n?.level(item.niveau) || item.niveau}</span>
+                  <span class="result-course-badge ${courseInfo.badgeClass}">${esc(courseInfo.label)}</span>
+                  <span class="result-cat">${esc(displayCat)}</span>
+                  <span class="level-badge">${esc(window.LearnHubI18n?.level(item.niveau) || item.niveau)}</span>
                 </div>
-                <strong class="result-title"><code>${displayName}</code></strong>
-                <p class="result-desc">${displayDesc}</p>
+                <strong class="result-title"><code>${esc(displayName)}</code></strong>
+                <p class="result-desc">${esc(displayDesc)}</p>
               </a>`;
           }).join("");
         } else {
@@ -101,6 +160,14 @@
       };
 
       globalSearch.addEventListener("input", showResults);
+      window.addEventListener("learnhublanguagechange", showResults);
+      document.querySelectorAll(".search-tag").forEach((button) => {
+        button.addEventListener("click", () => {
+          globalSearch.value = button.dataset.searchTerm || "";
+          globalSearch.dispatchEvent(new Event("input", { bubbles: true }));
+          globalSearch.focus();
+        });
+      });
       globalSearch.form?.addEventListener("submit", (event) => {
         event.preventDefault();
         showResults();
@@ -135,7 +202,25 @@
       tab.setAttribute("aria-selected", String(active));
       tab.tabIndex = active ? 0 : -1;
     });
+    const panel = document.querySelector("#course-content");
+    if (panel) panel.setAttribute("aria-labelledby", `tab-${activeKey}`);
   };
+
+  const syncActiveCategory = () => {
+    nav?.querySelectorAll(".cat-nav-link").forEach((link) => {
+      const active = link.getAttribute("href") === location.hash;
+      link.classList.toggle("active", active);
+      if (active) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    });
+  };
+
+  nav?.addEventListener("click", (event) => {
+    const link = event.target.closest(".cat-nav-link");
+    if (!link) return;
+    nav.querySelectorAll(".cat-nav-link").forEach((candidate) => candidate.classList.toggle("active", candidate === link));
+  });
+  window.addEventListener("hashchange", syncActiveCategory);
 
   // Add a "Favorites only" filter toggle button into toolbar if not present
   const setupToolbarExtras = () => {
@@ -159,6 +244,15 @@
     toolbar.appendChild(favToggle);
   };
 
+  const resetFilters = () => {
+    if (search) search.value = "";
+    if (level) level.value = "all";
+    onlyFavoritesFilter = false;
+    const favoriteToggle = document.querySelector(".fav-filter-toggle");
+    favoriteToggle?.classList.remove("active");
+    favoriteToggle?.setAttribute("aria-pressed", "false");
+  };
+
   setupToolbarExtras();
 
   function render() {
@@ -168,7 +262,7 @@
     const learned = readLearned(activeKey);
     const favorites = readFavorites(activeKey);
     const allItems = course.flatMap((section) => section.items.map((item) => ({ ...item, categorie: section.categorie })));
-    const query = search ? search.value.trim().toLocaleLowerCase() : "";
+    const query = search ? fold(search.value.trim()) : "";
     const selectedLevel = level ? level.value : "all";
 
     // Category navigation links
@@ -180,7 +274,7 @@
         const activeClass = location.hash === `#${activeKey}-${catSlug}` ? " active" : "";
         return `
           <a class="cat-nav-link${activeClass}" href="#${activeKey}-${catSlug}">
-            <span class="cat-nav-text">${window.LearnHubI18n?.category(section.categorie) || section.categorie}</span>
+            <span class="cat-nav-text">${esc(window.LearnHubI18n?.category(section.categorie) || section.categorie)}</span>
             <span class="cat-nav-badge">${complete ? "✓" : sectionItems.length}</span>
           </a>`;
       }).join("");
@@ -194,7 +288,8 @@
         const locEx = window.LearnHubI18n?.content(item, "exemple", activeKey, section.categorie) || item.exemple;
         const locCat = window.LearnHubI18n?.category(section.categorie) || section.categorie;
 
-        const searchable = `${item.nom} ${locName} ${locUtil} ${locEx} ${section.categorie} ${locCat}`.toLocaleLowerCase();
+        const locAttention = window.LearnHubI18n?.content(item, "attention", activeKey, section.categorie) || item.attention;
+        const searchable = fold(`${item.nom} ${locName} ${locUtil} ${locEx} ${locAttention} ${item.syntaxe || ""} ${section.categorie} ${locCat}`);
         const matchesQuery = !query || searchable.includes(query);
         const matchesLevel = selectedLevel === "all" || item.niveau === selectedLevel;
         const matchesFav = !onlyFavoritesFilter || isItemFavorite(favorites, activeKey, section.categorie, item);
@@ -205,12 +300,25 @@
     }).filter((section) => section.items.length > 0);
 
     const language = window.LearnHubI18n?.language() || "fr";
+    const favoriteLabels = {
+      ar: { label: "المفضلة", title: "عرض المفاهيم المفضلة فقط" },
+      en: { label: "Favorites", title: "Show only favorite concepts" },
+      fr: { label: "Favoris", title: "Afficher uniquement mes notions favorites" }
+    };
+    const favoriteText = favoriteLabels[language] || favoriteLabels.fr;
+    const favoriteToggle = document.querySelector(".fav-filter-toggle");
+    if (favoriteToggle) {
+      const label = favoriteToggle.querySelector(".fav-filter-text");
+      if (label) label.textContent = favoriteText.label;
+      favoriteToggle.title = favoriteText.title;
+      favoriteToggle.setAttribute("aria-label", favoriteText.title);
+    }
 
     if (sections) {
       sections.innerHTML = sectionsVisible.length ? sectionsVisible.map((section) => {
         const catSlug = slug(section.categorie);
-        const sectionIds = section.items.map((it) => idFor(activeKey, section.categorie, it));
-        const sectionComplete = sectionIds.length > 0 && sectionIds.every((id) => learned.has(id));
+        const fullSection = course.find((candidate) => candidate.categorie === section.categorie) || section;
+        const sectionComplete = fullSection.items.length > 0 && fullSection.items.every((item) => isItemLearned(learned, activeKey, section.categorie, item));
 
         const cards = section.items.map((item) => {
           const id = idFor(activeKey, section.categorie, item);
@@ -227,18 +335,18 @@
           return `
             <article class="concept-card${isLearned ? " is-learned" : ""}${isFav ? " is-favorited" : ""}" data-card-id="${id}">
               <div class="card-top-row">
-                <span class="card-cat-tag">${window.LearnHubI18n?.category(section.categorie) || section.categorie}</span>
-                <button class="favorite-btn${isFav ? " is-favorite" : ""}" type="button" data-id="${id}" aria-label="${isFav ? favLabelRemove : favLabel}">
+              <span class="card-cat-tag">${esc(window.LearnHubI18n?.category(section.categorie) || section.categorie)}</span>
+                <button class="favorite-btn${isFav ? " is-favorite" : ""}" type="button" data-id="${esc(id)}" aria-pressed="${isFav}" aria-label="${isFav ? favLabelRemove : favLabel}">
                   ${isFav ? "★" : "☆"}
                 </button>
               </div>
-              <button class="concept-open" type="button" data-id="${id}" data-category="${section.categorie}" data-name="${item.nom}" aria-label="${openLabel} ${displayName}">
+              <button class="concept-open" type="button" data-id="${esc(id)}" data-category="${esc(section.categorie)}" data-name="${esc(item.nom)}" aria-label="${openLabel} ${esc(displayName)}">
                 <div class="concept-title-row">
-                  <span class="concept-name"><code>${displayName}</code></span>
+                  <span class="concept-name"><code>${esc(displayName)}</code></span>
                 </div>
-                <p class="concept-snippet">${displayUtil}</p>
+                <p class="concept-snippet">${esc(displayUtil)}</p>
                 <div class="concept-bottom">
-                  <span class="level-badge level-${String(item.niveau || '').toLowerCase()}">${window.LearnHubI18n?.level(item.niveau) || item.niveau}</span>
+                  <span class="level-badge level-${slug(item.niveau)}">${esc(window.LearnHubI18n?.level(item.niveau) || item.niveau)}</span>
                   ${isLearned ? `<span class="learned-mark" aria-label="${checkLabel}"><span class="check-icon">✓</span> ${checkLabel}</span>` : `<span class="learn-cue">Découvrir →</span>`}
                 </div>
               </button>
@@ -253,11 +361,11 @@
           <section class="category-section" id="${activeKey}-${catSlug}">
             <div class="section-heading">
               <div class="heading-left">
-                <h2>${window.LearnHubI18n?.category(section.categorie) || section.categorie}</h2>
+                <h2>${esc(window.LearnHubI18n?.category(section.categorie) || section.categorie)}</h2>
                 <span class="section-count-badge">${section.items.length} ${countLabel}</span>
                 ${sectionComplete ? `<span class="badge badge-gold fade-in"><span class="badge-icon">🏆</span> ${completeLabel}</span>` : ""}
               </div>
-              <button class="quiz-btn" type="button" data-category="${section.categorie}" aria-label="${quizLabel}">
+              <button class="quiz-btn" type="button" data-category="${esc(section.categorie)}" aria-label="${quizLabel}">
                 <span class="quiz-btn-icon">⚡</span> ${quizLabel}
               </button>
             </div>
@@ -266,9 +374,9 @@
       }).join("") : `
         <div class="empty-state">
           <div class="empty-icon">🔍</div>
-          <h3>${window.LearnHubI18n?.get("noResults") || "Aucune notion trouvée"}</h3>
-          <p>Essaie de modifier tes critères de recherche ou réinitialise les filtres.</p>
-          <button class="clear-filters-btn" type="button">Réinitialiser les filtres</button>
+          <h3>${esc(window.LearnHubI18n?.get("noResults") || "Aucune notion trouvée")}</h3>
+          <p>${language === "ar" ? "حاول تغيير البحث أو الفلاتر." : language === "en" ? "Try changing your search or filters." : "Essaie de modifier tes critères de recherche ou réinitialise les filtres."}</p>
+          <button class="clear-filters-btn" type="button">${language === "ar" ? "إعادة تعيين الفلاتر" : language === "en" ? "Clear filters" : "Réinitialiser les filtres"}</button>
         </div>`;
     }
 
@@ -277,6 +385,7 @@
       nav.querySelectorAll("a").forEach((link) => {
         link.hidden = !sectionsVisible.some((section) => `#${activeKey}-${slug(section.categorie)}` === link.getAttribute("href"));
       });
+      syncActiveCategory();
     }
 
     // Modal open listeners
@@ -291,6 +400,7 @@
 
         const localizedItem = {
           ...item,
+          originalName: item.nom,
           nom: window.LearnHubI18n?.itemName(item.nom) || item.nom,
           utilite: window.LearnHubI18n?.content(item, "utilite", activeKey, item.categorie) || item.utilite,
           exemple: window.LearnHubI18n?.content(item, "exemple", activeKey, item.categorie) || item.exemple,
@@ -299,14 +409,17 @@
 
         window.LearnHubModal?.open(localizedItem, item.categorie, isLearnedNow, () => {
           const freshLearned = readLearned(activeKey);
-          if (freshLearned.has(id)) {
+          const legacyId = legacyIdFor(activeKey, item.categorie, item);
+          const wasLearned = isItemLearned(freshLearned, activeKey, item.categorie, item);
+          if (wasLearned) {
             freshLearned.delete(id);
+            freshLearned.delete(legacyId);
           } else {
             freshLearned.add(id);
           }
-          localStorage.setItem(`learnhub-learned-${activeKey}`, JSON.stringify([...freshLearned]));
+          storage.set(`learnhub-learned-${activeKey}`, JSON.stringify([...freshLearned]));
           render();
-          return freshLearned.has(id);
+          return !wasLearned;
         }, activeKey, id);
       });
     });
@@ -319,15 +432,18 @@
         if (!id) return;
 
         const freshFavorites = readFavorites(activeKey);
-        const currentlyFavorite = freshFavorites.has(id);
+        const favoriteItem = allItems.find((item) => idFor(activeKey, item.categorie, item) === id);
+        const legacyFavoriteId = favoriteItem ? legacyIdFor(activeKey, favoriteItem.categorie, favoriteItem) : null;
+        const currentlyFavorite = freshFavorites.has(id) || (legacyFavoriteId && freshFavorites.has(legacyFavoriteId));
 
         if (currentlyFavorite) {
           freshFavorites.delete(id);
+          if (legacyFavoriteId) freshFavorites.delete(legacyFavoriteId);
         } else {
           freshFavorites.add(id);
         }
 
-        localStorage.setItem(`learnhub-favorites-${activeKey}`, JSON.stringify([...freshFavorites]));
+        storage.set(`learnhub-favorites-${activeKey}`, JSON.stringify([...freshFavorites]));
 
         const isFav = freshFavorites.has(id);
         btn.classList.toggle("is-favorite", isFav);
@@ -336,6 +452,7 @@
         const favLabel = language === "ar" ? "إضافة للمفضلات" : language === "en" ? "Add to favorites" : "Ajouter aux favoris";
         const favLabelRemove = language === "ar" ? "إزالة من المفضلات" : language === "en" ? "Remove from favorites" : "Retirer des favoris";
         btn.setAttribute("aria-label", isFav ? favLabelRemove : favLabel);
+        btn.setAttribute("aria-pressed", String(isFav));
 
         const cardArticle = btn.closest(".concept-card");
         cardArticle?.classList.toggle("is-favorited", isFav);
@@ -361,10 +478,7 @@
 
     // Clear filters button in empty state
     sections?.querySelector(".clear-filters-btn")?.addEventListener("click", () => {
-      if (search) search.value = "";
-      if (level) level.value = "all";
-      onlyFavoritesFilter = false;
-      document.querySelector(".fav-filter-toggle")?.classList.remove("active");
+      resetFilters();
       render();
     });
 
@@ -420,6 +534,36 @@
 
   window.addEventListener("learnhublanguagechange", render);
   window.addEventListener("learnhubstatechange", render);
+  window.addEventListener("learnhubfavoritetoggle", (event) => {
+    if (event.detail?.key === activeKey && onlyFavoritesFilter) render();
+  });
+  window.addEventListener("storage", (event) => {
+    if (event.key?.startsWith("learnhub-learned-") || event.key?.startsWith("learnhub-favorites-")) render();
+  });
+
+  window.addEventListener("learnhubopenconcept", (event) => {
+    const { key, category, name } = event.detail || {};
+    if (key !== activeKey || !category || !name || !sections) return;
+
+    const findCard = () => [...sections.querySelectorAll(".concept-open")].find((card) => (
+      card.dataset.name === name && card.dataset.category === category
+    ));
+    let card = findCard();
+    if (!card) {
+      resetFilters();
+      const url = new URL(location.href);
+      url.searchParams.delete("q");
+      url.searchParams.delete("open");
+      history.replaceState(null, "", url);
+      render();
+      card = findCard();
+    }
+
+    if (card) {
+      card.scrollIntoView({ behavior: "smooth", block: "center" });
+      card.click();
+    }
+  });
 
   // Read URL query parameter
   const params = new URLSearchParams(location.search);

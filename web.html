@@ -24,6 +24,7 @@
   <script src="js/pypod.js" defer></script>
 </head>
 <body data-page="web">
+  <a class="skip-link" href="#main-content">Aller au contenu principal</a>
   <header class="topbar">
     <a class="brand" href="index.html">
       <span class="brand-mark">&lt;/&gt;</span> Learn<span>Hub</span>
@@ -52,7 +53,7 @@
     </div>
   </header>
 
-  <main class="course-main">
+  <main class="course-main" id="main-content">
     <section class="course-hero web-hero">
       <div>
         <p class="eyebrow">PARCOURS · DÉVELOPPEMENT WEB</p>
@@ -63,9 +64,9 @@
     </section>
 
     <div class="language-tabs" role="tablist" aria-label="Choisir une technologie">
-      <button class="language-tab active" type="button" role="tab" data-language="html" aria-selected="true">HTML <span>Structure</span></button>
-      <button class="language-tab" type="button" role="tab" data-language="css" aria-selected="false">CSS <span>Style & Layout</span></button>
-      <button class="language-tab" type="button" role="tab" data-language="javascript" aria-selected="false">JavaScript <span>Interactions</span></button>
+      <button class="language-tab active" id="tab-html" type="button" role="tab" data-language="html" aria-controls="course-content" aria-selected="true">HTML <span>Structure</span></button>
+      <button class="language-tab" id="tab-css" type="button" role="tab" data-language="css" aria-controls="course-content" aria-selected="false" tabindex="-1">CSS <span>Style & Layout</span></button>
+      <button class="language-tab" id="tab-javascript" type="button" role="tab" data-language="javascript" aria-controls="course-content" aria-selected="false" tabindex="-1">JavaScript <span>Interactions</span></button>
     </div>
 
     <section class="toolbar">
@@ -99,7 +100,7 @@
 
     <div class="course-layout">
       <aside class="category-nav" aria-label="Catégories"></aside>
-      <section class="card-sections" aria-label="Notions"></section>
+      <section class="card-sections" id="course-content" role="tabpanel" tabindex="0" aria-labelledby="tab-html" aria-label="Notions"></section>
     </div>
   </main>
 

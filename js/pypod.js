@@ -4,6 +4,7 @@
   const PYODIDE_BASE = `https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full/`;
   let pyodidePromise = null;
   let previousFocus = null;
+  let keydownHandler = null;
 
   const codeSnippets = {
     hello: `# Premier programme Python
@@ -217,48 +218,108 @@ print('Hello from Python!')" aria-label="Éditeur de code Python"></textarea>
       if (event.target === backdrop) close();
     });
 
-    const onKeyDown = (event) => {
+    keydownHandler = (event) => {
+      if (window.LearnHubUtils?.isTopLayer && !window.LearnHubUtils.isTopLayer(backdrop)) return;
       if (event.key === "Escape") {
-        event.stopPropagation();
+        event.stopImmediatePropagation();
         close();
+      } else if (event.key === "Tab") {
+        const dialog = backdrop.querySelector(".pyodide-dialog");
+        const focusable = [...dialog.querySelectorAll("button:not(:disabled), input:not(:disabled), textarea:not(:disabled), select:not(:disabled), [tabindex]:not([tabindex='-1'])")];
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable.at(-1);
+        if (event.shiftKey && (document.activeElement === first || document.activeElement === dialog)) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && (document.activeElement === last || document.activeElement === dialog)) {
+          event.preventDefault();
+          first.focus();
+        }
       }
     };
-    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("keydown", keydownHandler);
 
     // Run action
     runButton.addEventListener("click", async () => {
       runButton.disabled = true;
       runButton.classList.add("is-running");
       status.textContent = text.loading;
-      output.textContent = "Exécution en cours...";
+      output.textContent = "⟳ Chargement du moteur Python...";
 
       try {
         const pyodide = await loadPyodide();
-        const stdout = [];
-        const stderr = [];
+        output.textContent = "▶ Exécution en cours...";
 
-        pyodide.setStdout({ batched: (line) => stdout.push(line) });
-        pyodide.setStderr({ batched: (line) => stderr.push(line) });
+        const stdoutLines = [];
+        const stderrLines = [];
+        const maxOutputLines = 45;
+        const maxOutputCharacters = 24000;
+        let capturedLines = 0;
+        let capturedCharacters = 0;
+        let truncatedLines = 0;
+        const captureLine = (collection, line) => {
+          const value = String(line ?? "");
+          if (capturedLines >= maxOutputLines) {
+            truncatedLines += 1;
+            return;
+          }
+          const remaining = maxOutputCharacters - capturedCharacters;
+          if (remaining <= 0) {
+            truncatedLines += 1;
+            return;
+          }
+          const chunk = value.slice(0, remaining);
+          collection.push(chunk);
+          capturedLines += 1;
+          capturedCharacters += chunk.length;
+          if (chunk.length < value.length) truncatedLines += 1;
+        };
+
+        pyodide.setStdout({ batched: (line) => captureLine(stdoutLines, line) });
+        pyodide.setStderr({ batched: (line) => captureLine(stderrLines, line) });
         pyodide.setStdin({ error: true });
 
         const result = await pyodide.runPythonAsync(editor.value);
         if (result !== undefined && result !== null) {
-          stdout.push(String(result));
+          captureLine(stdoutLines, result);
         }
 
-        const outText = [...stdout, ...stderr].join("\n").trim();
+        const allLines = [...stdoutLines, ...(stderrLines.length ? ["--- stderr ---", ...stderrLines] : [])];
+        const outText = allLines.join("\n").trim();
         output.textContent = outText || text.empty;
+
+        if (truncatedLines > 0) {
+          const truncationMessage = language === "en"
+            ? `Output truncated (limit: ${maxOutputLines} lines / ${maxOutputCharacters.toLocaleString("en")} characters).`
+            : language === "ar"
+            ? `تم اقتطاع المخرجات (الحد: ${maxOutputLines} سطراً / ${maxOutputCharacters.toLocaleString("ar")} حرفاً).`
+            : `Sortie tronquée (limite : ${maxOutputLines} lignes / ${maxOutputCharacters.toLocaleString("fr")} caractères).`;
+          output.textContent += `\n\n… ${truncationMessage}`;
+        }
+
         status.textContent = "✓ Terminé";
+        status.className = "pyodide-status is-ok";
       } catch (error) {
-        const message = !navigator.onLine ? text.offline : (error?.message || String(error));
-        output.textContent = `Traceback / Erreur :\n${message}`;
-        status.textContent = "⚠ Erreur";
+        const isOffline = typeof navigator !== "undefined" && !navigator.onLine;
+        const rawMessage = String(isOffline ? text.offline : (error?.message || error));
+        const errorTruncated = rawMessage.length > maxOutputCharacters;
+        const message = rawMessage.slice(0, maxOutputCharacters);
+        const errLines = message.split("\n");
+        const truncErr = errorTruncated || errLines.length > maxOutputLines;
+        const dispErr = (errLines.length > maxOutputLines ? errLines.slice(0, maxOutputLines) : errLines).join("\n");
+        output.textContent = `Traceback (most recent call last):\n${dispErr}${truncErr ? "\n… traceback tronqué" : ""}`;
+        status.textContent = "✗ Erreur";
+        status.className = "pyodide-status is-error";
       } finally {
         runButton.disabled = false;
         runButton.classList.remove("is-running");
         window.setTimeout(() => {
-          if (status.isConnected) status.textContent = "";
-        }, 2500);
+          if (status.isConnected) {
+            status.textContent = "";
+            status.className = "pyodide-status";
+          }
+        }, 3000);
       }
     });
 
@@ -268,9 +329,13 @@ print('Hello from Python!')" aria-label="Éditeur de code Python"></textarea>
 
   function close() {
     const backdrop = document.querySelector(".pyodide-backdrop");
-    if (!backdrop) return;
-    backdrop.remove();
-    previousFocus?.focus();
+    if (keydownHandler) {
+      document.removeEventListener("keydown", keydownHandler);
+      keydownHandler = null;
+    }
+    if (backdrop) backdrop.remove();
+    if (previousFocus?.isConnected) previousFocus.focus();
+    previousFocus = null;
   }
 
   window.LearnHubPyodide = { open, close, loadPyodide };

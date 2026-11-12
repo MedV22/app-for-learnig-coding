@@ -6,6 +6,11 @@
   const modalId = "concept-modal";
   let previousFocus = null;
   let previousFocusId = null;
+  const storage = window.LearnHubStorage || {
+    get: (key) => { try { return localStorage.getItem(key); } catch { return null; } },
+    set: (key, value) => { try { localStorage.setItem(key, value); return true; } catch { return false; } }
+  };
+  const legacySlug = window.LearnHubUtils?.legacySlug || ((value) => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""));
 
   function close() {
     const backdrop = document.querySelector(".modal-backdrop");
@@ -22,8 +27,11 @@
   }
 
   function onKeydown(event) {
+    const backdrop = document.querySelector(".modal-backdrop");
+    if (window.LearnHubUtils?.isTopLayer && !window.LearnHubUtils.isTopLayer(backdrop)) return;
     if (event.key === "Escape") {
       event.preventDefault();
+      event.stopImmediatePropagation();
       close();
       return;
     }
@@ -57,7 +65,9 @@
     let isFav = false;
     if (key && id) {
       try {
-        isFav = new Set(JSON.parse(localStorage.getItem(`learnhub-favorites-${key}`) || "[]")).has(id);
+        const value = JSON.parse(storage.get(`learnhub-favorites-${key}`) || "[]");
+        const legacyId = `${key}-${legacySlug(category)}-${legacySlug(item.originalName || item.nom)}`;
+        isFav = Array.isArray(value) && (value.includes(id) || value.includes(legacyId));
       } catch {
         isFav = false;
       }
@@ -69,12 +79,14 @@
     // Detect language badge for code snippet
     const codeLang = key === "python" ? "Python" : key === "kali" ? "Bash / Terminal" : key === "css" ? "CSS" : key === "javascript" ? "JavaScript" : "HTML";
 
+    const displaySyntaxe = item.syntaxe;
+
     // Navigation (prev / next) across items
     let prevItem = null;
     let nextItem = null;
     if (key && typeof window.data !== "undefined" && window.data[key]) {
       const allItems = window.data[key].flatMap((s) => s.items.map((it) => ({ ...it, sectionCategory: s.categorie })));
-      const currentIndex = allItems.findIndex((it) => it.nom === item.nom && it.sectionCategory === category);
+      const currentIndex = allItems.findIndex((it) => it.nom === (item.originalName || item.nom) && it.sectionCategory === category);
       if (currentIndex > 0) prevItem = allItems[currentIndex - 1];
       if (currentIndex >= 0 && currentIndex < allItems.length - 1) nextItem = allItems[currentIndex + 1];
     }
@@ -121,7 +133,7 @@
               <span class="copy-icon">📋</span> <span class="copy-text">${label("copy", "Copier")}</span>
             </button>
           </div>
-          <div class="code-block"><pre><code>${esc(item.syntaxe)}</code></pre></div>
+          <div class="code-block"><pre><code>${esc(displaySyntaxe)}</code></pre></div>
         </div>
 
         <div class="modal-card-section modal-expl-card">
@@ -159,12 +171,12 @@
     const copyText = copyButton.querySelector(".copy-text");
     copyButton.addEventListener("click", async () => {
       try {
-        await navigator.clipboard.writeText(item.syntaxe);
+        await navigator.clipboard.writeText(displaySyntaxe);
         copyText.textContent = label("copied", "Copié !");
         copyButton.classList.add("copied");
       } catch {
         const field = document.createElement("textarea");
-        field.value = item.syntaxe;
+          field.value = displaySyntaxe;
         field.style.position = "fixed";
         field.style.opacity = "0";
         document.body.append(field);
@@ -200,11 +212,16 @@
       event.stopPropagation();
       if (!key || !id) return;
       try {
-        const stored = new Set(JSON.parse(localStorage.getItem(`learnhub-favorites-${key}`) || "[]"));
-        const currentlyFav = stored.has(id);
-        if (currentlyFav) stored.delete(id);
+        const value = JSON.parse(storage.get(`learnhub-favorites-${key}`) || "[]");
+        const stored = new Set(Array.isArray(value) ? value : []);
+        const legacyId = `${key}-${legacySlug(category)}-${legacySlug(item.originalName || item.nom)}`;
+        const currentlyFav = stored.has(id) || stored.has(legacyId);
+        if (currentlyFav) {
+          stored.delete(id);
+          stored.delete(legacyId);
+        }
         else stored.add(id);
-        localStorage.setItem(`learnhub-favorites-${key}`, JSON.stringify([...stored]));
+        storage.set(`learnhub-favorites-${key}`, JSON.stringify([...stored]));
 
         const isNowFav = stored.has(id);
         favBtn.classList.toggle("is-favorite", isNowFav);
@@ -228,11 +245,15 @@
     const nextBtn = backdrop.querySelector(".modal-next-btn");
 
     const navigateToItem = (targetItem) => {
-      const card = document.querySelector(`.concept-open[data-name="${CSS.escape(targetItem.nom)}"][data-category="${CSS.escape(targetItem.sectionCategory)}"]`);
+      const card = [...document.querySelectorAll(".concept-open")].find((candidate) => (
+        candidate.dataset.name === targetItem.nom && candidate.dataset.category === targetItem.sectionCategory
+      ));
       if (card) {
         card.click();
       } else {
-        close();
+        window.dispatchEvent(new CustomEvent("learnhubopenconcept", {
+          detail: { key, category: targetItem.sectionCategory, name: targetItem.nom }
+        }));
       }
     };
 

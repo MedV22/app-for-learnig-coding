@@ -25,6 +25,7 @@
   <script src="js/pypod.js" defer></script>
 </head>
 <body data-page="home">
+  <a class="skip-link" href="#main-content">Aller au contenu principal</a>
   <header class="topbar">
     <a class="brand" href="index.html">
       <span class="brand-mark">&lt;/&gt;</span> Learn<span>Hub</span>
@@ -53,7 +54,7 @@
     </div>
   </header>
 
-  <main class="home-main">
+  <main class="home-main" id="main-content">
     <section class="hero">
       <div class="hero-pill-badge">✨ Plateforme d'apprentissage interactive & open-source</div>
       <h1>Comprendre le code.<br><span>Explorer la cybersécurité.</span></h1>
@@ -72,11 +73,11 @@
 
       <div class="search-quick-tags">
         <span>Suggestions populaires :</span>
-        <button type="button" class="search-tag" onclick="document.querySelector('#global-search').value='print'; document.querySelector('#global-search').dispatchEvent(new Event('input'));">print()</button>
-        <button type="button" class="search-tag" onclick="document.querySelector('#global-search').value='nmap'; document.querySelector('#global-search').dispatchEvent(new Event('input'));">nmap</button>
-        <button type="button" class="search-tag" onclick="document.querySelector('#global-search').value='boucles'; document.querySelector('#global-search').dispatchEvent(new Event('input'));">boucles</button>
-        <button type="button" class="search-tag" onclick="document.querySelector('#global-search').value='flexbox'; document.querySelector('#global-search').dispatchEvent(new Event('input'));">flexbox</button>
-        <button type="button" class="search-tag" onclick="document.querySelector('#global-search').value='chmod'; document.querySelector('#global-search').dispatchEvent(new Event('input'));">chmod</button>
+        <button type="button" class="search-tag" data-search-term="print">print()</button>
+        <button type="button" class="search-tag" data-search-term="nmap">nmap</button>
+        <button type="button" class="search-tag" data-search-term="boucles">boucles</button>
+        <button type="button" class="search-tag" data-search-term="flexbox">flexbox</button>
+        <button type="button" class="search-tag" data-search-term="chmod">chmod</button>
       </div>
     </section>
 
@@ -84,29 +85,29 @@
       <div class="feature-pill">
         <span class="feature-pill-icon">📚</span>
         <div class="feature-pill-text">
-          <strong>200+ Fiches interactives</strong>
-          <span>Explications, syntaxe & exemples</span>
+          <strong>202 fiches interactives</strong>
+          <span>Fiches courtes pour apprendre une notion à la fois</span>
         </div>
       </div>
       <div class="feature-pill">
         <span class="feature-pill-icon">🐧</span>
         <div class="feature-pill-text">
           <strong>Terminal Kali simulé</strong>
-          <span>Pratique en ligne sans installation</span>
+          <span>Un terminal simulé pour explorer les commandes</span>
         </div>
       </div>
       <div class="feature-pill">
         <span class="feature-pill-icon">🐍</span>
         <div class="feature-pill-text">
-          <strong>Éditeur Python réel</strong>
-          <span>Exécution de code dans le navigateur</span>
+          <strong>Exécute du code dans le navigateur</strong>
+          <span>Un éditeur Python avec le moteur Pyodide</span>
         </div>
       </div>
       <div class="feature-pill">
         <span class="feature-pill-icon">⚡</span>
         <div class="feature-pill-text">
-          <strong>100% Hors-ligne & PWA</strong>
-          <span>Progression sauvegardée en local</span>
+          <strong>PWA &amp; mode hors-ligne</strong>
+          <span>Pages mises en cache après la première visite</span>
         </div>
       </div>
     </section>
@@ -115,7 +116,7 @@
       <a class="path-card web-path" href="web.html">
         <div class="path-card-top">
           <div class="path-icon" aria-hidden="true">&lt;/&gt;</div>
-          <span class="path-level-tag">50+ notions</span>
+          <span class="path-level-tag">63 notions</span>
         </div>
         <p class="eyebrow">CRÉATION WEB</p>
         <h2>HTML, CSS &amp; JavaScript</h2>
@@ -133,7 +134,7 @@
       <a class="path-card python-path" href="python.html">
         <div class="path-card-top">
           <div class="path-icon" aria-hidden="true">Py</div>
-          <span class="path-level-tag">70+ notions</span>
+          <span class="path-level-tag">62 notions</span>
         </div>
         <p class="eyebrow">PROGRAMMATION</p>
         <h2>Apprendre Python</h2>
@@ -151,7 +152,7 @@
       <a class="path-card kali-path" href="kali.html">
         <div class="path-card-top">
           <div class="path-icon" aria-hidden="true">⌘</div>
-          <span class="path-level-tag">80+ outils & cmds</span>
+          <span class="path-level-tag">77 outils &amp; commandes</span>
         </div>
         <p class="eyebrow">CYBERSÉCURITÉ</p>
         <h2>Découvrir Kali Linux</h2>
