@@ -1,12 +1,14 @@
-const CACHE_NAME = 'learnhub-v5';
+const CACHE_NAME = 'learnhub-v6';
 const ASSETS = [
   './',
   './index.html',
   './web.html',
+  './html-practice.html',
   './python.html',
   './kali.html',
   './css/style.css',
   './js/main.js',
+  './js/html-practice.js',
   './js/app.js',
   './js/data.js',
   './js/i18n.js',

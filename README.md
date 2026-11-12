@@ -14,6 +14,7 @@ Un site web simple et gratuit pour apprendre **Python** et **Kali Linux** au mê
 - 📚 **Section Python** : bases, conditions, boucles, fonctions, POO, fichiers, modules, mini-projets
 - 🐉 **Section Kali Linux** : commandes Linux, réseau, reconnaissance, outils de sécurité, labs d'entraînement
 - 🌐 **Section Web** : HTML, CSS et JavaScript
+- 🧑‍💻 **Parcours pratique HTML** : leçons progressives, exercices corrigés, indices, solutions expliquées et mini-projet avec aperçu
 - 💡 **Fenêtre « À quoi ça sert ? »** : explication simple, syntaxe, exemple et points d'attention
 - 🔍 **Recherche** en temps réel
 - 🎚️ **Filtre par niveau** : Débutant / Intermédiaire / Avancé
@@ -51,6 +52,7 @@ learn-hub/
 ├── python.html       → Section Python
 ├── kali.html         → Section Kali Linux
 ├── web.html          → Section HTML/CSS/JS
+├── html-practice.html → Parcours pratique guidé pour apprendre le HTML
 ├── css/
 │   └── style.css     → Styles et thèmes
 ├── js/
@@ -59,7 +61,8 @@ learn-hub/
 │   ├── app.js        → Logique des cours, progression, favoris, quiz
 │   ├── data.js       → Tout le contenu (Python + Kali + Web)
 │   ├── i18n.js       → Traductions (fr, en, ar)
-│   └── terminal.js   → Terminal Linux simulé
+│   ├── terminal.js   → Terminal Linux simulé
+│   └── html-practice.js → Exercices, corrections et progression HTML
 ├── PRD.md            → Cahier des charges du projet
 └── README.md
 ```
