@@ -1,6 +1,6 @@
 {
-  "name": "LearnHub",
-  "short_name": "LearnHub",
+  "name": "CodeVally",
+  "short_name": "CodeVally",
   "description": "Application d'apprentissage de Python, du web et de Kali Linux.",
   "start_url": "./index.html",
   "display": "standalone",
@@ -8,7 +8,7 @@
   "theme_color": "#4f46e5",
   "orientation": "portrait-primary",
   "icons": [
-    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" },
-    { "src": "favicon.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose": "any" }
+    { "src": "assets/codevally-logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "assets/codevally-logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
   ]
 }

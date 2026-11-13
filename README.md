@@ -1,4 +1,4 @@
-# 🐍🐉 Learn Hub – Apprendre Python & Kali Linux
+# 🐍🐉 CodeVally – Apprendre Python & Kali Linux
 
 Un site web simple et gratuit pour apprendre **Python** et **Kali Linux** au même endroit. Clique sur n'importe quelle carte (commande, outil, notion) et une fenêtre t'explique **à quoi ça sert**, avec la syntaxe et un exemple.
 
@@ -14,7 +14,9 @@ Un site web simple et gratuit pour apprendre **Python** et **Kali Linux** au mê
 - 📚 **Section Python** : bases, conditions, boucles, fonctions, POO, fichiers, modules, mini-projets
 - 🐉 **Section Kali Linux** : commandes Linux, réseau, reconnaissance, outils de sécurité, labs d'entraînement
 - 🌐 **Section Web** : HTML, CSS et JavaScript
-- 🧑‍💻 **Parcours pratique HTML** : leçons progressives, exercices corrigés, indices, solutions expliquées et mini-projet avec aperçu
+- 🧑‍💻 **Parcours pratiques HTML, CSS, JavaScript et Python** : leçons progressives, exercices corrigés, indices et solutions expliquées
+- 🐧 **Parcours Kali Linux simulé** : commandes de base sur des fichiers fictifs, sans accès au système ni au réseau
+- 🌍 **Interface en français, anglais et arabe** : les parcours suivent la langue choisie ; les exemples de code, commentaires et le terminal Kali restent inchangés
 - 💡 **Fenêtre « À quoi ça sert ? »** : explication simple, syntaxe, exemple et points d'attention
 - 🔍 **Recherche** en temps réel
 - 🎚️ **Filtre par niveau** : Débutant / Intermédiaire / Avancé
@@ -53,6 +55,7 @@ learn-hub/
 ├── kali.html         → Section Kali Linux
 ├── web.html          → Section HTML/CSS/JS
 ├── html-practice.html → Parcours pratique guidé pour apprendre le HTML
+├── practice.html     → Parcours pratique CSS, JavaScript, Python et Kali Linux
 ├── css/
 │   └── style.css     → Styles et thèmes
 ├── js/
@@ -61,8 +64,10 @@ learn-hub/
 │   ├── app.js        → Logique des cours, progression, favoris, quiz
 │   ├── data.js       → Tout le contenu (Python + Kali + Web)
 │   ├── i18n.js       → Traductions (fr, en, ar)
+│   ├── guided-i18n.js   → Traductions des parcours pratiques
 │   ├── terminal.js   → Terminal Linux simulé
-│   └── html-practice.js → Exercices, corrections et progression HTML
+│   ├── html-practice.js → Exercices, corrections et progression HTML
+│   └── practice.js   → Parcours CSS, JavaScript, Python et Kali Linux
 ├── PRD.md            → Cahier des charges du projet
 └── README.md
 ```

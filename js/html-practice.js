@@ -112,6 +112,9 @@
   const progressResume = document.querySelector("#progress-resume");
   const progressPercent = document.querySelector("#progress-percent");
   const progressTrack = document.querySelector(".guided-progress-track");
+  const i18n = window.LearnHubGuidedI18n;
+  const text = (key, values) => i18n?.common(key, values) || key;
+  const localizedStep = (step, key) => i18n?.step("html", step.id, key, step[key]) || step[key];
 
   const readState = () => {
     try {
@@ -138,13 +141,14 @@
   const updateProgress = () => {
     const done = state.completed.length;
     const percent = Math.round(done / steps.length * 100);
-    progressCount.textContent = `${done} / ${steps.length} étapes terminées`;
+    progressCount.textContent = text("stepCount", { done, total: steps.length });
     progressPercent.textContent = `${percent} %`;
     progressTrack.setAttribute("aria-valuenow", String(percent));
+    progressTrack.setAttribute("aria-label", `${text("stepsHeading")}: HTML`);
     progressTrack.querySelector("span").style.width = `${percent}%`;
     progressResume.textContent = state.finished
-      ? "Bravo, tu peux revoir ton projet ou reprendre une étape."
-      : "Ta progression et ton code sont sauvegardés dans ce navigateur.";
+      ? text("finishedProgress")
+      : text("savedProgress");
   };
 
   const renderNavigation = () => {
@@ -152,8 +156,8 @@
       const completed = state.completed.includes(step.id);
       const available = index <= state.index || completed;
       const current = index === state.index && !state.finished;
-      const label = completed ? "Terminée" : current ? "En cours" : "À venir";
-      return `<li><button class="guided-step-button${current ? " is-current" : ""}${completed ? " is-complete" : ""}" type="button" data-step-index="${index}"${available ? "" : " disabled"}${current ? ' aria-current="step"' : ""}><span class="guided-step-number">${completed ? "✓" : index + 1}</span><span class="guided-step-label"><strong>${escapeHTML(step.title)}</strong><small>${label}</small></span></button></li>`;
+      const label = completed ? text("completed") : current ? text("current") : text("upcoming");
+      return `<li><button class="guided-step-button${current ? " is-current" : ""}${completed ? " is-complete" : ""}" type="button" data-step-index="${index}"${available ? "" : " disabled"}${current ? ' aria-current="step"' : ""}><span class="guided-step-number">${completed ? "✓" : index + 1}</span><span class="guided-step-label"><strong>${escapeHTML(localizedStep(step, "title"))}</strong><small>${label}</small></span></button></li>`;
     }).join("");
   };
 
@@ -162,7 +166,7 @@
   const renderFinished = () => {
     const project = steps[steps.length - 1];
     const projectCode = state.drafts[project.id] || "";
-    content.innerHTML = `<section class="guided-finish"><p class="eyebrow">PARCOURS TERMINÉ</p><h2>Bravo, tu as créé ta page !</h2><p>Tu as parcouru les bases du HTML et validé les six étapes. Tu peux reprendre ton projet et continuer à le modifier.</p><button class="guided-secondary-button" type="button" data-review-project>Revoir mon projet</button><div class="guided-preview-wrap"><h3>Aperçu de ta page</h3><iframe class="guided-preview" title="Aperçu de la page personnelle créée" sandbox="" srcdoc="${escapeHTML(projectCode)}"></iframe></div></section>`;
+    content.innerHTML = `<section class="guided-finish"><p class="eyebrow">${text("pathFinished")}</p><h2>${text("finishedTitle", { course: "HTML" })}</h2><p>${text("finishedCopy")}</p><button class="guided-secondary-button" type="button" data-review-project>${text("reviewProject")}</button><div class="guided-preview-wrap"><h3>${text("pagePreview")}</h3><iframe class="guided-preview" title="${text("pagePreview")}" sandbox="" srcdoc="${escapeHTML(projectCode)}"></iframe></div></section>`;
     content.querySelector("[data-review-project]").addEventListener("click", () => {
       state.finished = false;
       state.index = steps.length - 1;
@@ -175,24 +179,25 @@
     const step = steps[state.index];
     const completed = state.completed.includes(step.id);
     const savedCode = state.drafts[step.id] || "";
+    const stepNumber = text("stepMeta", { current: state.index + 1, total: steps.length });
     content.innerHTML = `<article class="guided-lesson">
-      <div class="guided-lesson-meta"><span>ÉTAPE ${state.index + 1} SUR ${steps.length}</span><span class="guided-level">DÉBUTANT</span></div>
-      <h2>${escapeHTML(step.title)}</h2>
-      <section class="guided-explanation"><h3>La leçon</h3><p>${escapeHTML(step.lesson)}</p></section>
-      <section class="guided-task"><h3>À toi d’écrire</h3><p>${escapeHTML(step.exercise)}</p></section>
-      <label class="guided-editor-label" for="html-answer">Ton code HTML</label>
+      <div class="guided-lesson-meta"><span>${stepNumber}</span><span class="guided-level">${text("beginner")}</span></div>
+      <h2>${escapeHTML(localizedStep(step, "title"))}</h2>
+      <section class="guided-explanation"><h3>${text("lesson")}</h3><p>${escapeHTML(localizedStep(step, "lesson"))}</p></section>
+      <section class="guided-task"><h3>${text("exercise")}</h3><p>${escapeHTML(localizedStep(step, "exercise"))}</p></section>
+      <label class="guided-editor-label" for="html-answer">${text("htmlCodeLabel")}</label>
       <textarea class="guided-editor" id="html-answer" rows="${step.isProject ? 12 : 7}" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-describedby="editor-help">${escapeHTML(savedCode)}</textarea>
-      <p class="guided-editor-help" id="editor-help">Astuce : respecte l’ouverture et la fermeture de chaque balise.</p>
-      ${step.isProject ? `<div class="guided-preview-wrap"><div class="guided-preview-heading"><h3>Aperçu en direct</h3><span>Le code reste isolé dans cette prévisualisation.</span></div><iframe class="guided-preview" title="Aperçu en direct de ta page personnelle" sandbox="" srcdoc="${escapeHTML(savedCode)}"></iframe></div>` : ""}
+      <p class="guided-editor-help" id="editor-help">${text("htmlEditorHelp")}</p>
+      ${step.isProject ? `<div class="guided-preview-wrap"><div class="guided-preview-heading"><h3>${text("livePreviewHeading")}</h3><span>${text("livePreviewHelp")}</span></div><iframe class="guided-preview" title="${text("pagePreview")}" sandbox="" srcdoc="${escapeHTML(savedCode)}"></iframe></div>` : ""}
       <div class="guided-actions">
-        <button class="guided-primary-button" type="button" data-check>Vérifier ma réponse</button>
-        <button class="guided-secondary-button" type="button" data-hint aria-expanded="false">Afficher un indice</button>
-        <button class="guided-secondary-button" type="button" data-solution aria-expanded="false">Voir la solution expliquée</button>
+        <button class="guided-primary-button" type="button" data-check>${text("check")}</button>
+        <button class="guided-secondary-button" type="button" data-hint aria-expanded="false">${text("hint")}</button>
+        <button class="guided-secondary-button" type="button" data-solution aria-expanded="false">${text("solution")}</button>
       </div>
-      <p class="guided-hint" data-hint-content hidden>${escapeHTML(step.hint)}</p>
-      <section class="guided-solution" data-solution-content hidden><h3>Une solution possible</h3><pre><code>${escapeHTML(step.solution)}</code></pre><p>${escapeHTML(step.explanation)}</p></section>
+      <p class="guided-hint" data-hint-content hidden>${escapeHTML(localizedStep(step, "hint"))}</p>
+      <section class="guided-solution" data-solution-content hidden><h3>${text("possibleSolution")}</h3><pre><code>${escapeHTML(step.solution)}</code></pre><p>${escapeHTML(localizedStep(step, "explanation"))}</p></section>
       <div class="guided-feedback" data-feedback role="status" aria-live="polite" hidden></div>
-      <div class="guided-continue-row"><button class="guided-primary-button" type="button" data-next${completed ? "" : " disabled"}>${state.index === steps.length - 1 ? "Terminer le parcours" : "Passer à l’étape suivante"} <span aria-hidden="true">→</span></button></div>
+      <div class="guided-continue-row"><button class="guided-primary-button" type="button" data-next${completed ? "" : " disabled"}>${state.index === steps.length - 1 ? text("finish") : text("next")} <span aria-hidden="true">→</span></button></div>
     </article>`;
 
     const editor = content.querySelector("#html-answer");
@@ -216,14 +221,14 @@
       const hint = content.querySelector("[data-hint-content]");
       hint.hidden = !hint.hidden;
       hintButton.setAttribute("aria-expanded", String(!hint.hidden));
-      hintButton.textContent = hint.hidden ? "Afficher un indice" : "Masquer l’indice";
+      hintButton.textContent = hint.hidden ? text("hint") : text("hideHint");
     });
 
     solutionButton.addEventListener("click", () => {
       const solution = content.querySelector("[data-solution-content]");
       solution.hidden = !solution.hidden;
       solutionButton.setAttribute("aria-expanded", String(!solution.hidden));
-      solutionButton.textContent = solution.hidden ? "Voir la solution expliquée" : "Masquer la solution";
+      solutionButton.textContent = solution.hidden ? text("solution") : text("hideSolution");
     });
 
     content.querySelector("[data-check]").addEventListener("click", () => {
@@ -231,7 +236,8 @@
       feedback.hidden = false;
       if (error) {
         feedback.className = "guided-feedback is-error";
-        feedback.innerHTML = `<strong>Pas encore.</strong> ${escapeHTML(error)} Relis la leçon ou utilise l’indice, puis réessaie.`;
+        const explanation = i18n?.validationError("html", step.id, error) || error;
+        feedback.innerHTML = `<strong>${text("notYet")}</strong> ${escapeHTML(explanation)} ${text("retry")}`;
         return;
       }
 
@@ -241,7 +247,7 @@
       persist();
       renderNavigation();
       feedback.className = "guided-feedback is-success";
-      feedback.innerHTML = `<strong>Bonne réponse !</strong> ${escapeHTML(step.explanation)}${completed ? "" : " Étape validée, bravo !"}`;
+      feedback.innerHTML = `<strong>${text("correct")}</strong> ${escapeHTML(localizedStep(step, "explanation"))}${completed ? "" : text("stepValidated")}`;
       nextButton.disabled = false;
     });
 
@@ -275,5 +281,6 @@
     render();
   });
 
+  window.addEventListener("learnhublanguagechange", render);
   render();
 })();

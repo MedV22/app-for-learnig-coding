@@ -234,7 +234,7 @@ const data = {
       makeItem("nav", "Débutant", "Identifie spécifiquement la section regroupant les liens majeurs de navigation.", '<nav aria-label="Navigation principale">\n  <a href="/index.html">Accueil</a>\n  <a href="/web.html">Web</a>\n</nav>', "Aide les technologies d'assistance à identifier rapidement les menus."),
       makeItem("main", "Débutant", "Englobe le contenu central et exclusif de la page (unique par document).", '<main>\n  <h1>Guide de cybersécurité</h1>\n  <p>Contenu principal unique...</p>\n</main>', "Ne doit pas être imbriqué dans header, nav ou footer."),
       makeItem("section et article", "Débutant", "Définit une section thématique générale (section) ou un contenu autonome et réutilisable (article).", '<section aria-labelledby="titre-news">\n  <h2 id="titre-news">Actualités</h2>\n  <article>\n    <h3>Titre de l\'article</h3>\n    <p>Texte de l\'article...</p>\n  </article>\n</section>', "Structure la page de façon compréhensible pour les moteurs et lecteurs de flux RSS."),
-      makeItem("footer", "Débutant", "Représente le pied de page d'un document ou d'une section.", '<footer>\n  <p>© 2026 Learn Hub · Tous droits réservés.</p>\n</footer>', "Regroupe les mentions légales, copyrights et liens secondaires.")
+      makeItem("footer", "Débutant", "Représente le pied de page d'un document ou d'une section.", '<footer>\n  <p>© 2026 CodeVally · Tous droits réservés.</p>\n</footer>', "Regroupe les mentions légales, copyrights et liens secondaires.")
     ]),
     group("Formulaires", [
       makeItem("form", "Débutant", "Délimite un formulaire interactif et configure la méthode et l'adresse de soumission.", '<form action="/api/recherche" method="GET">\n  <input type="search" name="q" placeholder="Rechercher...">\n  <button type="submit">Valider</button>\n</form>', "action indique l'URL cible et method précise le verbe HTTP (GET ou POST)."),
@@ -295,7 +295,7 @@ const data = {
     ]),
     group("HTML et DOM", [
       makeItem("querySelector()", "Débutant", "Sélectionne le premier élément du DOM correspondant à un sélecteur CSS.", 'const bouton = document.querySelector("#btn-valider");\nconst elements = document.querySelectorAll(".carte");', "querySelectorAll renvoie une NodeList de tous les éléments correspondants."),
-      makeItem("textContent", "Débutant", "Lit ou modifie le contenu textuel brut d'un élément HTML en toute sécurité.", 'const titre = document.querySelector("h1");\ntitre.textContent = "Bienvenue sur Learn Hub";', "Préférable à innerHTML car insensible aux attaques d'injection XSS."),
+      makeItem("textContent", "Débutant", "Lit ou modifie le contenu textuel brut d'un élément HTML en toute sécurité.", 'const titre = document.querySelector("h1");\ntitre.textContent = "Bienvenue sur CodeVally";', "Préférable à innerHTML car insensible aux attaques d'injection XSS."),
       makeItem("classList", "Intermédiaire", "Manipule les classes CSS d'un élément (add, remove, toggle, contains).", 'const carte = document.querySelector(".carte");\ncarte.classList.add("active");\ncarte.classList.toggle("visible");', "Permet de modifier l'apparence visuelle sans manipuler directement l'attribut style."),
       makeItem("Événement click", "Débutant", "Attache un écouteur réagissant aux clics de l'utilisateur sur un élément.", 'const btn = document.querySelector("button");\nbtn.addEventListener("click", (event) => {\n  console.log("Bouton cliqué !", event.target);\n});', "addEventListener permet d'attacher plusieurs écouteurs sur un même élément.")
     ]),

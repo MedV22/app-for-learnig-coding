@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f46e5">
+  <meta name="description" content="Des parcours pratiques pour apprendre CSS, JavaScript, Python et les bases sûres de Kali Linux.">
+  <link rel="manifest" href="manifest.json">
+  <title>Parcours pratique — CodeVally</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="assets/codevally-logo.png" type="image/png">
+  <script src="js/i18n.js" defer></script>
+  <script src="js/guided-i18n.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/pypod.js" defer></script>
+  <script src="js/practice.js" defer></script>
+</head>
+<body data-page="guided-practice">
+  <a class="skip-link" href="#main-content">Aller au contenu principal</a>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <img class="brand-logo" src="assets/codevally-logo.png" alt="CodeVally">
+    </a>
+    <nav aria-label="Navigation principale">
+      <a href="index.html">Accueil</a>
+      <a href="web.html">HTML · CSS · JS</a>
+      <a href="python.html">Python</a>
+      <a href="kali.html">Kali Linux</a>
+    </nav>
+    <div class="header-actions">
+      <select class="language-switch" aria-label="Choisir la langue du site">
+        <option value="fr">Français</option>
+        <option value="ar">العربية</option>
+        <option value="en">English</option>
+      </select>
+      <button class="theme-toggle" type="button" aria-label="Activer le thème sombre" title="Changer de thème">
+        <span class="theme-icon">☾</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="course-main html-practice-main" id="main-content">
+    <section class="course-hero guided-hero">
+      <div>
+        <p class="eyebrow" id="path-eyebrow">PARCOURS PRATIQUE · DÉBUTANT</p>
+        <h1 id="path-title">Apprendre en pratiquant</h1>
+        <p id="path-description">Une courte leçon, un exercice à coder et un retour clair pour progresser.</p>
+      </div>
+      <div class="hero-symbol" id="path-symbol" aria-hidden="true">&lt;/&gt;</div>
+    </section>
+
+    <section class="guided-progress" aria-label="Progression du parcours">
+      <div class="guided-progress-copy">
+        <div>
+          <strong id="progress-count">0 / 6 étapes terminées</strong>
+          <span id="progress-resume">Ta progression est sauvegardée dans ce navigateur.</span>
+        </div>
+        <span class="guided-progress-percent" id="progress-percent">0 %</span>
+      </div>
+      <div class="guided-progress-track" role="progressbar" aria-label="Progression du parcours" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <span></span>
+      </div>
+    </section>
+
+    <div class="guided-layout">
+      <nav class="guided-step-nav" aria-label="Étapes du parcours">
+        <p class="guided-nav-title">LES ÉTAPES</p>
+        <ol id="step-list"></ol>
+      </nav>
+      <section class="guided-workspace" id="lesson-content" aria-live="polite"></section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <a class="brand" href="index.html">
+      <img class="brand-logo" src="assets/codevally-logo.png" alt="CodeVally">
+    </a>
+    <p>Apprendre avec curiosité, pratiquer avec responsabilité · Fait avec passion.</p>
+  </footer>
+</body>
+</html>

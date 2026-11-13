@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Apprends le HTML5, le CSS3 moderne et le JavaScript avec des fiches interactives et des exemples simples.">
   <link rel="manifest" href="manifest.json">
-  <title>HTML, CSS et JavaScript — Learn Hub</title>
+  <title>HTML, CSS et JavaScript — CodeVally</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/style.css">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/codevally-logo.png" type="image/png">
 
   <script src="js/data.js" defer></script>
   <script src="js/i18n.js" defer></script>
@@ -27,7 +27,7 @@
   <a class="skip-link" href="#main-content">Aller au contenu principal</a>
   <header class="topbar">
     <a class="brand" href="index.html">
-      <span class="brand-mark">&lt;/&gt;</span> Learn<span>Hub</span>
+      <img class="brand-logo" src="assets/codevally-logo.png" alt="CodeVally">
     </a>
     <nav aria-label="Navigation principale">
       <a href="index.html">Accueil</a>
@@ -63,13 +63,31 @@
       <div class="hero-symbol" aria-hidden="true">&lt;/&gt;</div>
     </section>
 
-    <section class="guided-path-promo" aria-labelledby="guided-path-title">
-      <div>
-        <p class="eyebrow">POUR BIEN DÉBUTER</p>
-        <h2 id="guided-path-title">Un parcours pratique pour apprendre le HTML</h2>
-        <p>De courts exercices corrigés, des indices et une page personnelle à créer et à prévisualiser.</p>
-      </div>
-      <a class="guided-path-link" href="html-practice.html">Commencer le parcours <span aria-hidden="true">→</span></a>
+    <section class="guided-path-grid" aria-label="Parcours pratiques pour le développement Web">
+      <article class="guided-path-promo" data-guided-path="html">
+        <div>
+          <p class="eyebrow">POUR BIEN DÉBUTER</p>
+          <h2>Un parcours pratique pour apprendre le HTML</h2>
+          <p>De courts exercices corrigés, des indices et une page personnelle à créer et à prévisualiser.</p>
+        </div>
+        <a class="guided-path-link" href="html-practice.html">Parcours HTML <span aria-hidden="true">→</span></a>
+      </article>
+      <article class="guided-path-promo" data-guided-path="css">
+        <div>
+          <p class="eyebrow">STYLE &amp; MISE EN PAGE</p>
+          <h2>Apprendre le CSS en pratiquant</h2>
+          <p>Écris tes règles de style et observe leur effet sur un aperçu de page.</p>
+        </div>
+        <a class="guided-path-link" href="practice.html?path=css">Parcours CSS <span aria-hidden="true">→</span></a>
+      </article>
+      <article class="guided-path-promo" data-guided-path="javascript">
+        <div>
+          <p class="eyebrow">INTERACTIONS</p>
+          <h2>Apprendre JavaScript en pratiquant</h2>
+          <p>Progresse avec des exercices guidés et teste un mini-projet en console isolée.</p>
+        </div>
+        <a class="guided-path-link" href="practice.html?path=javascript">Parcours JavaScript <span aria-hidden="true">→</span></a>
+      </article>
     </section>
 
     <div class="language-tabs" role="tablist" aria-label="Choisir une technologie">
@@ -115,7 +133,7 @@
 
   <footer class="site-footer">
     <a class="brand" href="index.html">
-      <span class="brand-mark">&lt;/&gt;</span> Learn<span>Hub</span>
+      <img class="brand-logo" src="assets/codevally-logo.png" alt="CodeVally">
     </a>
     <p>Apprendre avec curiosité, pratiquer avec responsabilité · Fait avec passion.</p>
   </footer>

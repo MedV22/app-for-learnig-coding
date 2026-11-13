@@ -20,7 +20,7 @@
       progressTitle:"Ta progression",noResults:"Aucun concept ne correspond à ta recherche.",sectionCount:"notions",modalPurpose:"À quoi ça sert ?",modalSyntax:"Syntaxe & exemple",modalExplanation:"Ce qui se passe :",modalKnow:"À savoir & Bonnes pratiques",copy:"Copier",copied:"Copié !",copyFailed:"Copie impossible",learned:"✓ Notion apprise",markLearned:"Marquer comme apprise",close:"Fermer la fenêtre",
       homeEyebrow:"APPRENDRE À TON RYTHME",homeTitle:"Comprendre le code.<br><span>Explorer la cybersécurité.</span>",homeCopy:"Des explications claires, des exemples concrets et les bases pour progresser en programmation et en sécurité.",homeSearchLabel:"Rechercher une notion",webEyebrow:"CRÉATION WEB",webTitle:"HTML, CSS & JavaScript",webCopy:"Apprends à construire une page, la mettre en forme et lui ajouter des interactions.",webLink:"Explorer le web",pythonEyebrow:"PROGRAMMATION",pythonTitle:"Apprendre Python",pythonCopy:"Des premières variables aux fonctions, fichiers et mini-projets.",pythonLink:"Explorer Python",kaliEyebrow:"CYBERSÉCURITÉ",kaliTitle:"Découvrir Kali Linux",kaliCopy:"Commandes Linux, réseau et outils de sécurité en environnement autorisé.",kaliLink:"Explorer Kali Linux",oneAtATime:"Un concept à la fois.",homeNote:"Ouvre une fiche pour comprendre à quoi sert chaque notion, voir un exemple et marquer tes acquis.",footer:"Apprendre avec curiosité, pratiquer avec responsabilité.",
       webMainEyebrow:"PARCOURS · DÉVELOPPEMENT WEB",webMainTitle:"Créer pour le <span>web</span>",webMainCopy:"Apprends à construire une page, à la styliser et à lui donner vie.",chooseTech:"Choisir une technologie",htmlTab:"Structure",cssTab:"Style",jsTab:"Interactions",pythonEyebrowCourse:"PARCOURS · PROGRAMMATION",kaliEyebrowCourse:"PARCOURS · CYBERSÉCURITÉ",
-      legalTitle:"Cadre légal obligatoire",legalText:"Utilise les outils présentés uniquement sur tes propres machines, dans un laboratoire, ou avec l'autorisation écrite du propriétaire. Toute utilisation illégale est interdite et relève de ta responsabilité.",searchNone:"Aucune notion trouvée. Essaie un autre mot-clé.",pageTitleHome:"Learn Hub — Apprendre, comprendre, pratiquer",pageTitleWeb:"HTML, CSS et JavaScript — Learn Hub",pageTitlePython:"Python — Learn Hub",pageTitleKali:"Kali Linux — Learn Hub"
+      legalTitle:"Cadre légal obligatoire",legalText:"Utilise les outils présentés uniquement sur tes propres machines, dans un laboratoire, ou avec l'autorisation écrite du propriétaire. Toute utilisation illégale est interdite et relève de ta responsabilité.",searchNone:"Aucune notion trouvée. Essaie un autre mot-clé.",pageTitleHome:"CodeVally — Apprendre, comprendre, pratiquer",pageTitleWeb:"HTML, CSS et JavaScript — CodeVally",pageTitlePython:"Python — CodeVally",pageTitleKali:"Kali Linux — CodeVally"
     },
     ar: {
       navHome:"الرئيسية",navWeb:"HTML · CSS · JS",navPython:"بايثون",navKali:"كالي لينكس",themeLight:"تفعيل الوضع الفاتح",themeDark:"تفعيل الوضع الداكن",
@@ -28,7 +28,7 @@
       progressTitle:"تقدمك في التعلم",noResults:"لا توجد نتائج مطابقة لبحثك.",sectionCount:"مفهوم",modalPurpose:"ما فائدة هذا؟",modalSyntax:"الصياغة ومثال",modalExplanation:"كيف يعمل المثال:",modalKnow:"معلومة مهمة",copy:"نسخ",copied:"تم النسخ!",copyFailed:"تعذر النسخ",learned:"✓ تم تعلم هذا المفهوم",markLearned:"تحديد كمفهوم تم تعلمه",close:"إغلاق النافذة",
       homeEyebrow:"تعلّم على وتيرتك",homeTitle:"افهم البرمجة.<br><span>واكتشف الأمان.</span>",homeCopy:"تفسيرات واضحة وأمثلة عملية تساعدك على التقدم في البرمجة والأمن السيبراني.",homeSearchLabel:"ابحث عن مفهوم",webEyebrow:"إنشاء مواقع الويب",webTitle:"HTML وCSS وJavaScript",webCopy:"تعلّم إنشاء صفحة ويب وتنسيقها وإضافة التفاعلات إليها.",webLink:"استكشف تطوير الويب",pythonEyebrow:"البرمجة",pythonTitle:"تعلّم بايثون",pythonCopy:"تعلّم أساسيات اللغة مع أمثلة بسيطة يمكنك تجربتها.",pythonLink:"استكشف بايثون",kaliEyebrow:"الأمن السيبراني",kaliTitle:"اكتشف كالي لينكس",kaliCopy:"تعرّف على أوامر لينكس وأدوات الأمن بمسؤولية.",kaliLink:"استكشف كالي لينكس",oneAtATime:"مفهوم واحد في كل مرة.",homeNote:"افتح بطاقة لفهم المفهوم ورؤية مثال وتسجيل ما تعلمته.",footer:"تعلّم بفضول، وتدرّب بمسؤولية.",
       webMainEyebrow:"مسار تعليمي · تطوير الويب",webMainTitle:"اصنع للـ<span>ويب</span>",webMainCopy:"تعلّم بناء صفحة وتنسيقها وإضافة التفاعلات إليها.",chooseTech:"اختر تقنية",htmlTab:"البنية",cssTab:"التنسيق",jsTab:"التفاعلات",pythonEyebrowCourse:"مسار تعليمي · البرمجة",kaliEyebrowCourse:"مسار تعليمي · الأمن السيبراني",
-      legalTitle:"الاستخدام القانوني إلزامي",legalText:"استخدم الأدوات المعروضة فقط على أجهزتك أو في مختبر أو بإذن كتابي من المالك. يُحظر أي استخدام غير قانوني وتقع مسؤوليته على المستخدم.",searchNone:"لم يتم العثور على مفاهيم. جرّب كلمة أخرى.",pageTitleHome:"Learn Hub — تعلّم البرمجة والأمان",pageTitleWeb:"HTML وCSS وJavaScript — Learn Hub",pageTitlePython:"بايثون — Learn Hub",pageTitleKali:"كالي لينكس — Learn Hub"
+      legalTitle:"الاستخدام القانوني إلزامي",legalText:"استخدم الأدوات المعروضة فقط على أجهزتك أو في مختبر أو بإذن كتابي من المالك. يُحظر أي استخدام غير قانوني وتقع مسؤوليته على المستخدم.",searchNone:"لم يتم العثور على مفاهيم. جرّب كلمة أخرى.",pageTitleHome:"CodeVally — تعلّم البرمجة والأمان",pageTitleWeb:"HTML وCSS وJavaScript — CodeVally",pageTitlePython:"بايثون — CodeVally",pageTitleKali:"كالي لينكس — CodeVally"
     },
     en: {
       navHome:"Home",navWeb:"HTML · CSS · JS",navPython:"Python",navKali:"Kali Linux",themeLight:"Switch to light mode",themeDark:"Switch to dark mode",
@@ -36,7 +36,7 @@
       progressTitle:"Your learning progress",noResults:"No concepts match your search.",sectionCount:"concepts",modalPurpose:"What is it for?",modalSyntax:"Syntax and example",modalExplanation:"How it works:",modalKnow:"Good to know",copy:"Copy",copied:"Copied!",copyFailed:"Could not copy",learned:"✓ Marked as learned",markLearned:"Mark as learned",close:"Close dialog",
       homeEyebrow:"LEARN AT YOUR OWN PACE",homeTitle:"Understand code.<br><span>Explore security.</span>",homeCopy:"Clear explanations and practical examples to help you grow in programming and cybersecurity.",homeSearchLabel:"Search for a concept",webEyebrow:"WEB DEVELOPMENT",webTitle:"HTML, CSS & JavaScript",webCopy:"Learn to build a page, style it, and add interactions.",webLink:"Explore web development",pythonEyebrow:"PROGRAMMING",pythonTitle:"Learn Python",pythonCopy:"Learn the language basics with simple examples to try.",pythonLink:"Explore Python",kaliEyebrow:"CYBERSECURITY",kaliTitle:"Discover Kali Linux",kaliCopy:"Learn Linux commands and security tools responsibly.",kaliLink:"Explore Kali Linux",oneAtATime:"One concept at a time.",homeNote:"Open a card to understand a concept, see an example, and mark it as learned.",footer:"Stay curious. Practice responsibly.",
       webMainEyebrow:"LEARNING PATH · WEB DEVELOPMENT",webMainTitle:"Build for the <span>web</span>",webMainCopy:"Learn to build a page, style it, and add interactions.",chooseTech:"Choose a technology",htmlTab:"Structure",cssTab:"Styling",jsTab:"Interactions",pythonEyebrowCourse:"LEARNING PATH · PROGRAMMING",kaliEyebrowCourse:"LEARNING PATH · CYBERSECURITY",
-      legalTitle:"Use these tools legally",legalText:"Use the tools shown only on your own devices, in a lab, or with the owner's written permission. Illegal use is prohibited and remains the user's responsibility.",searchNone:"No concepts found. Try another search.",pageTitleHome:"Learn Hub — Learn code and security",pageTitleWeb:"HTML, CSS and JavaScript — Learn Hub",pageTitlePython:"Python — Learn Hub",pageTitleKali:"Kali Linux — Learn Hub"
+      legalTitle:"Use these tools legally",legalText:"Use the tools shown only on your own devices, in a lab, or with the owner's written permission. Illegal use is prohibited and remains the user's responsibility.",searchNone:"No concepts found. Try another search.",pageTitleHome:"CodeVally — Learn code and security",pageTitleWeb:"HTML, CSS and JavaScript — CodeVally",pageTitlePython:"Python — CodeVally",pageTitleKali:"Kali Linux — CodeVally"
     }
   };
   const descriptions = {
@@ -68,9 +68,54 @@
     }
   };
   const pageText = {
-    fr: { homeTitle:"Learn Hub — Apprendre, comprendre, pratiquer",webTitle:"HTML, CSS et JavaScript — Learn Hub",pythonTitle:"Python — Learn Hub",kaliTitle:"Kali Linux — Learn Hub" },
-    en: { homeTitle:ui.en.pageTitleHome,webTitle:ui.en.pageTitleWeb,pythonTitle:ui.en.pageTitlePython,kaliTitle:ui.en.pageTitleKali },
-    ar: { homeTitle:ui.ar.pageTitleHome,webTitle:ui.ar.pageTitleWeb,pythonTitle:ui.ar.pageTitlePython,kaliTitle:ui.ar.pageTitleKali }
+    fr: { homeTitle:"CodeVally — Apprendre, comprendre, pratiquer",webTitle:"HTML, CSS et JavaScript — CodeVally",pythonTitle:"Python — CodeVally",kaliTitle:"Kali Linux — CodeVally",practiceTitle:"Parcours pratique — CodeVally",htmlPracticeTitle:"Apprendre le HTML en pratiquant — CodeVally" },
+    en: { homeTitle:ui.en.pageTitleHome,webTitle:ui.en.pageTitleWeb,pythonTitle:ui.en.pageTitlePython,kaliTitle:ui.en.pageTitleKali,practiceTitle:"Practice paths — CodeVally",htmlPracticeTitle:"Learn HTML by practicing — CodeVally" },
+    ar: { homeTitle:ui.ar.pageTitleHome,webTitle:ui.ar.pageTitleWeb,pythonTitle:ui.ar.pageTitlePython,kaliTitle:ui.ar.pageTitleKali,practiceTitle:"مسارات تدريبية — CodeVally",htmlPracticeTitle:"تعلّم HTML بالتدريب — CodeVally" }
+  };
+  const pageTitleKeys = { home:"homeTitle",web:"webTitle",python:"pythonTitle",kali:"kaliTitle","guided-practice":"practiceTitle","html-practice":"htmlPracticeTitle" };
+  const guidedPromos = {
+    fr: {
+      html:["POUR BIEN DÉBUTER","Un parcours pratique pour apprendre le HTML","De courts exercices corrigés, des indices et une page personnelle à créer et à prévisualiser.","Parcours HTML"],
+      css:["STYLE & MISE EN PAGE","Apprendre le CSS en pratiquant","Écris tes règles de style et observe leur effet sur un aperçu de page.","Parcours CSS"],
+      javascript:["INTERACTIONS","Apprendre JavaScript en pratiquant","Progresse avec des exercices guidés et teste un mini-projet en console isolée.","Parcours JavaScript"],
+      python:["POUR BIEN DÉBUTER","Un parcours pratique pour apprendre Python","Écris tes premiers programmes, vérifie leur syntaxe et teste le projet final dans Python Lab.","Parcours Python"],
+      kali:["TERMINAL SIMULÉ · DÉBUTANT","Apprendre les commandes Linux sans risque","Entraîne-toi sur des fichiers fictifs. Les commandes restent dans le navigateur et aucun système ni réseau n’est contacté.","Parcours Kali Linux"]
+    },
+    en: {
+      html:["START HERE","A hands-on path to learn HTML","Short checked exercises, hints, and a personal page to build and preview.","HTML path"],
+      css:["STYLING & LAYOUT","Learn CSS by practicing","Write style rules and see their effect in a live page preview.","CSS path"],
+      javascript:["INTERACTIONS","Learn JavaScript by practicing","Progress through guided exercises and test a mini-project in an isolated console.","JavaScript path"],
+      python:["START HERE","A hands-on path to learn Python","Write your first programs, check their syntax, and test the final project in Python Lab.","Python path"],
+      kali:["SIMULATED TERMINAL · BEGINNER","Learn Linux commands safely","Practice with fictional files. Commands stay in the browser and do not contact a system or network.","Kali Linux path"]
+    },
+    ar: {
+      html:["ابدأ من هنا","تعلّم HTML بالتطبيق العملي","تمارين قصيرة مع تصحيح وتلميحات وصفحة شخصية لإنشائها ومعاينتها.","مسار HTML"],
+      css:["التنسيق والتخطيط","تعلّم CSS بالتدريب","اكتب قواعد التنسيق وشاهد تأثيرها مباشرة على معاينة الصفحة.","مسار CSS"],
+      javascript:["التفاعلات","تعلّم JavaScript بالتدريب","تدرّج عبر تمارين موجهة واختبر مشروعاً صغيراً في وحدة تحكم معزولة.","مسار JavaScript"],
+      python:["ابدأ من هنا","تعلّم Python بالتطبيق العملي","اكتب برامجك الأولى، وتحقق من صياغتها، واختبر المشروع النهائي في Python Lab.","مسار Python"],
+      kali:["طرفية محاكاة · مبتدئ","تعلّم أوامر Linux بأمان","تدرّب على ملفات وهمية. تبقى الأوامر داخل المتصفح ولا تتصل بأي نظام أو شبكة.","مسار Kali Linux"]
+    }
+  };
+  const applyGuidedPromos = (lang) => {
+    document.querySelectorAll(".guided-path-promo[data-guided-path]").forEach((card) => {
+      const copy = guidedPromos[lang]?.[card.dataset.guidedPath] || guidedPromos.fr[card.dataset.guidedPath];
+      if (!copy) return;
+      const eyebrow = card.querySelector(".eyebrow");
+      const title = card.querySelector("h2");
+      const description = card.querySelector("p:last-child");
+      const link = card.querySelector(".guided-path-link");
+      if (eyebrow) eyebrow.textContent = copy[0];
+      if (title) title.textContent = copy[1];
+      if (description) description.textContent = copy[2];
+      if (link) {
+        const arrow = link.querySelector("span");
+        link.textContent = copy[3];
+        if (arrow) {
+          arrow.textContent = " →";
+          link.append(arrow);
+        }
+      }
+    });
   };
   function apply(lang) {
     const page = document.body.dataset.page;
@@ -84,7 +129,8 @@
     document.querySelectorAll(".skip-link").forEach((link) => {
       link.textContent = arabic ? "انتقل إلى المحتوى الرئيسي" : english ? "Skip to main content" : "Aller au contenu principal";
     });
-    document.title = pageText[lang]?.[{home:"homeTitle",web:"webTitle",python:"pythonTitle",kali:"kaliTitle"}[page]] || pageText.fr[{home:"homeTitle",web:"webTitle",python:"pythonTitle",kali:"kaliTitle"}[page]];
+    const pageTitleKey = pageTitleKeys[page] || "homeTitle";
+    document.title = pageText[lang]?.[pageTitleKey] || pageText.fr[pageTitleKey];
     document.querySelectorAll(".language-switch").forEach((select) => { select.value = lang; select.setAttribute("aria-label", arabic ? "اختر لغة الموقع" : english ? "Choose site language" : "Choisir la langue du site"); });
     const set = (selector, value, html = false) => { const element = document.querySelector(selector); if (element) html ? element.innerHTML = value : element.textContent = value; };
     const navLabels = { "index.html":t("navHome"),"web.html":t("navWeb"),"python.html":t("navPython"),"kali.html":t("navKali") };
@@ -92,6 +138,11 @@
     document.querySelectorAll(".topbar nav").forEach((nav) => nav.setAttribute("aria-label", arabic ? "التنقل الرئيسي" : english ? "Main navigation" : "Navigation principale"));
     document.querySelectorAll(".theme-toggle").forEach((button) => button.setAttribute("aria-label", arabic ? (document.documentElement.classList.contains("dark") ? t("themeLight") : t("themeDark")) : english ? (document.documentElement.classList.contains("dark") ? t("themeLight") : t("themeDark")) : (document.documentElement.classList.contains("dark") ? "Activer le thème clair" : "Activer le thème sombre")));
     set(".site-footer p", t("footer"));
+    applyGuidedPromos(lang);
+    if (page === "guided-practice" || page === "html-practice") {
+      window.dispatchEvent(new Event("learnhublanguagechange"));
+      return;
+    }
     if (page === "home") {
       set(".hero .eyebrow", t("homeEyebrow"));set(".hero h1", t("homeTitle"), true);set(".hero-copy", t("homeCopy"));
       const input=document.querySelector("#global-search");if(input)input.placeholder=t("searchHome");

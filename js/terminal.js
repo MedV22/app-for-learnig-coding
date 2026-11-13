@@ -1,4 +1,4 @@
-/* Simulated Kali Linux terminal — Learn Hub */
+/* Simulated Kali Linux terminal — CodeVally */
 (() => {
   const defaultFs = {
     "/": ["bin", "boot", "dev", "etc", "home", "lib", "media", "mnt", "opt", "proc", "root", "run", "sbin", "srv", "sys", "tmp", "usr", "var"],
@@ -12,9 +12,9 @@
 
   const defaultFiles = {
     "/etc/passwd": "root:x:0:0:root:/root:/bin/bash\nkali:x:1000:1000:Kali User:/home/kali:/bin/bash",
-    "/etc/hosts": "127.0.0.1\tlocalhost\n127.0.1.1\tlearnhub\n::1\t\tip6-localhost ip6-loopback",
+    "/etc/hosts": "127.0.0.1\tlocalhost\n127.0.1.1\tcodevally\n::1\t\tip6-localhost ip6-loopback",
     "/etc/os-release": "PRETTY_NAME=\"Kali GNU/Linux Rolling\"\nNAME=\"Kali GNU/Linux\"\nID=kali\nVERSION=\"2026.4\"",
-    "/home/kali/notes.txt": "# Learn Hub practice notes\n- Review common Linux commands (ls, cd, chmod, grep)\n- Practice nmap in an authorized lab (TryHackMe / DVWA)\n- Inspect HTTP requests with Burp Suite\n- Write a basic Python port scanner for a lab",
+    "/home/kali/notes.txt": "# CodeVally practice notes\n- Review common Linux commands (ls, cd, chmod, grep)\n- Practice nmap in an authorized lab (TryHackMe / DVWA)\n- Inspect HTTP requests with Burp Suite\n- Write a basic Python port scanner for a lab",
     "/home/kali/script.sh": "#!/bin/bash\necho \"[+] Starting the audit script...\"\necho \"[+] Scan completed successfully.\"\n",
     "/home/kali/scan.py": "import socket\nprint('Python port scanner is ready.')\n",
     "/home/kali/Desktop/lab_targets.txt": "192.168.1.100  test-web-server\n192.168.1.105  lab-gateway\n"
@@ -54,7 +54,7 @@
 
     const promptText = document.createElement("span");
     promptText.className = "terminal-prompt-user";
-    promptText.innerHTML = `<span class="term-user">kali@learnhub</span>:<span class="term-path">${esc(getDisplayDir())}</span><span class="term-sign">$</span> `;
+    promptText.innerHTML = `<span class="term-user">kali@codevally</span>:<span class="term-path">${esc(getDisplayDir())}</span><span class="term-sign">$</span> `;
 
     const input = document.createElement("input");
     input.className = "terminal-input";
@@ -76,7 +76,7 @@
 
         const executedLine = document.createElement("div");
         executedLine.className = "terminal-history-line";
-        executedLine.innerHTML = `<span class="term-user">kali@learnhub</span>:<span class="term-path">${esc(getDisplayDir())}</span><span class="term-sign">$</span> <span class="term-cmd-text">${esc(command)}</span>`;
+        executedLine.innerHTML = `<span class="term-user">kali@codevally</span>:<span class="term-path">${esc(getDisplayDir())}</span><span class="term-sign">$</span> <span class="term-cmd-text">${esc(command)}</span>`;
         promptWrap.replaceWith(executedLine);
 
         run(command);
@@ -279,7 +279,7 @@
 
       case "uname":
         result = args.includes("-a")
-          ? "Linux learnhub 6.6.0-kali1-amd64 #1 SMP PREEMPT_DYNAMIC Kali 6.6.9-1kali1 (2026-01-08) x86_64 GNU/Linux"
+          ? "Linux codevally 6.6.0-kali1-amd64 #1 SMP PREEMPT_DYNAMIC Kali 6.6.9-1kali1 (2026-01-08) x86_64 GNU/Linux"
           : "Linux";
         break;
 
@@ -564,7 +564,7 @@ tcp    ESTAB   0       0       192.168.1.105:22     192.168.1.1:51234`;
             <span class="dot dot-green"></span>
           </div>
           <div class="terminal-tab" id="terminal-title">
-            <span class="term-tab-icon">⌘</span> kali@learnhub: ~ (bash)
+            <span class="term-tab-icon">⌘</span> kali@codevally: ~ (bash)
           </div>
           <button class="terminal-close" type="button" aria-label="${text.close}">×</button>
         </div>

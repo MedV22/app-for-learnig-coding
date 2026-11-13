@@ -6,14 +6,16 @@
   <meta name="theme-color" content="#4f46e5">
   <meta name="description" content="Apprends le HTML avec de courtes leçons, des exercices corrigés et un mini-projet personnel.">
   <link rel="manifest" href="manifest.json">
-  <title>Apprendre le HTML en pratiquant — Learn Hub</title>
+  <title>Apprendre le HTML en pratiquant — CodeVally</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/style.css">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/codevally-logo.png" type="image/png">
+  <script src="js/i18n.js" defer></script>
+  <script src="js/guided-i18n.js" defer></script>
   <script src="js/main.js" defer></script>
   <script src="js/html-practice.js" defer></script>
 </head>
@@ -21,7 +23,7 @@
   <a class="skip-link" href="#main-content">Aller au contenu principal</a>
   <header class="topbar">
     <a class="brand" href="index.html">
-      <span class="brand-mark">&lt;/&gt;</span> Learn<span>Hub</span>
+      <img class="brand-logo" src="assets/codevally-logo.png" alt="CodeVally">
     </a>
     <nav aria-label="Navigation principale">
       <a href="index.html">Accueil</a>
@@ -30,6 +32,11 @@
       <a href="kali.html">Kali Linux</a>
     </nav>
     <div class="header-actions">
+      <select class="language-switch" aria-label="Choisir la langue du site">
+        <option value="fr">Français</option>
+        <option value="ar">العربية</option>
+        <option value="en">English</option>
+      </select>
       <button class="theme-toggle" type="button" aria-label="Activer le thème sombre" title="Changer de thème">
         <span class="theme-icon">☾</span>
       </button>
@@ -71,7 +78,7 @@
 
   <footer class="site-footer">
     <a class="brand" href="index.html">
-      <span class="brand-mark">&lt;/&gt;</span> Learn<span>Hub</span>
+      <img class="brand-logo" src="assets/codevally-logo.png" alt="CodeVally">
     </a>
     <p>Apprendre avec curiosité, pratiquer avec responsabilité · Fait avec passion.</p>
   </footer>

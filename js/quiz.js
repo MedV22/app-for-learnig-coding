@@ -1,4 +1,4 @@
-/* Quiz QCM par catégorie & Quiz Global — Learn Hub */
+/* Quiz QCM par catégorie & Quiz Global — CodeVally */
 (() => {
   const quizzes = {
     python: {

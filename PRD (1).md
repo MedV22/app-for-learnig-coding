@@ -1,6 +1,6 @@
-# PRD — LearnHub
+# PRD — CodeVally
 
-**Produit :** LearnHub, site pour apprendre à coder (HTML, CSS, JavaScript, Python, Kali Linux)
+**Produit :** CodeVally, site pour apprendre à coder (HTML, CSS, JavaScript, Python, Kali Linux)
 **Site actuel :** https://medv22.github.io/app-for-learnig-coding/
 **Langues :** Français, العربية, English
 **Version du document :** 1.0
@@ -10,7 +10,7 @@
 
 ## 1. Résumé
 
-LearnHub est un site d'apprentissage de la programmation pour débutants. Il propose déjà des parcours (Web, Python, Kali Linux), trois langues, un mode sombre, une recherche, un filtre de niveau et une barre de progression.
+CodeVally est un site d'apprentissage de la programmation pour débutants. Il propose déjà des parcours (Web, Python, Kali Linux), trois langues, un mode sombre, une recherche, un filtre de niveau et une barre de progression.
 
 Cette version du PRD décrit les fonctions à ajouter pour passer d'un site de **lecture** à une vraie plateforme où l'on **pratique** : éditeur de code, exercices, parcours guidé, projets et application installable.
 

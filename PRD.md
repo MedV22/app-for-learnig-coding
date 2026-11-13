@@ -195,7 +195,7 @@ Le contenu est **généré dynamiquement en JavaScript** à partir de ces donné
 
 ```
 ┌──────────────────────────────────────────────┐
-│  🐍 Learn Hub     [Accueil][Python][Kali] 🌙 │
+│  🐍 CodeVally     [Accueil][Python][Kali] 🌙 │
 ├──────────────────────────────────────────────┤
 │  🔍 Rechercher...        Niveau: [Tous ▼]    │
 ├───────────┬──────────────────────────────────┤

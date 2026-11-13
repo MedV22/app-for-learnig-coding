@@ -1,4 +1,4 @@
-/* Éditeur Python en ligne (Pyodide) — Learn Hub */
+/* Éditeur Python en ligne (Pyodide) — CodeVally */
 (() => {
   const PYODIDE_VERSION = "0.27.0";
   const PYODIDE_BASE = `https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full/`;
@@ -9,7 +9,7 @@
   const codeSnippets = {
     hello: `# Premier programme Python
 nom = "Apprenant"
-print(f"Bonjour {nom} ! Bienvenue sur Learn Hub.")
+print(f"Bonjour {nom} ! Bienvenue sur CodeVally.")
 print("Python est prêt à exécuter tes idées.")
 `,
     calc: `# Mini-calculatrice
@@ -30,7 +30,7 @@ print("100 / 4 =", calculer(100, 4, "/"))
 `,
     loop: `# Boucle et liste
 langages = ["Python", "JavaScript", "HTML", "CSS", "Bash"]
-print("Langages disponibles sur Learn Hub :")
+print("Langages disponibles sur CodeVally :")
 for index, lang in enumerate(langages, start=1):
     print(f"  {index}. {lang}")
 `,
@@ -84,7 +84,7 @@ for port, service in ports_usuels.items():
     return pyodidePromise;
   }
 
-  function open() {
+  function open(initialCode) {
     close();
     previousFocus = document.activeElement;
 
@@ -182,7 +182,7 @@ print('Hello from Python!')" aria-label="Éditeur de code Python"></textarea>
     const presetsSelect = backdrop.querySelector(".pyodide-presets");
 
     // Set default starter code
-    editor.value = codeSnippets.hello;
+    editor.value = typeof initialCode === "string" ? initialCode : codeSnippets.hello;
 
     // Presets change
     presetsSelect.addEventListener("change", () => {
@@ -338,5 +338,22 @@ print('Hello from Python!')" aria-label="Éditeur de code Python"></textarea>
     previousFocus = null;
   }
 
-  window.LearnHubPyodide = { open, close, loadPyodide };
+  async function validateSyntax(source) {
+    const pyodide = await loadPyodide();
+    const name = "_learnhub_practice_source";
+    pyodide.globals.set(name, String(source));
+    try {
+      const compiled = pyodide.runPython(`compile(${name}, "<parcours>", "exec")`);
+      compiled?.destroy?.();
+      return null;
+    } catch (error) {
+      const message = String(error?.message || error);
+      const syntaxLine = message.split(/\r?\n/).reverse().find((line) => /\b(?:SyntaxError|IndentationError|TabError)\s*:/.test(line));
+      return (syntaxLine || message).trim().slice(0, 240);
+    } finally {
+      pyodide.globals.delete(name);
+    }
+  }
+
+  window.LearnHubPyodide = { open, close, loadPyodide, validateSyntax };
 })();

@@ -1,22 +1,26 @@
-const CACHE_NAME = 'learnhub-v6';
+const CACHE_NAME = 'codevally-v14';
 const ASSETS = [
   './',
   './index.html',
   './web.html',
   './html-practice.html',
+  './practice.html',
   './python.html',
   './kali.html',
   './css/style.css',
   './js/main.js',
   './js/html-practice.js',
+  './js/practice.js',
   './js/app.js',
   './js/data.js',
   './js/i18n.js',
+  './js/guided-i18n.js',
   './js/modal.js',
   './js/quiz.js',
   './js/terminal.js',
   './js/pypod.js',
   './favicon.svg',
+  './assets/codevally-logo.png',
   './manifest.json'
 ];
 
