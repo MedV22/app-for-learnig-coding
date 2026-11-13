@@ -1,4 +1,4 @@
-const CACHE_NAME = 'codevally-v14';
+const CACHE_NAME = 'codevally-v15';
 const ASSETS = [
   './',
   './index.html',
