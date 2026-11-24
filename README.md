@@ -16,7 +16,9 @@ Un site web simple et gratuit pour apprendre **Python** et **Kali Linux** au mê
 - 🌐 **Section Web** : HTML, CSS et JavaScript
 - 🧑‍💻 **Parcours pratiques HTML, CSS, JavaScript et Python** : leçons progressives, exercices corrigés, indices et solutions expliquées
 - 🐧 **Parcours Kali Linux simulé** : commandes de base sur des fichiers fictifs, sans accès au système ni au réseau
+- 🖥️ **Vrai terminal Kali local** : shell dans Kali WSL avec une simulation pédagogique toujours disponible
 - 🌍 **Interface en français, anglais et arabe** : les parcours suivent la langue choisie ; les exemples de code, commentaires et le terminal Kali restent inchangés
+- 🧠 **Quiz** : questions d’origine en anglais, traduites en français lorsque l’interface est en français
 - 💡 **Fenêtre « À quoi ça sert ? »** : explication simple, syntaxe, exemple et points d'attention
 - 🔍 **Recherche** en temps réel
 - 🎚️ **Filtre par niveau** : Débutant / Intermédiaire / Avancé
@@ -42,7 +44,19 @@ python -m http.server 8000
 
 Puis ouvre `http://localhost:8000` dans ton navigateur. Le site est aussi disponible sur GitHub Pages en HTTPS.
 
-Le site peut mettre ses pages en cache après une première visite en ligne. L’éditeur Python charge Pyodide depuis un CDN et nécessite une connexion la première fois ; son runtime n’est pas inclus dans le cache hors ligne.
+### Utiliser le vrai terminal Kali
+
+Le terminal réel se connecte à la distribution **Kali Linux WSL** installée sur le PC et utilise Node.js pour le relais local. Dans PowerShell, depuis la racine du projet, lance :
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\start-kali-terminal.ps1
+```
+
+La première utilisation installe ttyd depuis sa version officielle, vérifie son empreinte SHA-256, puis crée un compte Kali `codevally-terminal` sans droits root. Ouvre `http://127.0.0.1:8080`, puis clique sur **Terminal → Kali réel (WSL)**. Garde la fenêtre PowerShell ouverte pendant l’utilisation. Pour arrêter le service Kali, lance `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\stop-kali-terminal.ps1` dans une autre fenêtre PowerShell, puis ferme la première avec Ctrl+C.
+
+Le site et le relais WebSocket écoutent uniquement sur `127.0.0.1`. Le shell tourne avec un compte sans privilèges root, mais il utilise le réseau normal de Kali WSL et peut accéder aux lecteurs Windows que WSL monte (par exemple `/mnt/c`). Utilise-le seulement pour des commandes que tu comprends, sur tes systèmes ou dans un labo autorisé. Le mode simulateur fonctionne sans WSL ni installation, y compris sur GitHub Pages.
+
+Le service worker met les pages et les fichiers de l’application en cache après une première visite en ligne. La progression reste dans le navigateur utilisé et ne se synchronise pas entre appareils. L’éditeur Python exécute le code dans un Worker isolé, mais charge Pyodide depuis un CDN et nécessite une connexion pour son premier démarrage ; le runtime Python n’est pas inclus dans le cache hors ligne.
 
 ---
 
@@ -56,18 +70,31 @@ learn-hub/
 ├── web.html          → Section HTML/CSS/JS
 ├── html-practice.html → Parcours pratique guidé pour apprendre le HTML
 ├── practice.html     → Parcours pratique CSS, JavaScript, Python et Kali Linux
+├── mainf.html        → Redirection vers la page d’accueil
+├── favicon.svg       → Icône du site
+├── manifest.json     → Métadonnées d’installation PWA
+├── sw.js             → Cache hors ligne et mises à jour PWA
+├── server.js           → Serveur local et relais WebSocket vers Kali WSL
+├── setup-kali-terminal.ps1 → Installation initiale du terminal WSL
+├── start-kali-terminal.ps1 → Démarrage du site et du vrai terminal
+├── stop-kali-terminal.ps1 → Arrêt du terminal WSL
+├── scripts/install-kali-terminal.sh → Installation vérifiée de ttyd
 ├── css/
 │   └── style.css     → Styles et thèmes
 ├── js/
 │   ├── main.js       → Navigation, recherche, thème, rendu des cartes
 │   ├── modal.js      → Fenêtre "À quoi ça sert"
-│   ├── app.js        → Logique des cours, progression, favoris, quiz
+│   ├── app.js        → Notions, progression et favoris
+│   ├── quiz.js       → Affichage et logique des quiz
 │   ├── data.js       → Tout le contenu (Python + Kali + Web)
 │   ├── i18n.js       → Traductions (fr, en, ar)
+│   ├── quiz-i18n.js  → Traductions françaises des quiz
 │   ├── guided-i18n.js   → Traductions des parcours pratiques
-│   ├── terminal.js   → Terminal Linux simulé
+│   ├── terminal.js   → Interface du simulateur et du terminal Kali réel
 │   ├── html-practice.js → Exercices, corrections et progression HTML
-│   └── practice.js   → Parcours CSS, JavaScript, Python et Kali Linux
+│   ├── practice.js   → Parcours CSS, JavaScript, Python et Kali Linux
+│   ├── pypod.js      → Interface de l’éditeur Python
+│   └── python-worker.js → Exécution isolée du code Python
 ├── PRD.md            → Cahier des charges du projet
 └── README.md
 ```
@@ -105,11 +132,11 @@ Toute utilisation illégale est interdite et relève de la seule responsabilité
 
 ---
 
-## 🗺️ À améliorer ensuite
+## ℹ️ Limites connues
 
-- [ ] Ajouter des exercices avec correction et des parcours guidés.
-- [ ] Compléter les essais sur les navigateurs et téléphones réels.
-- [ ] Étudier un mode hors ligne pour l’éditeur Python (Pyodide).
+- Les questions des quiz sont en anglais par défaut et traduites en français. Le texte des questions de quiz n’est pas encore traduit en arabe.
+- Les acquis sont sauvegardés uniquement dans le navigateur utilisé ; il n’y a pas de compte ni de synchronisation entre appareils.
+- L’éditeur Python ne fonctionne pas hors ligne tant que Pyodide n’a pas été chargé depuis le CDN.
 
 ---
 
@@ -132,7 +159,6 @@ Ce projet est sous licence **MIT**. Tu peux l'utiliser, le modifier et le partag
 
 ---
 
-## 👤 Auteur
+## 👤 Projet
 
-Fait avec ❤️ par **TON-NOM**
-GitHub : [@TON-NOM](https://github.com/TON-NOM)
+Maintenu par [@MedV22](https://github.com/MedV22)

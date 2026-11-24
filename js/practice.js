@@ -1,10 +1,48 @@
 (() => {
-  const ruleBody = (source, selector) => {
-    const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const match = new RegExp(`(?:^|})\\s*${escaped}\\s*\\{([^}]*)\\}`, "i").exec(source);
-    return match?.[1] || "";
+  const parseCss = (source) => {
+    try {
+      if (typeof CSSStyleSheet === "function") {
+        const sheet = new CSSStyleSheet();
+        sheet.replaceSync(String(source));
+        return [...sheet.cssRules];
+      }
+    } catch {}
+    return null;
   };
-  const hasCss = (source, selector, property) => new RegExp(`(?:^|;)\\s*${property}\\s*:\\s*[^;]+`, "i").test(ruleBody(source, selector));
+  const normalizedSelector = (selector) => selector.trim().replace(/\s+/g, " ").toLowerCase();
+  const findStyleRule = (rules, selector) => rules?.find((rule) => rule.type === 1 &&
+    rule.selectorText?.split(",").some((item) => normalizedSelector(item) === normalizedSelector(selector))) || null;
+  const findMediaRule = (rules, condition) => rules?.find((rule) => rule.type === 4 &&
+    rule.conditionText?.replace(/\s+/g, "").toLowerCase() === condition.replace(/\s+/g, "").toLowerCase()) || null;
+  const extractRuleBody = (source, selector) => {
+    const clean = String(source || "").replace(/\/\*[\s\S]*?\*\//g, "");
+    for (const match of clean.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+      if (normalizedSelector(match[1]) === normalizedSelector(selector)) return match[2];
+    }
+    return null;
+  };
+  const cssRule = (rules, source, selector) => {
+    if (rules) return findStyleRule(rules, selector);
+    const body = extractRuleBody(source, selector);
+    return body === null ? null : { body };
+  };
+  const cssValue = (rule, property) => {
+    const parsedValue = rule?.style?.getPropertyValue(property)?.trim();
+    if (parsedValue) return parsedValue;
+    if (typeof rule?.body !== "string") return "";
+    for (const declaration of rule.body.replace(/\/\*[\s\S]*?\*\//g, "").split(";")) {
+      const separator = declaration.indexOf(":");
+      if (separator < 0 || declaration.slice(0, separator).trim().toLowerCase() !== property.toLowerCase()) continue;
+      return declaration.slice(separator + 1).trim();
+    }
+    return "";
+  };
+  const hasCss = (rule, property) => {
+    const value = cssValue(rule, property);
+    if (!value) return false;
+    return typeof CSS === "undefined" || typeof CSS.supports !== "function" || CSS.supports(property, value);
+  };
+  const isFlex = (rule) => cssValue(rule, "display").toLowerCase() === "flex";
   const hasPython = (source, expression) => expression.test(source.replace(/#.*$/gm, ""));
   const hasJavaScript = (source, expression) => expression.test(source);
   const kaliExerciseError = (source, expected) => {
@@ -32,8 +70,10 @@
           solution: ".profil {\n  color: #333;\n}",
           explanation: "Le sélecteur .profil cible la classe et color définit la couleur du texte.",
           validate(code) {
-            if (!ruleBody(code, ".profil")) return "Ajoute une règle CSS pour le sélecteur .profil.";
-            if (!hasCss(code, ".profil", "color")) return "Ajoute une déclaration color dans la règle .profil.";
+            const rules = parseCss(code);
+            const profile = cssRule(rules, code, ".profil");
+            if (!profile) return "Ajoute une r\u00e8gle CSS valide pour le s\u00e9lecteur .profil.";
+            if (!hasCss(profile, "color")) return "Ajoute une couleur CSS valide dans la r\u00e8gle .profil.";
             return null;
           }
         },
@@ -46,9 +86,11 @@
           solution: ".profil h1 {\n  font-size: 2rem;\n  color: #c2410c;\n}",
           explanation: "La règle ne touche que les titres h1 de la classe profil et leur applique deux styles.",
           validate(code) {
-            if (!ruleBody(code, ".profil h1")) return "Ajoute une règle .profil h1 pour cibler le titre.";
-            if (!hasCss(code, ".profil h1", "font-size")) return "Ajoute font-size dans la règle du titre.";
-            if (!hasCss(code, ".profil h1", "color")) return "Ajoute color dans la règle du titre.";
+            const rules = parseCss(code);
+            const heading = cssRule(rules, code, ".profil h1");
+            if (!heading) return "Ajoute une r\u00e8gle .profil h1 valide pour cibler le titre.";
+            if (!hasCss(heading, "font-size")) return "Ajoute font-size avec une valeur CSS valide dans la r\u00e8gle du titre.";
+            if (!hasCss(heading, "color")) return "Ajoute color avec une valeur CSS valide dans la r\u00e8gle du titre.";
             return null;
           }
         },
@@ -61,9 +103,11 @@
           solution: ".carte {\n  padding: 24px;\n  margin: 20px;\n  border: 1px solid #ddd;\n}",
           explanation: "Ces trois propriétés donnent de l’espace autour du contenu et dessinent le contour de la carte.",
           validate(code) {
-            if (!ruleBody(code, ".carte")) return "Ajoute une règle pour .carte.";
+            const rules = parseCss(code);
+            const card = cssRule(rules, code, ".carte");
+            if (!card) return "Ajoute une r\u00e8gle CSS valide pour .carte.";
             for (const property of ["padding", "margin", "border"]) {
-              if (!hasCss(code, ".carte", property)) return `Ajoute la propriété ${property} dans la règle .carte.`;
+              if (!hasCss(card, property)) return "Ajoute la propri\u00e9t\u00e9 " + property + " avec une valeur CSS valide dans la r\u00e8gle .carte.";
             }
             return null;
           }
@@ -77,9 +121,11 @@
           solution: ".interets {\n  display: flex;\n  gap: 12px;\n}",
           explanation: "Flexbox aligne les éléments de la liste et gap espace chaque élément.",
           validate(code) {
-            if (!ruleBody(code, ".interets")) return "Ajoute une règle pour .interets.";
-            if (!/display\s*:\s*flex/i.test(ruleBody(code, ".interets"))) return "Ajoute display: flex dans cette règle.";
-            if (!hasCss(code, ".interets", "gap")) return "Ajoute gap pour espacer les éléments.";
+            const rules = parseCss(code);
+            const interests = cssRule(rules, code, ".interets");
+            if (!interests) return "Ajoute une r\u00e8gle CSS valide pour .interets.";
+            if (!isFlex(interests)) return "Ajoute display: flex dans cette r\u00e8gle.";
+            if (!hasCss(interests, "gap")) return "Ajoute gap avec une valeur CSS valide pour espacer les \u00e9l\u00e9ments.";
             return null;
           }
         },
@@ -92,10 +138,16 @@
           solution: "@media (max-width: 600px) {\n  .carte {\n    padding: 16px;\n  }\n}",
           explanation: "La règle de la carte ne s’applique ici que lorsque la fenêtre fait 600 px ou moins.",
           validate(code) {
-            const media = /@media\s*\(\s*max-width\s*:\s*600px\s*\)\s*\{([\s\S]*)\}/i.exec(code);
-            if (!media) return "Ajoute une règle @media (max-width: 600px).";
-            if (!ruleBody(media[1], ".carte")) return "Place une règle .carte à l’intérieur de @media.";
-            if (!hasCss(media[1], ".carte", "padding")) return "Ajoute padding dans la règle .carte de la media query.";
+            const rules = parseCss(code);
+            const media = rules ? findMediaRule(rules, "(max-width: 600px)") : null;
+            const cleanCode = String(code).replace(/\/\*[\s\S]*?\*\//g, "");
+            const mediaMatch = rules === null ? /@media\s*\(\s*max-width\s*:\s*600px\s*\)\s*\{([\s\S]*)\}/i.exec(cleanCode) : null;
+            if (rules ? !media : !mediaMatch) return "Ajoute une r\u00e8gle CSS valide @media (max-width: 600px).";
+            const card = rules
+              ? findStyleRule([...media.cssRules], ".carte")
+              : cssRule(null, mediaMatch[1], ".carte");
+            if (!card) return "Place une r\u00e8gle .carte valide \u00e0 l'int\u00e9rieur de @media.";
+            if (!hasCss(card, "padding")) return "Ajoute padding avec une valeur CSS valide dans la r\u00e8gle .carte de la media query.";
             return null;
           }
         },
@@ -109,11 +161,15 @@
           explanation: "Le fond, les espacements et les sélecteurs créent une carte de profil lisible, avec des intérêts alignés.",
           isProject: true,
           validate(code) {
-            if (!ruleBody(code, ".carte")) return "Ajoute une règle .carte pour styliser le bloc principal.";
-            if (!hasCss(code, ".carte", "padding") || !hasCss(code, ".carte", "border-radius")) return "Ajoute padding et border-radius à la carte.";
-            if (!hasCss(code, ".carte", "background") && !hasCss(code, ".carte", "background-color")) return "Ajoute une couleur de fond à la carte.";
-            if (!ruleBody(code, ".carte h1") || !hasCss(code, ".carte h1", "color")) return "Ajoute une couleur au titre avec .carte h1.";
-            if (!/display\s*:\s*flex/i.test(ruleBody(code, ".interets"))) return "Utilise display: flex dans la règle .interets.";
+            const rules = parseCss(code);
+            const card = cssRule(rules, code, ".carte");
+            if (!card) return "Ajoute une r\u00e8gle CSS valide pour .carte.";
+            if (!hasCss(card, "padding") || !hasCss(card, "border-radius")) return "Ajoute padding et border-radius avec des valeurs CSS valides \u00e0 la carte.";
+            if (!hasCss(card, "background") && !hasCss(card, "background-color")) return "Ajoute une couleur de fond CSS valide \u00e0 la carte.";
+            const heading = cssRule(rules, code, ".carte h1");
+            if (!heading || !hasCss(heading, "color")) return "Ajoute une couleur CSS valide au titre avec .carte h1.";
+            const interests = cssRule(rules, code, ".interets");
+            if (!isFlex(interests)) return "Utilise display: flex dans la r\u00e8gle .interets.";
             return null;
           }
         }
@@ -536,7 +592,7 @@
   };
 
   const jsWorkerCode = () => `const blocked = () => { throw new Error(${JSON.stringify(text("blockedJavaScript"))}); };
-for (const key of ["fetch", "XMLHttpRequest", "WebSocket", "EventSource", "importScripts", "Worker"]) {
+for (const key of ["fetch", "XMLHttpRequest", "WebSocket", "EventSource", "importScripts", "Worker", "SharedWorker", "BroadcastChannel", "indexedDB", "caches"]) {
   try { Object.defineProperty(globalThis, key, { value: blocked, configurable: false, writable: false }); } catch {}
   try { Object.defineProperty(WorkerGlobalScope.prototype, key, { value: blocked, configurable: false, writable: false }); } catch {}
 }
@@ -596,7 +652,7 @@ self.onmessage = ({ data }) => {
     const project = course.steps[course.steps.length - 1];
     const source = state.drafts[project.id] || "";
     const result = renderProject(source);
-    content.innerHTML = `<section class="guided-finish"><p class="eyebrow">${text("pathFinished")}</p><h2>${text("finishedTitle", { course: course.label })}</h2><p>${text("finishedCopy")}</p><button class="guided-secondary-button" type="button" data-review-project>${text("reviewProject")}</button>${result}<details class="guided-project-code"><summary>${text("showProjectCode")}</summary><pre><code>${escapeHTML(source)}</code></pre></details></section>`;
+    content.innerHTML = `<section class="guided-finish"><p class="eyebrow">${text("pathFinished")}</p><h2>${text("finishedTitle", { course: course.label })}</h2><p><span class="badge badge-gold fade-in"><span class="badge-icon">🏆</span> ${text("achievementBadge")}</span></p><p>${text("finishedCopy")}</p><button class="guided-secondary-button" type="button" data-review-project>${text("reviewProject")}</button>${result}<details class="guided-project-code"><summary>${text("showProjectCode")}</summary><pre><code>${escapeHTML(source)}</code></pre></details></section>`;
     bindProjectActions(source);
     if (course.projectType === "css") content.querySelector(".guided-preview").srcdoc = cssPreview(source);
   };

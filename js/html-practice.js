@@ -166,7 +166,7 @@
   const renderFinished = () => {
     const project = steps[steps.length - 1];
     const projectCode = state.drafts[project.id] || "";
-    content.innerHTML = `<section class="guided-finish"><p class="eyebrow">${text("pathFinished")}</p><h2>${text("finishedTitle", { course: "HTML" })}</h2><p>${text("finishedCopy")}</p><button class="guided-secondary-button" type="button" data-review-project>${text("reviewProject")}</button><div class="guided-preview-wrap"><h3>${text("pagePreview")}</h3><iframe class="guided-preview" title="${text("pagePreview")}" sandbox="" srcdoc="${escapeHTML(projectCode)}"></iframe></div></section>`;
+    content.innerHTML = `<section class="guided-finish"><p class="eyebrow">${text("pathFinished")}</p><h2>${text("finishedTitle", { course: "HTML" })}</h2><p><span class="badge badge-gold fade-in"><span class="badge-icon">🏆</span> ${text("achievementBadge")}</span></p><p>${text("finishedCopy")}</p><button class="guided-secondary-button" type="button" data-review-project>${text("reviewProject")}</button><div class="guided-preview-wrap"><h3>${text("pagePreview")}</h3><iframe class="guided-preview" title="${text("pagePreview")}" sandbox="" srcdoc="${escapeHTML(projectCode)}"></iframe></div></section>`;
     content.querySelector("[data-review-project]").addEventListener("click", () => {
       state.finished = false;
       state.index = steps.length - 1;

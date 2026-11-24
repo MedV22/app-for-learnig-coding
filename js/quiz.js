@@ -225,6 +225,18 @@
       questions = pool.slice(0, 10);
     }
 
+    const translations = window.CodeVallyQuizI18n?.[language] || {};
+    questions = questions.map((question) => {
+      const translated = translations[question.q];
+      if (!translated) return question;
+      return {
+        ...question,
+        q: translated.q || question.q,
+        options: translated.options || question.options,
+        explain: translated.explain || question.explain
+      };
+    });
+
     if (!questions.length) {
       const emptyMsg = language === "ar" ? "لا توجد أسئلة متاحة حالياً لهذا القسم." : language === "en" ? "No questions available for this section." : "Aucune question disponible pour cette section.";
       alert(emptyMsg);
@@ -375,6 +387,11 @@
     const resultEl = container.querySelector(".quiz-result");
     const nextBtn = container.querySelector(".quiz-next");
     const retryBtn = container.querySelector(".quiz-retry");
+    const contentLanguage = language === "ar" && !window.CodeVallyQuizI18n?.ar ? "en" : language;
+    for (const element of [questionEl, optionsEl, feedbackText]) {
+      element.lang = contentLanguage;
+      element.dir = contentLanguage === "ar" ? "rtl" : "ltr";
+    }
 
     function renderQuestion() {
       answered = false;
