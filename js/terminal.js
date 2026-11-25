@@ -543,38 +543,15 @@ tcp    ESTAB   0       0       192.168.1.105:22     192.168.1.1:51234`;
     output.scrollTop = output.scrollHeight;
   }
 
-  function setTerminalMode(backdrop, mode) {
-    const isReal = mode === "real";
-    const output = backdrop.querySelector("#terminal-output");
-    const realPanel = backdrop.querySelector("#terminal-real-panel");
-    const bannerHint = backdrop.querySelector(".terminal-hint");
-
-    backdrop.querySelectorAll("[data-terminal-mode]").forEach((button) => {
-      const selected = button.dataset.terminalMode === mode;
-      button.setAttribute("aria-pressed", String(selected));
-    });
-    backdrop.querySelector(".terminal-dialog").classList.toggle("terminal-dialog--real", isReal);
-    output.hidden = isReal;
-    realPanel.hidden = !isReal;
-    bannerHint.innerHTML = isReal
-      ? "🐉 <strong>Kali Linux réel</strong> — commandes exécutées dans ta distribution Kali WSL."
-      : "🐧 <strong>Kali Linux simulé</strong> — tape <code>help</code> pour voir les commandes disponibles.";
-
-    const frame = realPanel.querySelector("iframe");
-    if (isReal) {
-      if (!frame.src || frame.src === "about:blank") {
-        frame.src = new URL("kali-terminal/", window.location.href).href;
-      }
-    } else if (frame.src && frame.src !== "about:blank") {
-      frame.src = "about:blank";
-    }
-  }
-
   function open() {
     close();
     previousFocus = document.activeElement;
 
-    const text = { close: "Fermer" };
+    const text = {
+      title: "Kali Linux Simulated Terminal",
+      hint: "Type 'help' to list available commands",
+      close: "Close"
+    };
 
     const backdrop = document.createElement("div");
     backdrop.className = "terminal-backdrop";
@@ -598,39 +575,12 @@ tcp    ESTAB   0       0       192.168.1.105:22     192.168.1.1:51234`;
 | |   / _ \\/ _\` | '__||  _  | | | | '_ \\ 
 | |__|  __/ (_| | |   | | | | |_| | |_) |
 |_____\\___|\\__,_|_|   |_| |_|\\__,_|_.__/ </pre>
-          <p class="terminal-hint">🐧 <strong>Kali Linux simulé</strong> — tape <code>help</code> pour voir les commandes disponibles.</p>
-        </div>
-        <div class="terminal-modes" role="group" aria-label="Mode du terminal">
-          <button class="terminal-mode-button" type="button" data-terminal-mode="simulated" aria-pressed="true">Simulation pédagogique</button>
-          <button class="terminal-mode-button" type="button" data-terminal-mode="real" aria-pressed="false">Kali réel (WSL)</button>
+          <p class="terminal-hint">🐧 <strong>Kali Linux Rolling</strong> — ${text.hint}</p>
         </div>
         <div class="terminal-output" id="terminal-output" aria-live="polite"></div>
-        <section class="terminal-real-panel" id="terminal-real-panel" aria-label="Vrai terminal Kali" hidden>
-          <div class="terminal-real-help">
-            <p>Dans PowerShell, à la racine du projet, lance :</p>
-            <div class="terminal-start-command"><code>powershell.exe -NoProfile -ExecutionPolicy Bypass -File .&bsol;start-kali-terminal.ps1</code><button type="button" class="terminal-copy-command">Copier</button></div>
-            <p>Il faut Node.js et Kali WSL. Au premier lancement, le script installe ttyd et crée un compte Kali sans droits root.</p>
-            <p class="terminal-real-warning">Ce shell utilise ta distribution Kali WSL, son réseau et les lecteurs Windows montés dans WSL. N’exécute que des commandes comprises et autorisées.</p>
-            <a href="kali-terminal/" target="_blank" rel="noopener">Ouvrir le terminal dans un nouvel onglet</a>
-          </div>
-          <iframe title="Terminal Kali Linux réel dans WSL" src="about:blank" allow="clipboard-read; clipboard-write"></iframe>
-        </section>
       </section>`;
 
     backdrop.querySelector(".terminal-close").addEventListener("click", close);
-    backdrop.querySelectorAll("[data-terminal-mode]").forEach((button) => {
-      button.addEventListener("click", () => setTerminalMode(backdrop, button.dataset.terminalMode));
-    });
-    backdrop.querySelector(".terminal-copy-command").addEventListener("click", async (event) => {
-      const button = event.currentTarget;
-      try {
-        await navigator.clipboard.writeText("powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\\start-kali-terminal.ps1");
-        button.textContent = "Copié";
-      } catch {
-        button.textContent = "Copie indisponible";
-      }
-      window.setTimeout(() => { if (button.isConnected) button.textContent = "Copier"; }, 1800);
-    });
     backdrop.addEventListener("click", (event) => {
       if (event.target === backdrop) close();
     });
@@ -642,7 +592,7 @@ tcp    ESTAB   0       0       192.168.1.105:22     192.168.1.1:51234`;
         close();
       } else if (event.key === "Tab") {
         const dialog = backdrop.querySelector(".terminal-dialog");
-        const focusable = [...dialog.querySelectorAll("button:not(:disabled), input:not(:disabled), textarea:not(:disabled), select:not(:disabled), iframe, a[href], [tabindex]:not([tabindex='-1'])")].filter((element) => !element.hidden && element.getClientRects().length);
+        const focusable = [...dialog.querySelectorAll("button:not(:disabled), input:not(:disabled), textarea:not(:disabled), select:not(:disabled), [tabindex]:not([tabindex='-1'])")];
         if (!focusable.length) return;
         const first = focusable[0];
         const last = focusable.at(-1);
@@ -659,7 +609,6 @@ tcp    ESTAB   0       0       192.168.1.105:22     192.168.1.1:51234`;
 
     document.body.append(backdrop);
     const output = backdrop.querySelector("#terminal-output");
-    setTerminalMode(backdrop, "simulated");
     appendPrompt(output);
     output.scrollTop = output.scrollHeight;
   }

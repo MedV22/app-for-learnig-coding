@@ -1,4 +1,4 @@
-const CACHE_NAME = 'codevally-v17';
+const CACHE_NAME = 'codevally-v15';
 const ASSETS = [
   './',
   './index.html',
@@ -14,13 +14,11 @@ const ASSETS = [
   './js/app.js',
   './js/data.js',
   './js/i18n.js',
-  './js/quiz-i18n.js',
   './js/guided-i18n.js',
   './js/modal.js',
   './js/quiz.js',
   './js/terminal.js',
   './js/pypod.js',
-  './js/python-worker.js',
   './favicon.svg',
   './assets/codevally-logo.png',
   './manifest.json'

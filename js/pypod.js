@@ -1,113 +1,10 @@
 /* Éditeur Python en ligne (Pyodide) — CodeVally */
 (() => {
-  let pythonWorker = null;
-  let activePythonJob = null;
-  let nextPythonJobId = 1;
+  const PYODIDE_VERSION = "0.27.0";
+  const PYODIDE_BASE = `https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full/`;
+  let pyodidePromise = null;
   let previousFocus = null;
   let keydownHandler = null;
-
-  const pythonMessage = (key) => {
-    const language = window.LearnHubI18n?.language?.() || "fr";
-    const messages = {
-      loadingTimeout: {
-        fr: "Le moteur Python met trop de temps à se charger. Vérifie ta connexion puis réessaie.",
-        en: "The Python runtime took too long to load. Check your connection and try again.",
-        ar: "استغرق تحميل بيئة Python وقتاً طويلاً. تحقق من اتصالك ثم حاول مجدداً."
-      },
-      executionTimeout: {
-        fr: "Temps d’exécution dépassé. Vérifie qu’il n’y a pas de boucle infinie.",
-        en: "Execution timed out. Check for an infinite loop.",
-        ar: "انتهت مهلة التنفيذ. تحقق من عدم وجود حلقة لا نهائية."
-      }
-    };
-    return messages[key]?.[language] || messages[key].fr;
-  };
-
-  const clearPythonJobTimers = (job) => {
-    window.clearTimeout(job.loadTimer);
-    window.clearTimeout(job.executionTimer);
-  };
-
-  const terminatePythonWorker = (error) => {
-    const job = activePythonJob;
-    activePythonJob = null;
-    if (pythonWorker) {
-      pythonWorker.terminate();
-      pythonWorker = null;
-    }
-    if (job) {
-      clearPythonJobTimers(job);
-      if (error) job.reject(error);
-    }
-  };
-
-  const finishPythonJob = (message) => {
-    const job = activePythonJob;
-    if (!job || message?.id !== job.id) return;
-    clearPythonJobTimers(job);
-    activePythonJob = null;
-    if (message.error) job.reject(new Error(String(message.error).slice(0, 1200)));
-    else job.resolve(message);
-  };
-
-  const handlePythonWorkerMessage = (event) => {
-    const job = activePythonJob;
-    const message = event.data;
-    if (!job || message?.id !== job.id) return;
-    if (message.status === "loading") {
-      job.onLoading?.();
-      return;
-    }
-    if (message.status === "ready") {
-      window.clearTimeout(job.loadTimer);
-      if (job.timeoutMs) {
-        job.executionTimer = window.setTimeout(() => {
-          terminatePythonWorker(new Error(pythonMessage("executionTimeout")));
-        }, job.timeoutMs);
-      }
-      job.onReady?.();
-      return;
-    }
-    if (message.status === "result") finishPythonJob(message);
-  };
-
-  const ensurePythonWorker = () => {
-    if (pythonWorker) return Promise.resolve(pythonWorker);
-    try {
-      pythonWorker = new Worker(new URL("./js/python-worker.js", window.location.href));
-      pythonWorker.addEventListener("message", handlePythonWorkerMessage);
-      pythonWorker.addEventListener("error", (event) => {
-        event.preventDefault();
-        terminatePythonWorker(new Error(event.message || "Le moteur Python s’est arrêté."));
-      });
-      pythonWorker.addEventListener("messageerror", () => {
-        terminatePythonWorker(new Error("La réponse du moteur Python est illisible."));
-      });
-      return Promise.resolve(pythonWorker);
-    } catch (error) {
-      pythonWorker = null;
-      return Promise.reject(error);
-    }
-  };
-
-  const runPythonTask = (task, source, { onLoading, onReady, timeoutMs = 8000 } = {}) => new Promise((resolve, reject) => {
-    if (activePythonJob) {
-      reject(new Error("Une exécution Python est déjà en cours."));
-      return;
-    }
-    const id = nextPythonJobId++;
-    const job = { id, resolve, reject, onLoading, onReady, timeoutMs, loadTimer: null, executionTimer: null };
-    activePythonJob = job;
-    job.loadTimer = window.setTimeout(() => {
-      terminatePythonWorker(new Error(pythonMessage("loadingTimeout")));
-    }, 90000);
-    ensurePythonWorker().then((worker) => {
-      if (activePythonJob !== job) return;
-      worker.postMessage({ id, task, source: String(source ?? "") });
-    }).catch((error) => {
-      if (activePythonJob === job) terminatePythonWorker(error instanceof Error ? error : new Error(String(error)));
-    });
-  });
 
   const codeSnippets = {
     hello: `# Premier programme Python
@@ -162,7 +59,29 @@ for port, service in ports_usuels.items():
   };
 
   function loadPyodide() {
-    return runPythonTask("warmup", "", { timeoutMs: 0 }).then(() => undefined);
+    if (pyodidePromise) return pyodidePromise;
+
+    pyodidePromise = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = `${PYODIDE_BASE}pyodide.js`;
+      script.onload = async () => {
+        try {
+          if (typeof window.loadPyodide !== "function") throw new Error("Pyodide n'a pas été initialisé.");
+          resolve(await window.loadPyodide({ indexURL: PYODIDE_BASE }));
+        } catch (error) {
+          pyodidePromise = null;
+          reject(error);
+        }
+      };
+      script.onerror = () => {
+        pyodidePromise = null;
+        script.remove();
+        reject(new Error("Impossible de charger Pyodide depuis le CDN."));
+      };
+      document.head.append(script);
+    });
+
+    return pyodidePromise;
   }
 
   function open(initialCode) {
@@ -244,7 +163,7 @@ for port, service in ports_usuels.items():
 
         <div class="pyodide-body">
           <div class="pyodide-editor-wrap">
-          <textarea class="pyodide-editor" maxlength="20000" spellcheck="false" placeholder="# Écris ton code Python ici...
+            <textarea class="pyodide-editor" spellcheck="false" placeholder="# Écris ton code Python ici...
 print('Hello from Python!')" aria-label="Éditeur de code Python"></textarea>
           </div>
           <div class="pyodide-output-wrap">
@@ -329,19 +248,53 @@ print('Hello from Python!')" aria-label="Éditeur de code Python"></textarea>
       output.textContent = "⟳ Chargement du moteur Python...";
 
       try {
-        const result = await runPythonTask("run", editor.value, {
-          onLoading: () => { output.textContent = "⟳ Chargement du moteur Python..."; },
-          onReady: () => { output.textContent = "▶ Exécution en cours..."; },
-          timeoutMs: 8000
-        });
-        output.textContent = result.output || text.empty;
+        const pyodide = await loadPyodide();
+        output.textContent = "▶ Exécution en cours...";
 
-        if (result.truncated) {
+        const stdoutLines = [];
+        const stderrLines = [];
+        const maxOutputLines = 45;
+        const maxOutputCharacters = 24000;
+        let capturedLines = 0;
+        let capturedCharacters = 0;
+        let truncatedLines = 0;
+        const captureLine = (collection, line) => {
+          const value = String(line ?? "");
+          if (capturedLines >= maxOutputLines) {
+            truncatedLines += 1;
+            return;
+          }
+          const remaining = maxOutputCharacters - capturedCharacters;
+          if (remaining <= 0) {
+            truncatedLines += 1;
+            return;
+          }
+          const chunk = value.slice(0, remaining);
+          collection.push(chunk);
+          capturedLines += 1;
+          capturedCharacters += chunk.length;
+          if (chunk.length < value.length) truncatedLines += 1;
+        };
+
+        pyodide.setStdout({ batched: (line) => captureLine(stdoutLines, line) });
+        pyodide.setStderr({ batched: (line) => captureLine(stderrLines, line) });
+        pyodide.setStdin({ error: true });
+
+        const result = await pyodide.runPythonAsync(editor.value);
+        if (result !== undefined && result !== null) {
+          captureLine(stdoutLines, result);
+        }
+
+        const allLines = [...stdoutLines, ...(stderrLines.length ? ["--- stderr ---", ...stderrLines] : [])];
+        const outText = allLines.join("\n").trim();
+        output.textContent = outText || text.empty;
+
+        if (truncatedLines > 0) {
           const truncationMessage = language === "en"
-            ? "Output truncated (limit: 45 lines / 24,000 characters)."
+            ? `Output truncated (limit: ${maxOutputLines} lines / ${maxOutputCharacters.toLocaleString("en")} characters).`
             : language === "ar"
-            ? "تم اقتطاع المخرجات (الحد: 45 سطراً / 24,000 حرفاً)."
-            : "Sortie tronquée (limite : 45 lignes / 24 000 caractères).";
+            ? `تم اقتطاع المخرجات (الحد: ${maxOutputLines} سطراً / ${maxOutputCharacters.toLocaleString("ar")} حرفاً).`
+            : `Sortie tronquée (limite : ${maxOutputLines} lignes / ${maxOutputCharacters.toLocaleString("fr")} caractères).`;
           output.textContent += `\n\n… ${truncationMessage}`;
         }
 
@@ -349,10 +302,12 @@ print('Hello from Python!')" aria-label="Éditeur de code Python"></textarea>
         status.className = "pyodide-status is-ok";
       } catch (error) {
         const isOffline = typeof navigator !== "undefined" && !navigator.onLine;
-        const rawMessage = String(isOffline ? text.offline : (error?.message || error)).slice(0, 1200);
-        const errLines = rawMessage.split("\n");
-        const truncErr = errLines.length > 45;
-        const dispErr = (truncErr ? errLines.slice(0, 45) : errLines).join("\n");
+        const rawMessage = String(isOffline ? text.offline : (error?.message || error));
+        const errorTruncated = rawMessage.length > maxOutputCharacters;
+        const message = rawMessage.slice(0, maxOutputCharacters);
+        const errLines = message.split("\n");
+        const truncErr = errorTruncated || errLines.length > maxOutputLines;
+        const dispErr = (errLines.length > maxOutputLines ? errLines.slice(0, maxOutputLines) : errLines).join("\n");
         output.textContent = `Traceback (most recent call last):\n${dispErr}${truncErr ? "\n… traceback tronqué" : ""}`;
         status.textContent = "✗ Erreur";
         status.className = "pyodide-status is-error";
@@ -374,7 +329,6 @@ print('Hello from Python!')" aria-label="Éditeur de code Python"></textarea>
 
   function close() {
     const backdrop = document.querySelector(".pyodide-backdrop");
-    if (activePythonJob) terminatePythonWorker(new Error("Exécution annulée."));
     if (keydownHandler) {
       document.removeEventListener("keydown", keydownHandler);
       keydownHandler = null;
@@ -385,8 +339,20 @@ print('Hello from Python!')" aria-label="Éditeur de code Python"></textarea>
   }
 
   async function validateSyntax(source) {
-    const result = await runPythonTask("validate", String(source ?? ""), { timeoutMs: 8000 });
-    return result.syntaxError || null;
+    const pyodide = await loadPyodide();
+    const name = "_learnhub_practice_source";
+    pyodide.globals.set(name, String(source));
+    try {
+      const compiled = pyodide.runPython(`compile(${name}, "<parcours>", "exec")`);
+      compiled?.destroy?.();
+      return null;
+    } catch (error) {
+      const message = String(error?.message || error);
+      const syntaxLine = message.split(/\r?\n/).reverse().find((line) => /\b(?:SyntaxError|IndentationError|TabError)\s*:/.test(line));
+      return (syntaxLine || message).trim().slice(0, 240);
+    } finally {
+      pyodide.globals.delete(name);
+    }
   }
 
   window.LearnHubPyodide = { open, close, loadPyodide, validateSyntax };
